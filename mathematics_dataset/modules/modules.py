@@ -48,7 +48,7 @@ def train(entropy_fn):
   return {
       name: module.train(entropy_fn) for name, module in six.iteritems(all_)
   }
-
+#returns an entire dictionary for all module, with nested functions. (module.train returns dictonary. )
 
 def test():
   """Returns dict of testing modules."""
