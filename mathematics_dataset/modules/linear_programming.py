@@ -18,7 +18,7 @@ _ENTROPY_EXTRAPOLATE = (12, 12)
 
 def _make_modules(entropy):
   return {
-      'placeholder': functools.partial(placeholder_problem, *entropy),
+      'basic_linear_programming': functools.partial(basic_linear_programming, *entropy),
   }
 
 
@@ -34,17 +34,25 @@ def test_extra():
   return _make_modules(_ENTROPY_EXTRAPOLATE)
 
 
-def placeholder_problem(min_entropy, max_entropy):
-  """A placeholder linear programming problem that returns a fixed answer."""
+#this returns example object
+def basic_linear_programming(min_entropy, max_entropy):
+  entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
 
+  c1 = random.randint(1,10)
+  c2 = random.randint(1,10)
+  c3 = random.randint(2,100)
+  #(x,y) 
+  corners = [(0,0), (c3,0), (0,c3)]
+  answer = max(c1*x + c2*y for x, y in corners)
   template = random.choice([
-      'What is the maximum value of the objective function? (placeholder)',
+      'What is the maximum value of the objective function: {c1}x + {c2}y \n Given: x+y<={c3}',
   ])
 
   return example.Problem(
-      question=example.question(context, template),
-      answer=42)
+      question=example.question(context, template, c1 = c1, c2=c2,c3=c3), 
+      answer=answer)
+
 
 
 # def sequence_next_term(min_entropy, max_entropy):

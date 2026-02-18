@@ -236,7 +236,7 @@ def add_or_sub(value, sample_args, context=None):
   else:
     return _sub_question_or_entity(context, p, q, is_question)
 
-
+#sample_args just passes in entropy, ignore because for composition. 
 def add_or_sub_in_base(sample_args):
   """Module for addition and subtraction in another base."""
   context = composition.Context()
