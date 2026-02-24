@@ -9,7 +9,7 @@ import random
 
 from mathematics_dataset import example
 from mathematics_dataset.util import composition
-
+from mathematics_dataset.sample import number
 
 _ENTROPY_TRAIN = (3, 10)
 _ENTROPY_INTERPOLATE = (8, 8)
@@ -39,14 +39,14 @@ def basic_linear_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
 
-  c1 = random.randint(1,10)
-  c2 = random.randint(1,10)
-  c3 = random.randint(2,100)
+  c1 = number.integer(entropy / 3, signed=False, min_abs=1)
+  c2 = number.integer(entropy / 3, signed=False, min_abs=1)
+  c3 = number.integer(entropy / 3, signed=False, min_abs=2)
   #(x,y) 
   corners = [(0,0), (c3,0), (0,c3)]
   answer = max(c1*x + c2*y for x, y in corners)
   template = random.choice([
-      'What is the maximum value of the objective function: {c1}x + {c2}y \n Given: x+y<={c3}',
+      'What is the maximum value of the objective function: {c1}x + {c2}y \n Given: x+y<={c3} , x,y>=0',
   ])
 
   return example.Problem(

@@ -1,18 +1,4 @@
-# Copyright 2018 DeepMind Technologies Limited.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-"""Example of how to write generated questions to text files.
+"""Write generated questions to JSON files.
 
 Given an output directory, this will create the following subdirectories:
 
@@ -22,9 +8,8 @@ Given an output directory, this will create the following subdirectories:
 *   interpolate
 *   extrapolate
 
-and populate each of these directories with a text file for each of the module,
-where the text file contains lines alternating between the question and the
-answer.
+and populate each with a JSON file per module, where each file contains a list
+of {"question": ..., "answer": ...} dictionaries.
 
 Passing --train_split=False will create a single output directory 'train' for
 training data.
@@ -34,6 +19,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import json
 import os
 
 # Dependency imports
@@ -46,7 +32,7 @@ from six.moves import range
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('output_dir', None, 'Where to write output text')
+flags.DEFINE_string('output_dir', None, 'Where to write output JSON')
 flags.DEFINE_boolean('train_split', True,
                      'Whether to split training data by difficulty')
 flags.mark_flag_as_required('output_dir')
@@ -67,12 +53,16 @@ def main(unused_argv):
     per_module = generate.counts[regime]
     #writing loop
     for module_name, module in six.iteritems(flat_modules):
-      path = os.path.join(regime_dir, module_name + '.txt')
-      with open(path, 'w') as text_file:
-        for _ in range(per_module):
-          problem, _ = generate.sample_from_module(module)
-          text_file.write(str(problem.question) + '\n')
-          text_file.write(str(problem.answer) + '\n')
+      problems = []
+      for _ in range(per_module):
+        problem, _ = generate.sample_from_module(module)
+        problems.append({
+            'question': str(problem.question),
+            'answer': str(problem.answer),
+        })
+      path = os.path.join(regime_dir, module_name + '.json')
+      with open(path, 'w') as json_file:
+        json.dump(problems, json_file, indent=2)
       logging.info('Written %s', path)
 
 
