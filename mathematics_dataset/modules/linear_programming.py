@@ -6,12 +6,14 @@ from __future__ import print_function
 
 import functools
 import random
+import cvxpy as cp
+import numpy as np
 
 from mathematics_dataset import example
 from mathematics_dataset.util import composition
 from mathematics_dataset.sample import number
 
-_ENTROPY_TRAIN = (3, 10)
+_ENTROPY_TRAIN = (2, 4)
 _ENTROPY_INTERPOLATE = (8, 8)
 _ENTROPY_EXTRAPOLATE = (12, 12)
 
@@ -19,6 +21,7 @@ _ENTROPY_EXTRAPOLATE = (12, 12)
 def _make_modules(entropy):
   return {
       'basic_linear_programming': functools.partial(basic_linear_programming, *entropy),
+      'non_trivial_linear_programming': functools.partial(non_trivial_linear_programming, *entropy),
   }
 
 
@@ -53,6 +56,34 @@ def basic_linear_programming(min_entropy, max_entropy):
       question=example.question(context, template, c1 = c1, c2=c2,c3=c3), 
       answer=answer)
 
+def non_trivial_linear_programming(min_entropy, max_entropy):
+  entropy = random.uniform(min_entropy, max_entropy)
+  context = composition.Context()
+
+  m = 10
+  n = 10
+  # m = number.integer(entropy/2, signed=False, min_abs=1)
+  # n = number.integer(entropy/2, signed=False, min_abs=1)
+  s0 = np.random.randn(m)
+  lamb0 = np.maximum(-s0, 0)
+  s0 = np.maximum(s0, 0)
+  x0 = np.random.randn(n)
+  A = np.random.randn(m, n)
+  b = A @ x0 + s0
+  c = -A.T @ lamb0
+
+  # Define and solve the CVXPY problem.
+  x = cp.Variable(n)
+  prob = cp.Problem(cp.Minimize(c.T@x),
+                  [A @ x <= b])
+  prob.solve()
+
+  template = random.choice([
+      'Minimize {c}' ,
+  ])
+  return example.Problem(
+      question=example.question(context, template, c=c), 
+      answer=prob.value)
 
 
 # def sequence_next_term(min_entropy, max_entropy):
