@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is the maximum value of the objective function: 1003x + 1229y \n Given: x+y<=5970 , x,y>=0",
+    "answer": "7337130"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 8178x + 3245y \n Given: x+y<=1605 , x,y>=0",
+    "answer": "13125690"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 687x + 3161y \n Given: x+y<=745 , x,y>=0",
+    "answer": "2354945"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 8870x + 953y \n Given: x+y<=1118 , x,y>=0",
+    "answer": "9916660"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 9699x + 3237y \n Given: x+y<=452 , x,y>=0",
+    "answer": "4383948"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 7666x + 1928y \n Given: x+y<=4146 , x,y>=0",
+    "answer": "31783236"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 6752x + 6357y \n Given: x+y<=6836 , x,y>=0",
+    "answer": "46156672"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 9887x + 140y \n Given: x+y<=4523 , x,y>=0",
+    "answer": "44718901"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 8370x + 1934y \n Given: x+y<=922 , x,y>=0",
+    "answer": "7717140"
+  },
+  {
+    "question": "What is the maximum value of the objective function: 7291x + 8714y \n Given: x+y<=758 , x,y>=0",
+    "answer": "6605212"
+  }
+]
