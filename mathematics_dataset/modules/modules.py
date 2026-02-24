@@ -36,6 +36,7 @@ all_ = {
     'calculus': calculus,
     'comparison': comparison,
     'linear_programming': linear_programming,
+    'semidefinite_programming': semidefinite_programming,
     'measurement': measurement,
     'numbers': numbers,
     'polynomials': polynomials,
