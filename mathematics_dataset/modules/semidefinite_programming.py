@@ -9,8 +9,8 @@ from __future__ import division
 from __future__ import print_function
 
 import functools
-import random
-import numpy as np
+import random # controls problem entropy
+import numpy as np # generates matrices
 
 from mathematics_dataset import example
 from mathematics_dataset.util import composition
@@ -20,17 +20,13 @@ import cvxpy as cp
 
 
 
-# Entropy ranges control "difficulty" / "size" selection for train/test.
-# The entropy_fn provided by the dataset framework chooses a value in
-# these ranges; we then map that to k (matrix size) and m (#constraints).
-_ENTROPY_TRAIN = (3, 10)
-_ENTROPY_INTERPOLATE = (8, 8)
-_ENTROPY_EXTRAPOLATE = (12, 12)
+# Entropy ranges control "difficulty" and "size" selection for train/test.
+_ENTROPY_TRAIN = (3, 10) # random entropy between 3 and 10 (varied sizes)
+_ENTROPY_INTERPOLATE = (8, 8) # fixed at 8 for testing entropy
+_ENTROPY_EXTRAPOLATE = (12, 12) # fixed at 12 (harder than training)
 
 
-# Module registry: dataset framework expects a dict of named generators.
-# functools.partial(basic_semidefinite_programming, *entropy) means:
-#   later, calling the module runs basic_semidefinite_programming(minE, maxE)
+# Module registry: used to create a callable generator
 def _make_modules(entropy):
   return {
       'basic_semidefinite_programming': functools.partial(
@@ -38,8 +34,7 @@ def _make_modules(entropy):
       ),
   }
 
-
-# Entry points used by the dataset framework to select train/test ranges
+# Entry points used by the dataset framework to select train/test ranges, entropy_fn is provided
 def train(entropy_fn):
   return _make_modules(entropy_fn(_ENTROPY_TRAIN))
 
@@ -71,7 +66,7 @@ def _format_matrix(M):
   for row in M:
     formatted_row = []
     for v in row:
-      # Show as int if it's essentially an integer; else show rounded float.
+      # Show as int if it's essentially an integer; else show rounded float
       if abs(v - round(v)) < 1e-9:
         formatted_row.append(int(round(v)))
       else:
@@ -79,7 +74,7 @@ def _format_matrix(M):
     out.append(formatted_row)
   return str(out)
 
-# safe_round: stable rounding for numeric solver outputs
+# stable rounding for numeric solver outputs
 def _safe_round(x, ndigits=3):
   """Round numeric values from solvers (which may be numpy floats)."""
   if x is None:
@@ -99,22 +94,22 @@ def _safe_round(x, ndigits=3):
 # Then X* satisfies all constraints by construction.
 def basic_semidefinite_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
-  context = composition.Context()  # provides consistent formatting hooks
+  context = composition.Context()  # provides consistent formatting
 
-  # Complexity selection (controls how big/complex the SDP is).
-  # We keep k small so the question is readable and solver stable.
+  # Complexity selection (controls matrix size based on difficulty).
+  # We keep k small so the question is readable and solver stable
   if entropy < 6:
     k = 2
   else:
     k = 3  # 3x3 is still readable and is a "real" SDP
 
-  # Choose the number of linear constraints m (besides PSD).
+  # Choose the number of linear constraints m (besides PSD)
   # Note: total constraints are: m equalities + 1 PSD constraint.
   m = 2 if k == 3 else 1
   if entropy > 9:
     m = 3
 
-  # Coefficient magnitude: keep small integers to avoid huge numbers in the statement and reduce numerical instability
+  # limits coeff to be small integers to reduce numerical instability
   coeff_low, coeff_high = -3, 3
 
   # 1) Generate symmetric constraint matrices A_1...A_m
@@ -135,18 +130,18 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
     b_list.append(b_i)
 
   # 4) Generate symmetric objective matrix C
-  # Objective is: minimize <C, X> = trace(C^T X)
+  # minimize <C, X> = trace(C^T X)
   Bc = _rand_int_matrix(k, coeff_low, coeff_high)
   C = _symmetrize(Bc)
 
   # 5) Build and solve the CVXPY problem for verification/label
-  # we add trace(X) == trace(X_star) to reduce unboundedness and scale issues. To maximize robustness, uncomment
+  # we add trace(X) == trace(X_star) to reduce unboundedness and scale issues; To maximize robustness, uncomment
   X = cp.Variable((k, k), symmetric=True)
 
   constraints = [X >> 0]
 
   # Optional normalization (recommended for stability):
-  # constraints.append(cp.trace(X) == float(np.trace(X_star)))
+  constraints.append(cp.trace(X) == float(np.trace(X_star)))
 
   for i in range(m):
     constraints.append(cp.trace(A_list[i] @ X) == b_list[i])
@@ -157,7 +152,7 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   # Solve with SCS (common default for cone problems like SDP).
   prob.solve(solver=cp.SCS, verbose=False)
 
-  # 6) Retry logic: If solver doesn't return optimal, we resample the *objective* C.
+  # Retry: If solver doesn't return optimal, we resample C
   # (If the failure is due to constraints/conditioning, resampling A/X* is better; this is just a lightweight retry.)
   retries = 3
   while prob.status not in ["optimal", "optimal_inaccurate"] and retries > 0:
@@ -172,10 +167,10 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   if prob.status not in ["optimal", "optimal_inaccurate"]:
     raise ValueError("SDP solve failed with status: {}".format(prob.status))
 
-  # 7) Extract the numeric optimal value as the "answer" (rounded)
+  # Extract the numeric optimal value as the "answer" (rounded)
   answer = _safe_round(prob.value, ndigits=3)
 
-  # 8) Build natural-language question
+  # Build natural-language question
   A_text = "\n".join(
       ["A_{} = {}".format(i + 1, _format_matrix(A_list[i])) for i in range(m)]
   )
@@ -202,7 +197,7 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
       b_text=b_text
   )
 
-  # 9) Return an example.Problem object the dataset framework expects
+  # Return an example.Problem object the dataset framework expects
   # question: formatted string
   # answer: numeric label
   return example.Problem(question=question, answer=answer)
