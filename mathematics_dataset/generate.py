@@ -37,6 +37,7 @@ flags.DEFINE_string('filter', '', 'restrict to matching module names')
 flags.DEFINE_integer('per_train_module', 10, 'Num of examples per train module')
 flags.DEFINE_integer('per_test_module', 10, 'Num of examples per test module')
 flags.DEFINE_bool('show_dropped', False, 'Whether to print dropped questions')
+flags.DEFINE_bool('train_only', False, 'Only generate training data (skip interpolate/extrapolate)')
 
 
 filtered_modules = collections.OrderedDict([])
@@ -103,8 +104,9 @@ def init_modules(train_split=False):
   else:
     all_modules['train'] = modules.train(_make_entropy_fn(0, 1))
 
-  all_modules['interpolate'] = modules.test()
-  all_modules['extrapolate'] = modules.test_extra()
+  if not FLAGS.train_only:
+    all_modules['interpolate'] = modules.test()
+    all_modules['extrapolate'] = modules.test_extra()
 
   counts['train'] = FLAGS.per_train_module
   counts['train-easy'] = FLAGS.per_train_module // 3
