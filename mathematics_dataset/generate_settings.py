@@ -22,7 +22,7 @@ import os
 import string
 
 MAX_QUESTION_LENGTH = 10000
-MAX_ANSWER_LENGTH = 30
+MAX_ANSWER_LENGTH = 1000
 QUESTION_CHARS = (
     ['', ' '] + list(string.ascii_letters + string.digits + string.punctuation))
 EMPTY_INDEX = QUESTION_CHARS.index('')
