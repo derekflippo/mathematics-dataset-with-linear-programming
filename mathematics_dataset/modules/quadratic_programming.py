@@ -74,12 +74,12 @@ def quadratic_programming(min_entropy, max_entropy):
   prob.solve(solver=cp.SCS, verbose=False)
 
   # Format arrays for readable output
-  P_str = np.array2string(P, precision=2, suppress_small=True, threshold=np.inf)
-  q_str = np.array2string(q, precision=2, suppress_small=True, threshold=np.inf)
-  G_str = np.array2string(G, precision=2, suppress_small=True, threshold=np.inf)
-  h_str = np.array2string(h, precision=2, suppress_small=True, threshold=np.inf)
-  A_str = np.array2string(A, precision=2, suppress_small=True, threshold=np.inf)
-  b_str = np.array2string(b, precision=2, suppress_small=True, threshold=np.inf)
+  P_str = np.array2string(P, threshold=np.inf)
+  q_str = np.array2string(q, threshold=np.inf)
+  G_str = np.array2string(G, threshold=np.inf)
+  h_str = np.array2string(h, threshold=np.inf)
+  A_str = np.array2string(A, threshold=np.inf)
+  b_str = np.array2string(b, threshold=np.inf)
   answer = round(prob.value, 2)
 
   template = random.choice([
