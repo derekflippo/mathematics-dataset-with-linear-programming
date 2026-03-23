@@ -63,17 +63,19 @@ def non_trivial_linear_programming(min_entropy, max_entropy):
   n = int(number.integer(entropy/2, signed=False, min_abs=1))
   # Use integer inputs so displayed values are exact (no precision loss)
   coeff_low, coeff_high = -4, 4
-  # Ensure at least one negative entry in s0 so lamb0 (and thus c) is nonzero
-  s0 = np.random.randint(coeff_low, coeff_high + 1, size=(m,)).astype(float)
-  while np.all(s0 >= 0):
+  # Resample until optimal value (c^T @ x0) is nonzero
+  optimal_value = 0
+  while optimal_value == 0:
     s0 = np.random.randint(coeff_low, coeff_high + 1, size=(m,)).astype(float)
-  lamb0 = np.maximum(-s0, 0)
-  s0 = np.maximum(s0, 0)
-  #x0 is the optimal solution vector
-  x0 = np.random.randint(0, coeff_high + 1, size=(n,)).astype(float)
-  A = np.random.randint(coeff_low, coeff_high + 1, size=(m, n)).astype(float)
-  b = A @ x0 + s0
-  c = -A.T @ lamb0
+    while np.all(s0 >= 0):
+      s0 = np.random.randint(coeff_low, coeff_high + 1, size=(m,)).astype(float)
+    lamb0 = np.maximum(-s0, 0)
+    s0 = np.maximum(s0, 0)
+    x0 = np.random.randint(1, coeff_high + 1, size=(n,)).astype(float)
+    A = np.random.randint(coeff_low, coeff_high + 1, size=(m, n)).astype(float)
+    b = A @ x0 + s0
+    c = -A.T @ lamb0
+    optimal_value = c @ x0
   
   
   #c is the weights

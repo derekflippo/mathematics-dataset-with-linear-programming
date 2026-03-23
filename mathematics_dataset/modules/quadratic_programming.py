@@ -49,7 +49,7 @@ def quadratic_programming(min_entropy, max_entropy):
   coeff_low, coeff_high = -4, 4
 
   # Pick a feasible point x0 (non-negative integers)
-  x0 = np.random.randint(0, coeff_high + 1, size=(n,)).astype(float)
+  x0 = np.random.randint(1, coeff_high + 1, size=(n,)).astype(float)
 
   # Build PSD matrix P = M^T M from integer M
   M = np.random.randint(coeff_low, coeff_high + 1, size=(n, n)).astype(float)
@@ -80,8 +80,8 @@ def quadratic_programming(min_entropy, max_entropy):
   h_str = np.array2string(h, threshold=np.inf)
   A_str = np.array2string(A, threshold=np.inf)
   b_str = np.array2string(b, threshold=np.inf)
-  answer = round(prob.value, 2)
-
+  # answer = round(prob.value, 2)
+  answer = prob.value
   template = random.choice([
       'Minimize the quadratic objective (1/2) x^T P x + q^T x where\n'
       'P = {P} and q = {q},\nsubject to G x <= h and A x = b, where\n'
