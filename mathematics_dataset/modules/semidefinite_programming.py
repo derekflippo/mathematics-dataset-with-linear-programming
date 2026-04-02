@@ -1,6 +1,6 @@
 """Semidefinite programming questions.
 
-This module defines a generator that produces *small* SDP instances
+This module defines a generator that produces small SDP instances
 and labels them by solving with CVXPY (so we can verify correctness).
 """
 
@@ -168,7 +168,8 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
     raise ValueError("SDP solve failed with status: {}".format(prob.status))
 
   # Extract the numeric optimal value as the "answer" (rounded)
-  answer = _safe_round(prob.value, ndigits=3)
+  # answer = _safe_round(prob.value, ndigits=3)
+  answer = prob.value
 
   # Build natural-language question
   A_text = "\n".join(
