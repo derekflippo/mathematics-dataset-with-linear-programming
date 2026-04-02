@@ -23,8 +23,9 @@ from mathematics_dataset.modules import arithmetic
 from mathematics_dataset.modules import calculus
 from mathematics_dataset.modules import comparison
 from mathematics_dataset.modules import linear_programming
-from mathematics_dataset.modules import semidefinite_programming
 from mathematics_dataset.modules import quadratic_programming
+from mathematics_dataset.modules import semidefinite_programming
+from mathematics_dataset.modules import geometric
 from mathematics_dataset.modules import measurement
 from mathematics_dataset.modules import numbers
 from mathematics_dataset.modules import polynomials
@@ -38,8 +39,9 @@ all_ = {
     'calculus': calculus,
     'comparison': comparison,
     'linear_programming': linear_programming,
-    'semidefinite_programming': semidefinite_programming,
     'quadratic_programming': quadratic_programming,
+    'semidefinite_programming': semidefinite_programming,
+    'geometric' : geometric,
     'measurement': measurement,
     'numbers': numbers,
     'polynomials': polynomials,
