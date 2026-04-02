@@ -23,6 +23,7 @@ from mathematics_dataset.modules import arithmetic
 from mathematics_dataset.modules import calculus
 from mathematics_dataset.modules import comparison
 from mathematics_dataset.modules import linear_programming
+from mathematics_dataset.modules import semidefinite_programming
 from mathematics_dataset.modules import measurement
 from mathematics_dataset.modules import numbers
 from mathematics_dataset.modules import polynomials
