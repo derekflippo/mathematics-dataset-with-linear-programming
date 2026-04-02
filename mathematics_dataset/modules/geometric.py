@@ -53,7 +53,7 @@ def basic_geometric_programming(min_entropy, max_entropy):
   d = b + c + number.integer(entropy/3, signed=False, min_abs=2)
   g = e + f + number.integer(entropy/3, signed=False, min_abs=2)
 
-  # exponents for harder objective
+  # exponents
   p = random.randint(1, 3)
   q = random.randint(1, 3)
 
@@ -63,29 +63,59 @@ def basic_geometric_programming(min_entropy, max_entropy):
   objective = cp.Minimize(a * x**p * y**q)
 
   constraints = [
-    b*x + c*y <= d,
-    e*x*y <= g,
-    x*y >= 1
-]
+      b*x + c*y <= d,
+      e*x*y <= g,
+      x*y >= 1
+  ]
+
+  constraint_strings = [
+      f"{b}x + {c}y <= {d}",
+      f"{e}xy <= {g}",
+      "xy >= 1"
+  ]
+
+  # additional constraints
+  if random.random() < 0.5:
+    h = number.integer(entropy/3, signed=False, min_abs=1)
+    constraints.append(x <= h)
+    constraint_strings.append(f"x <= {h}")
+
+  if random.random() < 0.5:
+    constraints.append(y <= g)
+    constraint_strings.append(f"y <= {g}")
+
+  if random.random() < 0.5:
+    constraints.append(x**2 * y <= g + d)
+    constraint_strings.append(f"x^2 y <= {g + d}")
+
+  if random.random() < 0.5:
+    constraints.append(x / y <= g)
+    constraint_strings.append(f"x/y <= {g}")
+
+  if random.random() < 0.5:
+    constraints.append(b*x + c*y + e*x*y <= d + g)
+    constraint_strings.append(f"{b}x + {c}y + {e}xy <= {d + g}")
 
   prob = cp.Problem(objective, constraints)
-  prob.solve(gp=True, solver=cp.SCS)
+  prob.solve(gp=True, solver=cp.SCS, eps=1e-6, max_iters=5000)
 
   if prob.status not in ["optimal", "optimal_inaccurate"]:
     raise ValueError("GP solve failed with status: {}".format(prob.status))
 
+  constraints_text = ", ".join(constraint_strings)
+
   template = random.choice([
-      ('Minimize the geometric program: {a}x^{p}y^{q} subject to '
-       '{b}x + {c}y <= {d} and {e}xy <= {g}, with x,y > 0. '
-       'What is the optimal value?'),
+      ('Find the minimum value of {a}x^{p}y^{q} subject to {constraints}, '
+       'with x,y > 0.'),
 
-      ('Consider the geometric program: minimize f(x,y) = {a}x^{p}y^{q} '
-       'subject to {b}x + {c}y <= {d} and {e}xy <= {g}. '
-       'Find the minimum value.'),
+      ('Minimize f(x,y) = {a}x^{p}y^{q} given that {constraints}. '
+       'What is the minimum value?'),
 
-      ('Find the minimum of the geometric program: minimize {a}x^{p}y^{q} '
-       'under constraints {b}x + {c}y <= {d} and {e}xy <= {g}, '
-       'where x,y > 0.')
+      ('Suppose x,y > 0 satisfy {constraints}. '
+       'Determine the smallest possible value of {a}x^{p}y^{q}.'),
+
+      ('Under the constraints {constraints}, '
+       'find the minimum value of {a}x^{p}y^{q}.')
   ])
 
   return example.Problem(
@@ -99,6 +129,8 @@ def basic_geometric_programming(min_entropy, max_entropy):
           e=e,
           g=g,
           p=p,
-          q=q
+          q=q,
+          constraints=constraints_text
       ),
-      answer=round(float(prob.value), 3))
+      answer=round(float(prob.value), 3)
+  )
