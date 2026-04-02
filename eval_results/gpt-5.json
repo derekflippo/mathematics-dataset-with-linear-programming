@@ -1,0 +1,89 @@
+{
+  "model": "gpt-5",
+  "total": 10,
+  "correct": 6,
+  "accuracy": 0.6,
+  "tolerance": 0.01,
+  "results": [
+    {
+      "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-6.  8.], under the constraints \nG * w <= q, where \nG = [[ 0.  0.]\n [-4. -4.]\n [ 3. -4.]\n [ 1.  1.]] and \nq = [  3. -32.  -4.   8.]. What is the minimum value achieved?",
+      "expected_answer": 8.0,
+      "model_answer": 8.0,
+      "raw_response": "8",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Minimize the objective function c^T * x where \nc = [ -9.  -6.  -6.  12. -12.], subject to the constraints \nA * x <= b, where \nA = [[ 3.  2.  2. -4.  4.]] and \nb = [17.]. What is the optimal value?",
+      "expected_answer": -51.0,
+      "model_answer": -51.0,
+      "raw_response": "-51",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ 27.  -6.  24.   0.   8. -11.  13.   2.], under the constraints \nG * w <= q, where \nG = [[-2. -4. -4. -1. -3. -2. -3. -1.]\n [-2. -3.  2.  0. -4.  3.  1. -2.]\n [-1. -1.  2.  2.  1.  1. -4. -2.]\n [ 1.  0. -2. -1.  0.  4.  0.  4.]\n [ 1.  0.  4.  1.  4.  1. -1. -4.]\n [-4.  2. -4. -2.  1. -3. -2.  2.]\n [-3.  1. -4.  1. -2.  4. -1. -1.]\n [-3.  1. -2. -3.  3.  3.  3. -2.]] and \nq = [-63. -27.  -3.  11.  23. -17. -25.  -6.]. What is the minimum value achieved?",
+      "expected_answer": 181.0,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": false
+    },
+    {
+      "question": "Minimize the objective function c^T * x where \nc = [-8. -4. -8. -8.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  4. -2.  2.]\n [ 4. -1.  4. -1.]\n [ 0. -1.  2.  3.]] and \nb = [ 4. 27. 19.]. What is the optimal value?",
+      "expected_answer": -100.0,
+      "model_answer": -100.0,
+      "raw_response": "-100",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Minimize the objective function c^T * x where \nc = [1. 2.], subject to the constraints \nA * x <= b, where \nA = [[-1. -2.]\n [ 2. -2.]] and \nb = [-6.  4.]. What is the optimal value?",
+      "expected_answer": 6.0,
+      "model_answer": 6.0,
+      "raw_response": "6",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  4.   8.  36.   8. -36. -16. -32.  24.], under the constraints \nG * w <= q, where \nG = [[ 0. -4. -4. -2.  3.  1.  4. -4.]\n [-1. -3.  1. -2.  1.  0.  4. -4.]\n [ 0.  3. -2.  4.  4.  0. -3.  4.]\n [ 0.  2. -4. -2.  1.  3.  3. -2.]\n [-2.  0.  2.  2.  1. -3. -4. -3.]\n [-1. -3.  3. -2. -4. -3. -3.  1.]] and \nq = [-15.  -1.  16.   2. -12. -21.]. What is the minimum value achieved?",
+      "expected_answer": -8.0,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": false
+    },
+    {
+      "question": "Minimize the objective function c^T * x where \nc = [-10.  16.], subject to the constraints \nA * x <= b, where \nA = [[ 1. -1.]\n [ 2. -3.]\n [ 1. -4.]\n [ 2. -2.]] and \nb = [ 5.  4. -2.  2.]. What is the optimal value?",
+      "expected_answer": -4.0,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": false
+    },
+    {
+      "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ -4. -16.   8.   8.  -8.  -8.   0.  -8.   0.  -8.], under the constraints \nG * w <= q, where \nG = [[ 1.  4. -2. -2.  2.  2.  0.  2.  0.  2.]] and \nq = [32.]. What is the minimum value achieved?",
+      "expected_answer": -128.0,
+      "model_answer": -128.0,
+      "raw_response": "-128",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-10.], subject to \nM * y <= h, with \nM = [[ 0.]\n [-2.]\n [-4.]\n [-1.]\n [ 4.]\n [ 4.]\n [ 4.]\n [ 1.]\n [-1.]] and \nh = [ 3. -2. -4. -1.  4.  6.  5.  4.  0.]. What is the optimal objective value?",
+      "expected_answer": -10.0,
+      "model_answer": -10.0,
+      "raw_response": "-10",
+      "finish_reason": "stop",
+      "correct": true
+    },
+    {
+      "question": "Minimize the objective function c^T * x where \nc = [-6.  4. -4. 20. 50. 30.], subject to the constraints \nA * x <= b, where \nA = [[-2. -4. -3.  1.  1. -1.]\n [ 1. -4.  0.  4. -4.  4.]\n [ 0. -3. -1. -1. -4. -1.]\n [-1. -1.  4. -4. -3. -4.]\n [ 4.  4. -4. -2. -2. -4.]\n [-4.  2.  4.  0. -3. -1.]] and \nb = [-16. -10. -31. -25.  -6.  -7.]. What is the optimal value?",
+      "expected_answer": 282.0,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": false
+    }
+  ]
+}

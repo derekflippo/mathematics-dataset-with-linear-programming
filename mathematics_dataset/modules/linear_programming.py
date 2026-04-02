@@ -59,16 +59,23 @@ def basic_linear_programming(min_entropy, max_entropy):
 def non_trivial_linear_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
-  m = number.integer(entropy/2, signed=False, min_abs=1)
-  n = number.integer(entropy/2, signed=False, min_abs=1)
-  s0 = np.random.randn(m)
-  lamb0 = np.maximum(-s0, 0)
-  s0 = np.maximum(s0, 0)
-  #x0 is the optimal solution vector 
-  x0 = np.round(np.random.randn(n))
-  A = np.round(np.random.randn(m, n), 2)
-  b = A @ x0 + s0
-  c = -A.T @ lamb0
+  m = int(number.integer(entropy/2, signed=False, min_abs=1))
+  n = int(number.integer(entropy/2, signed=False, min_abs=1))
+  # Use integer inputs so displayed values are exact (no precision loss)
+  coeff_low, coeff_high = -4, 4
+  # Resample until optimal value (c^T @ x0) is nonzero
+  optimal_value = 0
+  while optimal_value == 0:
+    s0 = np.random.randint(coeff_low, coeff_high + 1, size=(m,)).astype(float)
+    while np.all(s0 >= 0):
+      s0 = np.random.randint(coeff_low, coeff_high + 1, size=(m,)).astype(float)
+    lamb0 = np.maximum(-s0, 0)
+    s0 = np.maximum(s0, 0)
+    x0 = np.random.randint(1, coeff_high + 1, size=(n,)).astype(float)
+    A = np.random.randint(coeff_low, coeff_high + 1, size=(m, n)).astype(float)
+    b = A @ x0 + s0
+    c = -A.T @ lamb0
+    optimal_value = c @ x0
   
   
   #c is the weights
@@ -77,15 +84,16 @@ def non_trivial_linear_programming(min_entropy, max_entropy):
   # Define and solve the CVXPY problem.
   x = cp.Variable(n)
 
-  #guarantee feasibility with x >= 0 
+  #guarantee feasibility and boundedness with x >= 0
   prob = cp.Problem(cp.Minimize(c.T@x),
-                  [A @ x <= b])
-  prob.solve()
+                  [A @ x <= b, x >= 0])
+  prob.solve(solver=cp.SCS, verbose=False)
 
   # Format arrays for readable output
-  A_str = np.array2string(A, precision=2, suppress_small=True)
-  b_str = np.array2string(b, precision=2, suppress_small=True)
-  c_str = np.array2string(c, precision=2, suppress_small=True)
+  A_str = np.array2string(A, precision=2, suppress_small=True, threshold=np.inf)
+  b_str = np.array2string(b, precision=2, suppress_small=True, threshold=np.inf)
+  c_str = np.array2string(c, precision=2, suppress_small=True, threshold=np.inf)
+  answer = round(prob.value)
 
   template = random.choice([
       'Minimize the objective function c^T * x where \nc = {c}, subject to the constraints \nA * x <= b, where \nA = {A} and \nb = {b}. What is the optimal value?',
@@ -93,8 +101,8 @@ def non_trivial_linear_programming(min_entropy, max_entropy):
       'Consider the optimization problem: minimize f(w) = p^T * w \nwith p = {c}, under the constraints \nG * w <= q, where \nG = {A} and \nq = {b}. What is the minimum value achieved?',
   ])
   return example.Problem(
-      question=example.question(context, template, c=c, b=b, A=A),
-      answer=prob.value)
+      question=example.question(context, template, c=c_str, b=b_str, A=A_str),
+      answer=answer)
 
 
 # def sequence_next_term(min_entropy, max_entropy):
