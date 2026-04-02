@@ -1,0 +1,402 @@
+[
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ -8. -12.  -8.   8.  10. -22.], under the constraints \nG * w <= q, where \nG = [[ 4. -3.  4. -3.  4. -3.]\n [ 3.  1.  0.  0. -1.  4.]\n [-2.  4.  4. -4. -3.  3.]] and \nq = [-1. 15. -1.]. What is the minimum value achieved?",
+    "answer": "-58"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-12.   6. -14.], subject to \nM * y <= h, with \nM = [[ 4. -3.  2.]\n [ 4.  1.  3.]\n [-2. -1.  2.]\n [ 4.  0. -2.]] and \nh = [15. 31. -3. 12.]. What is the optimal objective value?",
+    "answer": "-86"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-24.   0.  16.], subject to \nM * y <= h, with \nM = [[ 4.  0. -3.]\n [ 3.  4. -1.]\n [ 2.  0. -1.]\n [ 0.  1.  2.]] and \nh = [ 6. 14.  4.  5.]. What is the optimal objective value?",
+    "answer": "-40"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  4.   2.  -6. -22. -14.  22.], under the constraints \nG * w <= q, where \nG = [[-1. -4.  1.  4.  1. -4.]\n [ 0. -2.  0.  0. -4. -1.]\n [-3. -3.  4. -4. -3. -4.]\n [ 4. -3.  3.  3. -1. -1.]\n [ 3.  3.  4.  4. -2.  4.]\n [-4. -3. -1.  3. -1. -3.]\n [ 1.  1.  2.  4.  4. -4.]] and \nq = [ -9. -10. -18.   5.  26. -17.   6.]. What is the minimum value achieved?",
+    "answer": "10"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [13. -3.  6.  1. 11.  9.  9.  3.], subject to the constraints \nA * x <= b, where \nA = [[-3.  1.  0. -2. -1. -4. -4.  2.]\n [ 3. -1.  0.  0.  0.  2. -1. -1.]\n [ 4.  3. -4. -1. -1. -3.  1.  1.]\n [-2. -4. -2.  3. -2. -1. -3. -3.]\n [-3.  1. -4. -3.  2. -2.  3. -2.]\n [-4.  3. -2. -1. -4. -2. -1. -1.]] and \nb = [-16.   4.   5. -26.  -9. -27.]. What is the optimal value?",
+    "answer": "96"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  1.  23.   6. -11.   0.  10. -12. -13.   2.], under the constraints \nG * w <= q, where \nG = [[-4.  0.  1.  0.  2. -2.  4.  3.  0.]\n [ 1.  3.  3. -2.  4.  4.  1.  3.  3.]\n [ 1.  3.  4.  2.  3. -3.  4.  0.  3.]\n [-2.  0.  2. -2.  0.  3.  1.  4. -1.]\n [ 2. -3. -4.  3. -3.  2. -1.  4. -4.]\n [-3. -4.  0. -3.  0. -2. -1.  1.  0.]\n [ 1. -3.  4.  2. -4.  2. -4.  0.  0.]\n [-1. -4.  3.  0.  4.  2.  1.  1. -3.]\n [ 4. -2. -4.  1. -2. -4.  0. -3.  4.]] and \nq = [ 20.  36.  47.  18.  -7. -25.   3.  14. -24.]. What is the minimum value achieved?",
+    "answer": "-25"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [12. 16.  8.], under the constraints \nG * w <= q, where \nG = [[-3. -4. -2.]] and \nq = [-16.]. What is the minimum value achieved?",
+    "answer": "64"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 8. -4. 10.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  4. -2.]\n [ 3.  3. -4.]\n [-4. -4. -2.]\n [-3.  1. -2.]] and \nb = [ -2.  -6. -14.  -5.]. What is the optimal value?",
+    "answer": "34"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-10.  10.  -2.  -1.   2.   8.], under the constraints \nG * w <= q, where \nG = [[-3.  4.  1. -4.  2.  2.]\n [ 4. -4.  2.  0. -1. -3.]\n [-2.  2. -4.  1.  1.  1.]] and \nq = [-3. -6.  4.]. What is the minimum value achieved?",
+    "answer": "14"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [1.], under the constraints \nG * w <= q, where \nG = [[ 0.]\n [-1.]\n [-1.]] and \nq = [ 4. -2. -1.]. What is the minimum value achieved?",
+    "answer": "2"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-4.  1.], subject to \nM * y <= h, with \nM = [[ 3. -3.]\n [-3.  4.]\n [ 4. -1.]] and \nh = [-1. 11.  8.]. What is the optimal objective value?",
+    "answer": "-8"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [  8.  12.  20. -16.], subject to \nM * y <= h, with \nM = [[ 1.  2. -2. -3.]\n [ 1. -1. -1.  0.]\n [ 0.  3. -4.  3.]\n [-2. -1. -1.  2.]\n [ 0.  4. -3. -2.]\n [-3. -2. -4.  4.]\n [ 2. -4.  2.  3.]] and \nh = [-5. -2. 11.  1. -1.  1.  6.]. What is the optimal objective value?",
+    "answer": "4"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ 0. -8.  2. -2.], under the constraints \nG * w <= q, where \nG = [[ 0.  4. -1.  1.]] and \nq = [12.]. What is the minimum value achieved?",
+    "answer": "-24"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [6.], subject to \nM * y <= h, with \nM = [[-2.]] and \nh = [-2.]. What is the optimal objective value?",
+    "answer": "6"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ -3.   0.   6.   3. -12.   3.   9.], under the constraints \nG * w <= q, where \nG = [[ 1.  0. -2. -1.  4. -1. -3.]] and \nq = [-8.]. What is the minimum value achieved?",
+    "answer": "24"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [6. 6. 4. 0. 8. 8.], under the constraints \nG * w <= q, where \nG = [[-3. -3. -2.  0. -4. -4.]] and \nq = [-45.]. What is the minimum value achieved?",
+    "answer": "90"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 2. -8. -8. -6. -2.  6.  8.], subject to the constraints \nA * x <= b, where \nA = [[-1.  4.  4.  3.  1. -3. -4.]\n [ 2.  2.  4.  1.  4.  4.  0.]\n [ 1. -2. -3.  0.  0.  4. -3.]] and \nb = [ 20.  36. -11.]. What is the optimal value?",
+    "answer": "-40"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-7.], subject to \nM * y <= h, with \nM = [[ 3.]\n [ 1.]\n [-2.]\n [-4.]\n [ 0.]] and \nh = [ 6.  2. -3. -4.  2.]. What is the optimal objective value?",
+    "answer": "-14"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [  2.  -6.  16.  16. -20.], subject to \nM * y <= h, with \nM = [[-2. -2.  0. -4.  4.]\n [ 1. -4. -1.  2. -3.]\n [ 1.  3. -4. -1.  2.]\n [-2.  4.  2.  1.  0.]\n [ 4.  3.  1.  3.  4.]] and \nh = [-14.  -2.   1.   9.  34.]. What is the optimal objective value?",
+    "answer": "38"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 2.  7. -8.  5. -3.  2. -4.], subject to \nM * y <= h, with \nM = [[-4. -1.  0.  3. -1. -2.  0.]\n [-1. -3. -4. -2. -4.  2.  1.]\n [ 1. -3.  4. -4.  2.  0.  2.]] and \nh = [ -3. -18.   1.]. What is the optimal objective value?",
+    "answer": "1"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  6.   2. -19. -16.], under the constraints \nG * w <= q, where \nG = [[ 1.  3. -1.  2.]\n [-4.  0.  3.  4.]\n [ 1. -2.  3.  0.]\n [-3. -2.  1. -4.]] and \nq = [ 12.   8.   6. -13.]. What is the minimum value achieved?",
+    "answer": "-72"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 0. 12. 16.], subject to the constraints \nA * x <= b, where \nA = [[ 0. -3. -4.]\n [-1. -2. -2.]\n [ 4.  2.  2.]\n [-2. -4.  3.]\n [ 1. -4.  1.]\n [ 1. -4. -2.]] and \nb = [-24. -13.  18.  -7. -11. -19.]. What is the optimal value?",
+    "answer": "96"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 1. -1.], subject to \nM * y <= h, with \nM = [[-4. -3.]\n [ 4.  3.]\n [-1.  1.]] and \nh = [-12.  17.   2.]. What is the optimal objective value?",
+    "answer": "-2"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-5.], subject to \nM * y <= h, with \nM = [[ 2.]\n [ 0.]\n [ 3.]\n [-4.]\n [ 0.]\n [ 3.]\n [-4.]\n [ 2.]\n [-1.]\n [ 2.]] and \nh = [ 4.  1.  6. -5.  0.  8. -8.  4.  0.  4.]. What is the optimal objective value?",
+    "answer": "-10"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ 12.  -2. -33.  -4. -16.  -5.   0.  27.], under the constraints \nG * w <= q, where \nG = [[-4.  2.  1.  4.  4. -3.  0. -3.]\n [-3.  2.  4.  1.  0.  1. -3. -2.]\n [ 0.  2.  3. -2.  4.  2. -2. -4.]\n [ 1. -2.  4. -1.  3.  1.  3. -4.]] and \nq = [-11.  -6.   6.   5.]. What is the minimum value achieved?",
+    "answer": "15"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-4.], under the constraints \nG * w <= q, where \nG = [[-1.]\n [ 2.]\n [ 2.]\n [ 2.]] and \nq = [-4. 12. 12.  8.]. What is the minimum value achieved?",
+    "answer": "-16"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ 6. -4.], under the constraints \nG * w <= q, where \nG = [[-2.  1.]\n [-3.  2.]] and \nq = [-4. -5.]. What is the minimum value achieved?",
+    "answer": "10"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [12.  0. -4.], under the constraints \nG * w <= q, where \nG = [[-3.  0.  1.]\n [ 2. -4.  4.]\n [ 2. -1. -4.]] and \nq = [-9. 15. -5.]. What is the minimum value achieved?",
+    "answer": "36"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ -2. -17. -19.  16.  11.   8.   3.  16.], under the constraints \nG * w <= q, where \nG = [[-2.  1.  3.  0. -3. -4.  1. -4.]\n [-1.  0. -3.  0. -1. -2. -4.  1.]\n [ 0.  2.  4.  0.  0.  4.  1. -3.]\n [ 1.  4.  4. -4. -2. -1. -1. -3.]\n [-1. -2.  1. -4. -3.  2. -4.  3.]\n [-1. -2.  2. -2. -3. -2. -2. -2.]] and \nq = [-21. -31.  33.   1.  -7. -27.]. What is the minimum value achieved?",
+    "answer": "17"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [  9.  -1.  16.  -6.   7.   1. -15. -18.  -5.], subject to \nM * y <= h, with \nM = [[-2.  1. -4.  2. -2. -1.  4.  4.  2.]\n [ 3.  4.  2. -3.  2. -3.  2. -2. -3.]\n [-3.  4.  3. -1. -1.  2.  1.  3. -2.]\n [-1. -3.  0. -2.  1.  3. -1.  2. -3.]] and \nh = [  5.   8.  12. -17.]. What is the optimal objective value?",
+    "answer": "-3"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-5. -4.  2. -3.  2.  3.], under the constraints \nG * w <= q, where \nG = [[-3. -3.  1.  1. -2.  3.]\n [ 1.  2. -2.  4. -3. -1.]\n [ 2. -2.  3.  3. -4. -4.]\n [ 4.  2.  0. -1.  1. -2.]] and \nq = [-12.  11.   3.  13.]. What is the minimum value achieved?",
+    "answer": "-24"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-12.  -8.   8.   4. -12.], under the constraints \nG * w <= q, where \nG = [[ 3.  2. -2. -1.  3.]] and \nq = [-1.]. What is the minimum value achieved?",
+    "answer": "4"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  0.  20. -12.  -8.  20.], under the constraints \nG * w <= q, where \nG = [[ 2.  1.  1.  0.  1.]\n [-3. -2.  0.  3.  4.]\n [-3. -4.  4.  0. -4.]\n [ 4. -1.  2.  2. -2.]\n [ 3. -1. -1.  2. -1.]] and \nq = [ 20.   8. -24.  26.   9.]. What is the minimum value achieved?",
+    "answer": "60"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ -7.  16. -15.   4.], subject to \nM * y <= h, with \nM = [[-1. -4.  3.  0.]\n [ 2. -3.  3. -1.]\n [ 0. -4. -3.  0.]] and \nh = [-4.  4. -6.]. What is the optimal objective value?",
+    "answer": "-12"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-3. -3.  4. -2.  0.], subject to the constraints \nA * x <= b, where \nA = [[ 3.  3. -4.  2.  0.]\n [-3. -1.  3.  4. -1.]] and \nb = [22.  9.]. What is the optimal value?",
+    "answer": "-22"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 0.  0. 22.  0.], subject to \nM * y <= h, with \nM = [[-2.  2. -3.  0.]\n [-3. -4. -2. -3.]\n [ 1. -3.  4. -1.]\n [ 1. -1. -4.  0.]] and \nh = [ -7. -27.   1.  -2.]. What is the optimal objective value?",
+    "answer": "22"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [  8.   4.   4. -16. -12.], subject to \nM * y <= h, with \nM = [[ 0.  4.  0.  0. -1.]\n [-2. -1. -1.  4.  3.]] and \nh = [ 3. 15.]. What is the optimal objective value?",
+    "answer": "-60"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [0. 3. 2. 4. 2.], subject to the constraints \nA * x <= b, where \nA = [[ 0. -3. -2. -4. -2.]\n [-1. -4.  2. -3.  4.]] and \nb = [-26.  -8.]. What is the optimal value?",
+    "answer": "26"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 6. -4.], subject to the constraints \nA * x <= b, where \nA = [[-3.  2.]\n [-3. -3.]] and \nb = [-4. -7.]. What is the optimal value?",
+    "answer": "8"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-28.  -6.  23.], subject to the constraints \nA * x <= b, where \nA = [[ 2.  0.  4.]\n [ 2.  3.  1.]\n [-3. -1. -1.]\n [ 3.  3. -4.]\n [ 1.  2.  2.]\n [ 4. -2. -3.]\n [-3.  1. -3.]\n [ 1. -2. -4.]\n [ 0. -4. -1.]] and \nb = [ 10.  10. -11.   8.   7.   7.  -8.  -3.  -5.]. What is the optimal value?",
+    "answer": "-67"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-13.  18. -27.  12.  22.], under the constraints \nG * w <= q, where \nG = [[-1.  2.  2. -3.  0.]\n [-2. -2.  3.  4. -4.]\n [ 0. -3.  3.  1.  2.]\n [ 0. -1.  3.  2.  4.]\n [-2.  2. -4. -1. -1.]\n [ 2.  0.  0. -2.  3.]\n [ 2. -4.  3. -3. -2.]\n [ 0. -3.  2.  4. -4.]\n [ 3.  1.  2. -4. -4.]] and \nq = [  9.   2.   6.  24. -12.   4. -12.  -4.  -1.]. What is the minimum value achieved?",
+    "answer": "19"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 0. -3.  0.  0.], subject to the constraints \nA * x <= b, where \nA = [[0. 1. 0. 0.]] and \nb = [4.]. What is the optimal value?",
+    "answer": "-12"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-4.  3.  0.  4. -2.], under the constraints \nG * w <= q, where \nG = [[ 4. -3.  0. -4.  2.]] and \nq = [-3.]. What is the minimum value achieved?",
+    "answer": "3"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 4. -1.], subject to the constraints \nA * x <= b, where \nA = [[-4.  1.]] and \nb = [-1.]. What is the optimal value?",
+    "answer": "1"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-8. -6.  2.  0.], subject to the constraints \nA * x <= b, where \nA = [[ 2.  1.  2.  1.]\n [-4.  0. -1.  2.]\n [ 1.  2. -2. -4.]\n [ 3.  1.  1.  4.]\n [ 1. -2.  1. -2.]] and \nb = [ 20. -18.  -2.  23.   4.]. What is the optimal value?",
+    "answer": "-42"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [25.], under the constraints \nG * w <= q, where \nG = [[ 2.]\n [-2.]\n [ 3.]\n [ 1.]\n [-4.]\n [-3.]] and \nq = [ 4. -1.  3.  1. -4. -3.]. What is the minimum value achieved?",
+    "answer": "25"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-1.], under the constraints \nG * w <= q, where \nG = [[ 2.]\n [ 4.]\n [-3.]] and \nq = [ 4. 12. -6.]. What is the minimum value achieved?",
+    "answer": "-2"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [0. 0. 1.], under the constraints \nG * w <= q, where \nG = [[ 0.  0. -1.]] and \nq = [-3.]. What is the minimum value achieved?",
+    "answer": "3"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [1.], subject to the constraints \nA * x <= b, where \nA = [[ 1.]\n [-1.]\n [ 3.]\n [ 0.]\n [ 4.]\n [-1.]] and \nb = [ 7. -3. 11.  2. 13. -2.]. What is the optimal value?",
+    "answer": "3"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 0.  3. -2. -4.  0. -4.], subject to \nM * y <= h, with \nM = [[ 0. -3.  2.  4.  0.  4.]] and \nh = [20.]. What is the optimal objective value?",
+    "answer": "-20"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [  2. -10.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  2.]\n [ 1.  3.]\n [-3.  2.]\n [ 0. -3.]\n [-2.  1.]\n [ 0.  0.]\n [ 0. -3.]] and \nb = [ 7. 12. -3. -9.  1.  0. -9.]. What is the optimal value?",
+    "answer": "-24"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [10.  0. -4.  1. -4.  8.], subject to \nM * y <= h, with \nM = [[-2.  1. -1.  0. -2. -4.]\n [-3.  1.  2. -1.  1. -3.]\n [-2. -3.  1.  1.  4.  2.]] and \nh = [-17.  -8.   9.]. What is the optimal objective value?",
+    "answer": "24"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 6. -9.], subject to \nM * y <= h, with \nM = [[-2.  3.]] and \nh = [8.]. What is the optimal objective value?",
+    "answer": "-24"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 2. 10.  5.], subject to \nM * y <= h, with \nM = [[-2. -3.  3.]\n [ 0.  0. -1.]\n [-1. -2.  2.]\n [ 1. -2. -4.]] and \nh = [-4. -1.  2. -4.]. What is the optimal objective value?",
+    "answer": "19"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ -9.   8.   1.   6.   9. -16.   3.], subject to the constraints \nA * x <= b, where \nA = [[ 3. -3.  1.  4.  3.  3.  0.]\n [-3. -2. -2. -1. -3.  4.  0.]\n [ 0.  1. -1. -1.  0. -4.  4.]\n [ 2. -4.  3. -2. -1.  1. -2.]\n [ 2.  4.  1. -3. -4.  4.  4.]\n [ 4.  4.  0.  3.  0. -4.  2.]\n [ 3. -1.  0. -3. -3.  3. -1.]\n [ 0. -4.  2. -4. -4. -4.  4.]\n [ 0.  4. -3. -4. -3.  3.  2.]] and \nb = [ 37. -18.  -4. -10.  11.  21.  -7. -34.  -4.]. What is the optimal value?",
+    "answer": "2"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [4. 4.], under the constraints \nG * w <= q, where \nG = [[-2. -2.]\n [-2. -1.]] and \nq = [-16. -12.]. What is the minimum value achieved?",
+    "answer": "32"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-12.  -8.   4.], subject to \nM * y <= h, with \nM = [[-3. -4. -3.]\n [ 3.  2. -1.]] and \nh = [-27.  16.]. What is the optimal objective value?",
+    "answer": "-64"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-17.   8.  16.  -1.  15. -15.], subject to \nM * y <= h, with \nM = [[ 3.  1.  2.  2.  0.  1.]\n [ 1.  0.  3. -3. -4. -4.]\n [ 2.  2. -3. -2. -1.  0.]\n [ 1.  2.  2.  2. -1. -3.]\n [ 4. -3. -4. -1. -1.  3.]\n [ 3. -3. -2.  2. -4.  4.]] and \nh = [ 25. -21.  -8.  11. -10.   2.]. What is the optimal objective value?",
+    "answer": "20"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [12.], subject to the constraints \nA * x <= b, where \nA = [[-4.]\n [ 3.]\n [ 1.]\n [-2.]] and \nb = [-12.   9.   6.  -6.]. What is the optimal value?",
+    "answer": "36"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-12.], subject to the constraints \nA * x <= b, where \nA = [[ 3.]\n [ 1.]\n [ 0.]\n [ 2.]\n [ 4.]\n [ 1.]\n [ 3.]\n [ 4.]\n [-1.]] and \nb = [ 6.  2.  4.  8.  9.  2.  6.  9. -2.]. What is the optimal value?",
+    "answer": "-24"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [18.], subject to the constraints \nA * x <= b, where \nA = [[-3.]\n [-4.]\n [-1.]\n [ 1.]] and \nb = [-10. -16.  -4.   4.]. What is the optimal value?",
+    "answer": "72"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-8.  0.  4.], under the constraints \nG * w <= q, where \nG = [[ 2. -4.  3.]\n [ 2.  0. -1.]\n [-4.  3. -2.]\n [-3. -1. -2.]] and \nq = [  5.   3.  -6. -15.]. What is the minimum value achieved?",
+    "answer": "-12"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ 0. -5. -8.  7. -6. 21.], under the constraints \nG * w <= q, where \nG = [[-3.  1.  1.  1.  0. -3.]\n [-4. -1.  2. -1.  1. -3.]\n [ 3. -3.  2. -4.  4. -4.]\n [-1.  4.  0.  1. -2. -1.]\n [ 3. -1. -4.  2.  1.  2.]\n [-1.  4. -2. -1. -3.  2.]] and \nq = [ -1.  -3.   3.   0.   3. -12.]. What is the minimum value achieved?",
+    "answer": "-7"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-1.  4. -4. -2.], subject to \nM * y <= h, with \nM = [[ 1. -4.  4.  2.]] and \nh = [8.]. What is the optimal objective value?",
+    "answer": "-8"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-12.   9.   3.  12.  12.], under the constraints \nG * w <= q, where \nG = [[-2. -1. -1.  3. -4.]\n [ 4. -3. -1. -4. -4.]] and \nq = [-15. -16.]. What is the minimum value achieved?",
+    "answer": "48"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-8.  2. -7. 10.  6.  6. 17.], under the constraints \nG * w <= q, where \nG = [[ 1. -2.  3. -2.  0. -4.  2.]\n [ 3.  0. -4.  0.  2.  2. -3.]\n [ 0. -2. -4.  3. -2. -2. -1.]\n [-1.  0. -2.  1. -3. -1.  2.]\n [ 1.  0.  2. -2. -2. -1. -4.]] and \nq = [ -7.  -2. -28.  -9.  -9.]. What is the minimum value achieved?",
+    "answer": "45"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [12.], subject to the constraints \nA * x <= b, where \nA = [[-3.]\n [ 3.]] and \nb = [-6.  9.]. What is the optimal value?",
+    "answer": "24"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [6. 0.], subject to \nM * y <= h, with \nM = [[-2.  0.]\n [-3.  4.]] and \nh = [-6. -2.]. What is the optimal objective value?",
+    "answer": "18"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [  7.   9.  28. -24.  13.   0.   8.], subject to the constraints \nA * x <= b, where \nA = [[-1. -3. -4.  4.  1.  0. -4.]\n [ 3. -4. -4. -4.  0.  2.  2.]\n [-1.  0. -4.  3. -4.  0.  1.]\n [ 0. -2.  0. -3. -3.  3. -2.]] and \nb = [-14. -14. -17. -17.]. What is the optimal value?",
+    "answer": "110"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-2. -3.  2. -3.  3.  2.  4.  3.], subject to \nM * y <= h, with \nM = [[ 2.  3. -2.  3. -3. -2. -4. -3.]] and \nh = [-14.]. What is the optimal objective value?",
+    "answer": "14"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 0.  1. -2.  2.  2. -1. -3. -2. -2. -4.  3.], subject to \nM * y <= h, with \nM = [[ 0.  0. -3.  3.  2. -2.  1.  3. -1.  1.  3.]\n [ 0. -1.  2. -2. -2.  1.  3.  2.  2.  4. -3.]] and \nh = [26.  8.]. What is the optimal objective value?",
+    "answer": "-8"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-1.  8.  0. -1.  9. -8. -3. 15.], subject to \nM * y <= h, with \nM = [[-1.  2.  1.  1. -3.  0. -4. -2.]\n [ 0. -1.  1. -1. -4. -3.  4.  1.]\n [ 0. -4. -1.  0.  0.  4.  3. -4.]\n [ 3. -3. -1.  0.  1.  3.  1. -4.]] and \nh = [-11. -13.  -4.   5.]. What is the optimal objective value?",
+    "answer": "38"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-12.   9.], subject to \nM * y <= h, with \nM = [[ 4. -3.]\n [ 3.  4.]] and \nh = [ 6. 18.]. What is the optimal objective value?",
+    "answer": "-18"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-12.  -9.   3.   3.  -9.   9.], under the constraints \nG * w <= q, where \nG = [[ 4.  3. -1. -1.  3. -3.]] and \nq = [10.]. What is the minimum value achieved?",
+    "answer": "-30"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-12. -16.  12.   4.   8.   4.], subject to the constraints \nA * x <= b, where \nA = [[ 3.  4. -3. -1. -2. -1.]\n [-2.  3. -1.  1. -2.  4.]] and \nb = [ 6. 11.]. What is the optimal value?",
+    "answer": "-24"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [12.  0.  3. 12.], under the constraints \nG * w <= q, where \nG = [[-4.  0. -1. -4.]] and \nq = [-16.]. What is the minimum value achieved?",
+    "answer": "48"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 2. -4.  0.  1.  3.], subject to the constraints \nA * x <= b, where \nA = [[-2.  4.  0. -1. -3.]\n [ 1.  0.  4.  1. -3.]\n [-3.  3. -4.  0.  4.]\n [ 2.  1. -3.  3. -2.]\n [ 1.  0. -3.  3.  1.]\n [ 4.  4.  3. -1. -1.]] and \nb = [-11.   7.   8.   7.  14.  29.]. What is the optimal value?",
+    "answer": "11"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [  2. -13.  -6.  -2.   4.  10.  -1.   6.], under the constraints \nG * w <= q, where \nG = [[ 0.  0. -1. -2.  1. -1. -2. -1.]\n [ 3. -2. -3. -1.  1. -1.  0.  4.]\n [ 3. -4.  1.  4. -4. -4. -4. -3.]\n [-1.  2.  2.  2.  2. -2. -3.  4.]\n [ 0.  4.  2.  1. -2. -2.  1. -2.]\n [-2.  1.  0. -1.  2. -4. -2.  0.]\n [-4. -3. -1.  3.  4.  0. -4. -4.]\n [-1.  1.  3. -4.  4. -1. -2. -1.]] and \nq = [-17.   9. -21.   5.  -4. -26. -18. -15.]. What is the minimum value achieved?",
+    "answer": "38"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [12. 12.], subject to \nM * y <= h, with \nM = [[-3. -3.]\n [ 2. -1.]\n [-2. -2.]\n [-4. -4.]] and \nh = [-18.   5. -11. -28.]. What is the optimal objective value?",
+    "answer": "84"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-13.   4. -16.], subject to \nM * y <= h, with \nM = [[-2.  1.  4.]\n [ 1.  4.  0.]\n [ 1. -4.  0.]\n [ 1. -1.  4.]\n [ 3. -2.  4.]\n [ 3. -1. -2.]] and \nh = [ 9.  8.  1. 21. 26.  5.]. What is the optimal objective value?",
+    "answer": "-112"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 6. -6. -9.  0. -9.  3.  3.], subject to \nM * y <= h, with \nM = [[-2. -4. -2. -1.  0.  3. -1.]\n [-2.  2.  3.  0.  3. -1. -1.]] and \nh = [-28.  14.]. What is the optimal objective value?",
+    "answer": "-42"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [4. 2.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  3.]\n [-3. -2.]\n [ 4. -2.]\n [ 0. -2.]\n [-4. -1.]\n [-3. -2.]\n [-2.  2.]] and \nb = [ 12. -14.   0.  -8.  -8. -14.   4.]. What is the optimal value?",
+    "answer": "16"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-1. -2. -3.  4.], subject to \nM * y <= h, with \nM = [[ 1.  2.  3. -4.]] and \nh = [10.]. What is the optimal objective value?",
+    "answer": "-10"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [ 4. -1. -4.], subject to \nM * y <= h, with \nM = [[-1.  1. -2.]\n [-4.  1.  4.]] and \nh = [0. 2.]. What is the optimal objective value?",
+    "answer": "-2"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-1. -8. 28. 15. 22.], subject to \nM * y <= h, with \nM = [[ 1.  0. -3. -1.  0.]\n [-1.  1.  0. -2. -3.]\n [ 1.  0. -3. -4. -3.]\n [ 4. -4. -3.  3.  4.]\n [ 4.  1. -2.  4.  4.]\n [-3.  1. -3. -1. -4.]] and \nh = [  0.  -5.  -6.   5.  26. -16.]. What is the optimal objective value?",
+    "answer": "29"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-14.], under the constraints \nG * w <= q, where \nG = [[ 2.]\n [-1.]\n [ 0.]\n [ 1.]\n [-1.]\n [ 4.]] and \nq = [ 4. -2.  0.  2. -2.  8.]. What is the minimum value achieved?",
+    "answer": "-28"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-32.   8.   0.  -8.], under the constraints \nG * w <= q, where \nG = [[ 4. -4. -1.  3.]\n [ 2. -4. -3.  4.]\n [ 4.  2.  1. -1.]\n [ 2.  3. -4.  4.]\n [-1. -1. -1. -2.]\n [-1.  1.  1. -4.]\n [-4.  3. -3.  1.]\n [ 0.  3.  4.  2.]] and \nq = [ 19.  19.  11.  22. -10. -17.  -6.  16.]. What is the minimum value achieved?",
+    "answer": "-120"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-17. -16.  23.  10.  11. -18. -36.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  0. -1. -2. -4.  4.  4.]\n [ 2.  4. -2.  3. -4. -1.  4.]\n [-3.  3.  2.  0.  2.  2.  0.]\n [-4.  3.  0. -3.  1.  2. -3.]\n [-2. -1.  1. -2.  3.  0.  3.]\n [-4. -1. -4. -4.  0. -2.  2.]\n [ 4.  2.  0. -1.  3. -2.  4.]\n [ 0. -1. -1. -1.  0. -1.  0.]\n [-1.  0. -4.  1. -2.  4.  3.]\n [ 2.  3. -4.  1. -3.  4.  1.]] and \nb = [ -5.   9.  28.   4.  12. -28.  31.  -8.  -7.   3.]. What is the optimal value?",
+    "answer": "-83"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-3. -2.  9. -5. -1.], under the constraints \nG * w <= q, where \nG = [[ 0.  0.  4. -4. -3.]\n [-3.  2.  0. -1.  1.]\n [ 0. -1. -3. -1. -2.]\n [ 1.  2.  1.  3.  3.]\n [-2.  0. -2. -4. -3.]] and \nq = [ -1.   1. -10.  18. -14.]. What is the minimum value achieved?",
+    "answer": "-14"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [2. 8.], subject to the constraints \nA * x <= b, where \nA = [[-1. -4.]] and \nb = [-12.]. What is the optimal value?",
+    "answer": "24"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [2. 7.], subject to the constraints \nA * x <= b, where \nA = [[ 0. -1.]\n [-3. -1.]\n [-1. -2.]\n [-1. -2.]\n [-3.  2.]\n [ 2.  0.]] and \nb = [-2. -5. -5. -5.  5.  3.]. What is the optimal value?",
+    "answer": "16"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [4.], subject to the constraints \nA * x <= b, where \nA = [[ 4.]\n [-4.]\n [ 2.]\n [-4.]\n [ 4.]\n [ 2.]\n [ 1.]] and \nb = [ 7. -2.  2. -4.  4.  2.  1.]. What is the optimal value?",
+    "answer": "4"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [9. 9.], under the constraints \nG * w <= q, where \nG = [[-3. -3.]] and \nq = [-24.]. What is the minimum value achieved?",
+    "answer": "72"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [  5.   9.  29.  -2.  -7.   3.  -7.  17. -41.], subject to \nM * y <= h, with \nM = [[-1.  3. -1.  2. -1. -3.  3. -2.  3.]\n [ 2.  2. -4. -1.  4.  1.  4. -4.  4.]\n [-4. -4. -4.  1. -1.  2. -3.  1.  4.]\n [ 2. -2.  0.  2. -4. -4. -4. -3.  4.]\n [ 1. -1.  2. -1.  0. -4.  2.  0.  1.]\n [-4. -4. -3.  3. -4.  4. -2.  2. -1.]\n [ 0. -2.  2.  0. -4. -2.  1.  2. -4.]] and \nh = [  5.   9. -15. -10.   3. -20. -15.]. What is the optimal objective value?",
+    "answer": "23"
+  },
+  {
+    "question": "Find the minimum value of the linear program: minimize z = d^T * y \nwhere d = [-20. -14.   2.  14.], subject to \nM * y <= h, with \nM = [[ 4.  0.  4.  4.]\n [-1. -3. -3.  1.]\n [ 3.  0. -3. -2.]\n [ 4.  3.  1.  3.]\n [ 1.  4. -3. -3.]\n [ 1.  4.  1. -1.]\n [ 4.  3.  3. -4.]\n [-1.  2. -3. -3.]] and \nh = [ 32. -17. -15.  29.  -8.  18.  13. -16.]. What is the optimal objective value?",
+    "answer": "-12"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [11.  6. -7.], subject to the constraints \nA * x <= b, where \nA = [[ 0.  4.  3.]\n [ 4. -2.  2.]\n [ 1. -4.  1.]\n [ 1.  0. -2.]\n [-3. -3.  0.]\n [-3.  2. -3.]\n [ 1.  1.  3.]\n [-2.  1.  3.]\n [-4. -2. -2.]\n [-1. -3. -2.]] and \nb = [ 19.   9. -11.   1. -18.  -3.  10.   1. -22. -17.]. What is the optimal value?",
+    "answer": "50"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [ -4. -13.  17.], under the constraints \nG * w <= q, where \nG = [[ 2. -3.  1.]\n [ 0.  4. -3.]\n [-1. -4. -1.]\n [ 3.  4. -2.]\n [-2.  1. -4.]\n [ 1.  0.  2.]\n [ 0. -4.  0.]] and \nq = [ 6.  1. -7.  8. -7.  4. -4.]. What is the minimum value achieved?",
+    "answer": "-4"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-2.], subject to the constraints \nA * x <= b, where \nA = [[-2.]\n [ 1.]\n [-3.]\n [ 0.]\n [ 3.]\n [-3.]] and \nb = [-2.  1. -1.  0.  3. -3.]. What is the optimal value?",
+    "answer": "-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-4.], subject to the constraints \nA * x <= b, where \nA = [[-2.]\n [ 3.]\n [ 4.]\n [ 1.]\n [ 2.]] and \nb = [-2. 11. 12.  5. 10.]. What is the optimal value?",
+    "answer": "-12"
+  },
+  {
+    "question": "Consider the optimization problem: minimize f(w) = p^T * w \nwith p = [-9. 10. -8.], under the constraints \nG * w <= q, where \nG = [[-1. -1.  0.]\n [ 1.  2.  0.]\n [-1.  1.  2.]\n [ 1. -2. -3.]\n [ 2. -3.  2.]] and \nq = [-3.  4.  9. -8.  9.]. What is the minimum value achieved?",
+    "answer": "-40"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "question": "Consider the convex quadratically constrained quadratic program over x in R^3:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..2,\nand ||x||_2^2 <= 29.697.\n\nQ_0 = [[9, 6, -6], [6, 7, -5], [-6, -5, 7]]\nc_0 = [-1, 2, -3]\nQ_1 = [[6.5, 3, 3], [3, 5.5, 0], [3, 0, 6.5]], c_1 = [-2, -2, 1], d_1 = 19.0\nQ_2 = [[9.5, 2, -6], [2, 4.5, -4], [-6, -4, 8.5]], c_2 = [3, -2, 2], d_2 = 56.0\n\nWhat is the minimum value of the objective (rounded to 3 decimals)?",
+    "answer": "-2.683"
+  },
+  {
+    "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 27.416.\n\nQ_0 = [[3, -2], [-2, 5]]\nc_0 = [1, -1]\nQ_1 = [[1.5, -2], [-2, 8.5]], c_1 = [-1, 0], d_1 = 44.5\n\nWhat is the minimum value of the objective (rounded to 3 decimals)?",
+    "answer": "-0.182"
+  },
+  {
+    "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 16.0.\n\nQ_0 = [[6, -2], [-2, 9]]\nc_0 = [2, 1]\nQ_1 = [[5.5, 4], [4, 4.5]], c_1 = [2, -2], d_1 = 7.5\n\nWhat is the minimum value of the objective (rounded to 3 decimals)?",
+    "answer": "-0.5"
+  }
+]

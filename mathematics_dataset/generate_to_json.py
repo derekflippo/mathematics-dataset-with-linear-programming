@@ -21,6 +21,7 @@ from __future__ import print_function
 
 import json
 import os
+import shutil
 
 # Dependency imports
 from absl import app
@@ -43,7 +44,8 @@ def main(unused_argv):
 
   output_dir = os.path.expanduser(FLAGS.output_dir)
   if os.path.exists(output_dir):
-    logging.fatal('output dir %s already exists', output_dir)
+    logging.info('Removing existing output dir %s', output_dir)
+    shutil.rmtree(output_dir)
   logging.info('Writing to %s', output_dir)
   os.makedirs(output_dir)
 
