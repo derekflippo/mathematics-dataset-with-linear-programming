@@ -6,16 +6,16 @@ from __future__ import print_function
 
 import functools
 import random
+import numpy as np
 import cvxpy as cp
 
 from mathematics_dataset import example
 from mathematics_dataset.util import composition
-from mathematics_dataset.sample import number
 
 
-_ENTROPY_TRAIN = (1, 4)
-_ENTROPY_INTERPOLATE = (5, 6)
-_ENTROPY_EXTRAPOLATE = (7, 8)
+_ENTROPY_TRAIN = (4, 10)
+_ENTROPY_INTERPOLATE = (8, 8)
+_ENTROPY_EXTRAPOLATE = (12, 12)
 
 
 def _make_modules(entropy):
@@ -37,100 +37,142 @@ def test_extra():
   return _make_modules(_ENTROPY_EXTRAPOLATE)
 
 
+def _safe_round(x, ndigits=3):
+  return round(float(x), ndigits)
+
+
+def _make_monomial(x, exponents, coeff):
+  term = coeff
+  for i in range(len(exponents)):
+    if exponents[i] != 0:
+      term *= cp.power(x[i], exponents[i])
+  return term
+
+
+def _monomial_str(exponents, coeff):
+  parts = []
+  for i in range(len(exponents)):
+    if exponents[i] == 1:
+      parts.append(f"x{i+1}")
+    elif exponents[i] > 1:
+      parts.append(f"x{i+1}^{exponents[i]}")
+    elif exponents[i] < 0:
+      parts.append(f"x{i+1}^{exponents[i]}")
+  if not parts:
+    return str(coeff)
+  if coeff == 1:
+    return "*".join(parts)
+  return str(coeff) + "*" + "*".join(parts)
+
+
 def basic_geometric_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
 
-  # coefficients
-  a = number.integer(entropy/3, signed=False, min_abs=1)
-  b = number.integer(entropy/3, signed=False, min_abs=1)
-  c = number.integer(entropy/3, signed=False, min_abs=1)
+  # dimension and variables
+  n = random.randint(4, 6)
+  x = cp.Variable(n, pos=True)
 
-  e = number.integer(entropy/3, signed=False, min_abs=1)
-  f = number.integer(entropy/3, signed=False, min_abs=1)
+  # feasible reference point
+  x_star = np.random.uniform(1.2, 2.0, size=n)
 
-  # guarantee feasibility
-  d = b + c + number.integer(entropy/3, signed=False, min_abs=2)
-  g = e + f + number.integer(entropy/3, signed=False, min_abs=2)
+  # objective construction
+  obj_terms = random.randint(3, 5)
+  objective_expr = 0
+  obj_strings = []
 
-  # exponents
-  p = random.randint(1, 3)
-  q = random.randint(1, 3)
+  used = set()
+  for _ in range(obj_terms):
+    coeff = random.randint(1, 10)
 
-  x = cp.Variable(pos=True)
-  y = cp.Variable(pos=True)
+    while True:
+      exponents = tuple(np.random.randint(-1, 3, size=n))
+      if all(e == 0 for e in exponents):
+        continue
+      if all(e >= 0 for e in exponents):
+        exponents = list(exponents)
+        exponents[random.randint(0, n-1)] = -1
+        exponents = tuple(exponents)
+      if exponents not in used:
+        used.add(exponents)
+        break
 
-  objective = cp.Minimize(a * x**p * y**q)
+    term = _make_monomial(x, exponents, coeff)
+    objective_expr += term
+    obj_strings.append(_monomial_str(exponents, coeff))
 
-  constraints = [
-      b*x + c*y <= d,
-      e*x*y <= g,
-      x*y >= 1
-  ]
+  objective = cp.Minimize(objective_expr)
+  obj_str = " + ".join(obj_strings)
 
-  constraint_strings = [
-      f"{b}x + {c}y <= {d}",
-      f"{e}xy <= {g}",
-      "xy >= 1"
-  ]
+  constraints = []
+  constraint_strings = []
 
-  # additional constraints
-  if random.random() < 0.5:
-    h = number.integer(entropy/3, signed=False, min_abs=1)
-    constraints.append(x <= h)
-    constraint_strings.append(f"x <= {h}")
+  # upper bound constraints
+  num_constraints = random.randint(3, 5)
 
-  if random.random() < 0.5:
-    constraints.append(y <= g)
-    constraint_strings.append(f"y <= {g}")
+  for _ in range(num_constraints):
+    expr = 0
+    expr_val = 0
+    term_strings = []
 
-  if random.random() < 0.5:
-    constraints.append(x**2 * y <= g + d)
-    constraint_strings.append(f"x^2 y <= {g + d}")
+    used = set()
+    for _ in range(random.randint(2, 3)):
+      coeff = random.randint(1, 5)
 
-  if random.random() < 0.5:
-    constraints.append(x / y <= g)
-    constraint_strings.append(f"x/y <= {g}")
+      while True:
+        exponents = tuple(np.random.randint(1, 3, size=n))
+        if exponents not in used:
+          used.add(exponents)
+          break
 
-  if random.random() < 0.5:
-    constraints.append(b*x + c*y + e*x*y <= d + g)
-    constraint_strings.append(f"{b}x + {c}y + {e}xy <= {d + g}")
+      term = _make_monomial(x, exponents, coeff)
+      expr += term
+
+      val = coeff * np.prod(x_star ** exponents)
+      expr_val += val
+
+      term_strings.append(_monomial_str(exponents, coeff))
+
+    bound = expr_val * random.uniform(0.35, 0.55)
+
+    constraints.append(expr <= bound)
+    constraint_strings.append("(" + " + ".join(term_strings) + f") <= {round(bound,2)}")
+
+  # lower coupling constraint
+  i, j = random.sample(range(n), 2)
+  val = x_star[i] * x_star[j]
+  c = val * random.uniform(0.8, 1.2)
+
+  constraints.append(1 / (x[i] * x[j]) <= 1 / c)
+  constraint_strings.append(f"1/(x{i+1}*x{j+1}) <= {round(1/c,2)}")
+
+  # variable bounds
+  for i in range(n):
+    constraints.append(x[i] <= 5)
+    constraints.append(1 / x[i] <= 2)
 
   prob = cp.Problem(objective, constraints)
   prob.solve(gp=True, solver=cp.SCS, eps=1e-6, max_iters=5000)
 
-  if prob.status not in ["optimal", "optimal_inaccurate"]:
-    raise ValueError("GP solve failed with status: {}".format(prob.status))
+  if prob.status in ["infeasible", "unbounded"]:
+    return basic_geometric_programming(min_entropy, max_entropy)
 
   constraints_text = ", ".join(constraint_strings)
+  bounds_text = "0.5 ≤ x_i ≤ 5"
 
   template = random.choice([
-      ('Find the minimum value of {a}x^{p}y^{q} subject to {constraints}, '
-       'with x,y > 0.'),
-
-      ('Minimize f(x,y) = {a}x^{p}y^{q} given that {constraints}. '
-       'What is the minimum value?'),
-
-      ('Suppose x,y > 0 satisfy {constraints}. '
-       'Determine the smallest possible value of {a}x^{p}y^{q}.'),
-
-      ('Under the constraints {constraints}, '
-       'find the minimum value of {a}x^{p}y^{q}.')
+      ('Find the minimum value of {obj} subject to {constraints}, {bounds}, with x_i > 0.'),
+      ('Minimize f(x) = {obj} given that {constraints}, {bounds}. What is the minimum value?'),
+      ('Suppose x_i > 0 satisfy {constraints}, {bounds}. Determine the smallest possible value of {obj}.'),
   ])
 
   return example.Problem(
       question=example.question(
           context,
           template,
-          a=a,
-          b=b,
-          c=c,
-          d=d,
-          e=e,
-          g=g,
-          p=p,
-          q=q,
-          constraints=constraints_text
+          obj=obj_str,
+          constraints=constraints_text,
+          bounds=bounds_text
       ),
-      answer=round(float(prob.value), 3)
+      answer=_safe_round(prob.value, 3)
   )
