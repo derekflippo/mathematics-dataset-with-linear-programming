@@ -71,7 +71,7 @@ def quadratic_programming(min_entropy, max_entropy):
   prob = cp.Problem(cp.Minimize((1/2)*cp.quad_form(x, P) + q.T @ x),
                    [G @ x <= h,
                     A @ x == b])
-  prob.solve(solver=cp.SCS, verbose=False)
+  prob.solve(verbose=False)
 
   # Format arrays for readable output
   P_str = np.array2string(P, threshold=np.inf)
