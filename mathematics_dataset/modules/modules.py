@@ -22,15 +22,15 @@ from mathematics_dataset.modules import algebra
 from mathematics_dataset.modules import arithmetic
 from mathematics_dataset.modules import calculus
 from mathematics_dataset.modules import comparison
-from mathematics_dataset.modules import linear_programming
-from mathematics_dataset.modules import quadratic_programming
-from mathematics_dataset.modules import semidefinite_programming
-from mathematics_dataset.modules import quadratic_constrained_quadratic_programming
 from mathematics_dataset.modules import geometric
+from mathematics_dataset.modules import linear_programming
 from mathematics_dataset.modules import measurement
 from mathematics_dataset.modules import numbers
 from mathematics_dataset.modules import polynomials
 from mathematics_dataset.modules import probability
+from mathematics_dataset.modules import quadratic_programming
+from mathematics_dataset.modules import quadratic_constrained_quadratic_programming
+from mathematics_dataset.modules import semidefinite_programming
 import six
 
 
@@ -39,15 +39,15 @@ all_ = {
     'arithmetic': arithmetic,
     'calculus': calculus,
     'comparison': comparison,
-    'linear_programming': linear_programming,
-    'quadratic_programming': quadratic_programming,
-    'semidefinite_programming': semidefinite_programming,
-    'quadratic_constrained_quadratic_programming' : quadratic_constrained_quadratic_programming,
     'geometric' : geometric,
+    'linear_programming': linear_programming,
     'measurement': measurement,
     'numbers': numbers,
     'polynomials': polynomials,
     'probability': probability,
+    'quadratic_constrained_quadratic_programming' : quadratic_constrained_quadratic_programming,
+    'quadratic_programming': quadratic_programming,
+    'semidefinite_programming': semidefinite_programming,
 }
 
 
