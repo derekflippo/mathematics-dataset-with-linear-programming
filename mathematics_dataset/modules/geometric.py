@@ -34,7 +34,7 @@ def test():
 
 
 def test_extra():
-  return _make_modules(_ENTROPY_EXTRAPOLATE)
+    return _make_modules(_ENTROPY_EXTRAPOLATE)
 
 
 def _safe_round(x, ndigits=3):
@@ -70,14 +70,54 @@ def _monomial_str(exponents, coeff):
 
 def _difficulty_params(entropy):
   if entropy < 6:
-    return dict(n=(2, 4), obj=(2, 3), cons=(2, 3), terms=(1, 2),
-                exp=(-1, 2), coeff=5, tightness=(1.05, 1.2))
+    return dict(n=(2, 3), obj=(2, 3), cons=(2, 3), terms=(1, 2),
+                exp=(-1, 1), coeff=5, tightness=(1.0, 1.0),
+                group_sizes=(2, 3))
   elif entropy < 10:
-    return dict(n=(3, 5), obj=(3, 4), cons=(3, 4), terms=(2, 3),
-                exp=(-1, 2), coeff=7, tightness=(1.02, 1.15))
+    return dict(n=(3, 4), obj=(3, 4), cons=(3, 4), terms=(2, 3),
+                exp=(-1, 2), coeff=7, tightness=(1.0, 1.0),
+                group_sizes=(2, 3, 4))
   else:
     return dict(n=(4, 5), obj=(4, 5), cons=(4, 5), terms=(2, 3),
-                exp=(-2, 3), coeff=10, tightness=(1.01, 1.1))
+                exp=(-2, 3), coeff=10, tightness=(1.0, 1.0),
+                group_sizes=(2, 3, 4))
+
+
+def _random_nonzero_exponents(n, low, high):
+  while True:
+    exponents = tuple(np.random.randint(low, high + 1, size=n))
+    if not all(e == 0 for e in exponents):
+      return exponents
+
+
+def _make_balanced_group(n, low, high, group_size, used):
+  for _ in range(1000):
+    group = []
+    for _ in range(group_size - 1):
+      group.append(_random_nonzero_exponents(n, low, high))
+
+    final = tuple(-sum(exponents[i] for exponents in group)
+                  for i in range(n))
+
+    if all(e == 0 for e in final):
+      continue
+
+    if any(e < low or e > high for e in final):
+      continue
+
+    group.append(final)
+
+    if len(set(group)) != group_size:
+      continue
+
+    if any(exponents in used for exponents in group):
+      continue
+
+    if all(any(exponents[i] != 0 for exponents in group)
+           for i in range(n)):
+      return group
+
+  return None
 
 
 def basic_geometric_programming(min_entropy, max_entropy):
@@ -91,38 +131,40 @@ def basic_geometric_programming(min_entropy, max_entropy):
   x = cp.Variable(n, pos=True)
 
   # Feasible reference point
-  x_star = np.random.uniform(1.2, 2.0, size=n)
+  x_star = np.ones(n)
 
   # Objective construction
   obj_terms = random.randint(*params["obj"])
   objective_expr = 0
   obj_strings = []
+  theoretical_value = 0
 
   used = set()
-  for _ in range(obj_terms):
+  groups_made = 0
+
+  while groups_made < obj_terms:
     coeff = random.randint(1, params["coeff"])
+    group_size = random.choice(params["group_sizes"])
 
-    while True:
-      exponents = tuple(np.random.randint(params["exp"][0],
-                                          params["exp"][1] + 1,
-                                          size=n))
+    group = _make_balanced_group(n,
+                                 params["exp"][0],
+                                 params["exp"][1],
+                                 group_size,
+                                 used)
 
-      if all(e == 0 for e in exponents):
-        continue
+    if group is None:
+      continue
 
-      # Ensure every objective monomial has at least one negative exponent, so the objective is not trivially minimized by lower bounds only.
-      if all(e >= 0 for e in exponents):
-        exponents = list(exponents)
-        exponents[random.randint(0, n - 1)] = -1
-        exponents = tuple(exponents)
+    random.shuffle(group)
 
-      if exponents not in used:
-        used.add(exponents)
-        break
+    for exponents in group:
+      used.add(exponents)
+      term = _make_monomial(x, exponents, coeff)
+      objective_expr += term
+      obj_strings.append(_monomial_str(exponents, coeff))
 
-    term = _make_monomial(x, exponents, coeff)
-    objective_expr += term
-    obj_strings.append(_monomial_str(exponents, coeff))
+    theoretical_value += group_size * coeff
+    groups_made += 1
 
   objective = cp.Minimize(objective_expr)
   obj_str = " + ".join(obj_strings)
@@ -144,7 +186,7 @@ def basic_geometric_programming(min_entropy, max_entropy):
 
       while True:
         exponents = tuple(np.random.randint(0,
-                                            params["exp"][1] + 1,
+                                            max(2, params["exp"][1]) + 1,
                                             size=n))
         if all(e == 0 for e in exponents):
           continue
@@ -160,7 +202,7 @@ def basic_geometric_programming(min_entropy, max_entropy):
 
       term_strings.append(_monomial_str(exponents, coeff))
 
-    bound = round(expr_val * random.uniform(*params["tightness"]), 2)
+    bound = round(expr_val, 2)
 
     constraints.append(expr <= bound)
     constraint_strings.append(
@@ -170,7 +212,7 @@ def basic_geometric_programming(min_entropy, max_entropy):
   # Lower coupling constraint
   i, j = random.sample(range(n), 2)
   val = x_star[i] * x_star[j]
-  c = val * random.uniform(0.8, 1.2)
+  c = val
 
   rhs = round(1 / c, 2)
 
@@ -190,6 +232,9 @@ def basic_geometric_programming(min_entropy, max_entropy):
     return basic_geometric_programming(min_entropy, max_entropy)
 
   if prob.status in ["infeasible", "unbounded", "infeasible_inaccurate", "unbounded_inaccurate"]:
+    return basic_geometric_programming(min_entropy, max_entropy)
+
+  if abs(prob.value - theoretical_value) > 1e-3:
     return basic_geometric_programming(min_entropy, max_entropy)
 
   constraints_text = ", ".join(constraint_strings)
@@ -218,5 +263,5 @@ def basic_geometric_programming(min_entropy, max_entropy):
           constraints=constraints_text,
           bounds=bounds_text,
       ),
-      answer=_safe_round(prob.value, 3),
+      answer=_safe_round(theoretical_value, 3),
   )
