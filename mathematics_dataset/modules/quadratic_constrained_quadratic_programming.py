@@ -18,9 +18,22 @@ from mathematics_dataset.util import composition
 import cvxpy as cp
 
 
-_ENTROPY_TRAIN = (3, 10)
-_ENTROPY_INTERPOLATE = (8, 8)
-_ENTROPY_EXTRAPOLATE = (12, 12)
+_ENTROPY_TRAIN = (0, 8)
+_ENTROPY_INTERPOLATE = (5, 6)
+_ENTROPY_EXTRAPOLATE = (7, 8)
+
+# (n_variables, m_quadratic_constraints) per level. Level index = int(entropy).
+_LEVEL_DIMS = [
+    (2,  1),  # level 1
+    (2,  2),  # level 2
+    (3,  2),  # level 3
+    (3,  3),  # level 4
+    (4,  3),  # level 5
+    (5,  4),  # level 6
+    (7,  5),  # level 7
+    (10, 7),  # level 8
+]
+
 
 
 def _make_modules(entropy):
@@ -93,19 +106,11 @@ def basic_qcqp(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
 
-  # 1) Choose dimension and number of constraints
-  if entropy < 6:
-    n = 2
-  elif entropy < 9:
-    n = 3
-  else:
-    n = 4
+  # 1) Choose dimension and number of constraints from level
+  level = min(int(entropy), 7)
+  n, m = _LEVEL_DIMS[level]
 
-  m = 1 if n == 2 else 2
-  if entropy > 9:
-    m = 3
-
-  coeff_low, coeff_high = -3, 3
+  coeff_low, coeff_high = -4, 4
 
   # 2) Choose a known feasible point x_star
   x_star = _rand_int_vector(n, -2, 2)
@@ -144,7 +149,7 @@ def basic_qcqp(min_entropy, max_entropy):
   objective = cp.Minimize(0.5 * cp.quad_form(x, Q0) + c0 @ x)
   prob = cp.Problem(objective, constraints)
 
-  prob.solve(solver=cp.SCS, verbose=False)
+  prob.solve(solver=cp.CLARABEL, verbose=False)
 
   retries = 3
   while prob.status not in ["optimal", "optimal_inaccurate"] and retries > 0:
@@ -171,14 +176,11 @@ def basic_qcqp(min_entropy, max_entropy):
 
     objective = cp.Minimize(0.5 * cp.quad_form(x, Q0) + c0 @ x)
     prob = cp.Problem(objective, constraints)
-    prob.solve(solver=cp.SCS, verbose=False)
+    prob.solve(solver=cp.CLARABEL, verbose=False)
 
     retries -= 1
 
-  if prob.status not in ["optimal", "optimal_inaccurate"]:
-    raise ValueError("QCQP solve failed with status: {}".format(prob.status))
-
-  answer = _safe_round(prob.value, 3)
+  answer = prob.value
 
   # 7) Build question text
   constraint_lines = []
@@ -194,7 +196,7 @@ def basic_qcqp(min_entropy, max_entropy):
 
   constraints_text = "\n".join(constraint_lines)
 
-  template = (
+  template = random.choice([
       "Consider the convex quadratically constrained quadratic program over x in R^{n}:\n"
       "Minimize (1/2) x^T Q_0 x + c_0^T x\n"
       "subject to x^T Q_i x + c_i^T x <= d_i for i=1..{m},\n"
@@ -202,8 +204,11 @@ def basic_qcqp(min_entropy, max_entropy):
       "Q_0 = {Q0}\n"
       "c_0 = {c0}\n"
       "{constraints_text}\n\n"
-      "What is the minimum value of the objective (rounded to 3 decimals)?"
-  )
+      "What is the minimum value of the objective?\n"
+      "You must solve it using only mental mathematical reasoning. "
+      "Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. "
+      "Do NOT use CVXPY, scipy, numpy, or any solver library.",
+  ])
 
   question = example.question(
       context,

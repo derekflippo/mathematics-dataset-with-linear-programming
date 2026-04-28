@@ -11,11 +11,23 @@ import numpy as np
 
 from mathematics_dataset import example
 from mathematics_dataset.util import composition
-from mathematics_dataset.sample import number
 
-_ENTROPY_TRAIN = (1, 4)
+_ENTROPY_TRAIN = (0, 8)
 _ENTROPY_INTERPOLATE = (5, 6)
 _ENTROPY_EXTRAPOLATE = (7, 8)
+
+# (n_variables, m_inequality_constraints) per level. Level index = int(entropy).
+_LEVEL_DIMS = [
+    (2,  2),   # level 1
+    (2,  3),   # level 2
+    (3,  3),   # level 3
+    (3,  4),   # level 4
+    (4,  5),   # level 5
+    (5,  6),   # level 6
+    (7,  8),   # level 7
+    (10, 12),  # level 8
+]
+
 
 
 def _make_modules(entropy):
@@ -42,8 +54,8 @@ def quadratic_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
 
-  n = int(number.integer(entropy / 2, signed=False, min_abs=2))
-  m = int(number.integer(entropy / 2, signed=False, min_abs=1))
+  level = min(int(entropy), 7)
+  n, m = _LEVEL_DIMS[level]
   p = max(1, n // 2)
 
   coeff_low, coeff_high = -4, 4
@@ -71,7 +83,21 @@ def quadratic_programming(min_entropy, max_entropy):
   prob = cp.Problem(cp.Minimize((1/2)*cp.quad_form(x, P) + q.T @ x),
                    [G @ x <= h,
                     A @ x == b])
-  prob.solve(verbose=False)
+  prob.solve(solver=cp.CLARABEL, verbose=False)
+
+  retries = 3
+  while prob.status not in ["optimal", "optimal_inaccurate"] and retries > 0:
+    q = np.random.randint(coeff_low, coeff_high + 1, size=(n,)).astype(float)
+    G = np.random.randint(coeff_low, coeff_high + 1, size=(m, n)).astype(float)
+    slack = np.random.randint(1, coeff_high + 1, size=(m,)).astype(float)
+    h = G @ x0 + slack
+    A = np.random.randint(coeff_low, coeff_high + 1, size=(p, n)).astype(float)
+    b = A @ x0
+    prob = cp.Problem(cp.Minimize((1/2)*cp.quad_form(x, P) + q.T @ x),
+                     [G @ x <= h,
+                      A @ x == b])
+    prob.solve(solver=cp.CLARABEL, verbose=False)
+    retries -= 1
 
   # Format arrays for readable output
   P_str = np.array2string(P, threshold=np.inf)
@@ -86,15 +112,10 @@ def quadratic_programming(min_entropy, max_entropy):
       'Minimize the quadratic objective (1/2) x^T P x + q^T x where\n'
       'P = {P} and q = {q},\nsubject to G x <= h and A x = b, where\n'
       'G = {G}, h = {h},\nA = {A}, b = {b}.\n'
-      'What is the optimal value?',
-      'Find the minimum value of the quadratic program: minimize (1/2) y^T Q y + r^T y\n'
-      'where Q = {P} and r = {q},\nsubject to C y <= d and E y = f, where\n'
-      'C = {G}, d = {h},\nE = {A}, f = {b}.\n'
-      'What is the optimal objective value?',
-      'Consider the optimization problem: minimize (1/2) w^T H w + g^T w\n'
-      'with H = {P} and g = {q},\nunder the constraints F w <= e and D w = c, where\n'
-      'F = {G}, e = {h},\nD = {A}, c = {b}.\n'
-      'What is the minimum value achieved?',
+      'What is the optimal value?\n'
+      'You must solve it using only mental mathematical reasoning. '
+      'Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. '
+      'Do NOT use CVXPY, scipy, numpy, or any solver library.',
   ])
 
   return example.Problem(
