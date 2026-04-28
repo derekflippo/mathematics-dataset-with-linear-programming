@@ -98,9 +98,9 @@ def init_modules(train_split=False):
 
   all_modules = collections.OrderedDict([])
   if train_split:
-    all_modules['train-easy'] = modules.train(_make_entropy_fn(0, 3))
-    all_modules['train-medium'] = modules.train(_make_entropy_fn(1, 3))
-    all_modules['train-hard'] = modules.train(_make_entropy_fn(2, 3))
+    for i in range(8):
+      level_name = 'level-{}'.format(i + 1)
+      all_modules[level_name] = modules.train(_make_entropy_fn(i, 8))
   else:
     all_modules['train'] = modules.train(_make_entropy_fn(0, 1))
 
@@ -109,9 +109,8 @@ def init_modules(train_split=False):
     all_modules['extrapolate'] = modules.test_extra()
 
   counts['train'] = FLAGS.per_train_module
-  counts['train-easy'] = FLAGS.per_train_module // 3
-  counts['train-medium'] = FLAGS.per_train_module // 3
-  counts['train-hard'] = FLAGS.per_train_module // 3
+  for i in range(8):
+    counts['level-{}'.format(i + 1)] = FLAGS.per_train_module // 8
   counts['interpolate'] = FLAGS.per_test_module
   counts['extrapolate'] = FLAGS.per_test_module
 

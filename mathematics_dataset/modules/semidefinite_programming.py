@@ -21,9 +21,22 @@ import cvxpy as cp
 
 
 # Entropy ranges control "difficulty" and "size" selection for train/test.
-_ENTROPY_TRAIN = (3, 10) # random entropy between 3 and 10 (varied sizes)
-_ENTROPY_INTERPOLATE = (8, 8) # fixed at 8 for testing entropy
-_ENTROPY_EXTRAPOLATE = (12, 12) # fixed at 12 (harder than training)
+_ENTROPY_TRAIN = (0, 8)
+_ENTROPY_INTERPOLATE = (5, 6)
+_ENTROPY_EXTRAPOLATE = (7, 8)
+
+# (k_matrix_size, m_equality_constraints) per level. Level index = int(entropy).
+_LEVEL_DIMS = [
+    (2,  1),  # level 1
+    (2,  2),  # level 2
+    (3,  2),  # level 3
+    (3,  3),  # level 4
+    (4,  3),  # level 5
+    (5,  4),  # level 6
+    (7,  5),  # level 7
+    (10, 7),  # level 8
+]
+
 
 
 # Module registry: used to create a callable generator
@@ -96,21 +109,12 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()  # provides consistent formatting
 
-  # Complexity selection (controls matrix size based on difficulty).
-  # We keep k small so the question is readable and solver stable
-  if entropy < 6:
-    k = 2
-  else:
-    k = 3  # 3x3 is still readable and is a "real" SDP
-
-  # Choose the number of linear constraints m (besides PSD)
-  # Note: total constraints are: m equalities + 1 PSD constraint.
-  m = 2 if k == 3 else 1
-  if entropy > 9:
-    m = 3
+  # Choose matrix size and number of constraints from level.
+  level = min(int(entropy), 7)
+  k, m = _LEVEL_DIMS[level]
 
   # limits coeff to be small integers to reduce numerical instability
-  coeff_low, coeff_high = -3, 3
+  coeff_low, coeff_high = -4, 4
 
   # 1) Generate symmetric constraint matrices A_1...A_m
   A_list = []
@@ -150,7 +154,7 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   prob = cp.Problem(objective, constraints)
 
   # Solve with SCS (common default for cone problems like SDP).
-  prob.solve(solver=cp.SCS, verbose=False)
+  prob.solve(solver=cp.CLARABEL, verbose=False)
 
   # Retry: If solver doesn't return optimal, we resample C
   # (If the failure is due to constraints/conditioning, resampling A/X* is better; this is just a lightweight retry.)
@@ -161,15 +165,10 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
 
     objective = cp.Minimize(cp.trace(C @ X))
     prob = cp.Problem(objective, constraints)
-    prob.solve(solver=cp.SCS, verbose=False)
+    prob.solve(solver=cp.CLARABEL, verbose=False)
     retries -= 1
 
-  if prob.status not in ["optimal", "optimal_inaccurate"]:
-    raise ValueError("SDP solve failed with status: {}".format(prob.status))
-
-  # Extract the numeric optimal value as the "answer" (rounded)
-  answer = _safe_round(prob.value, ndigits=3)
-  # answer = prob.value
+  answer = prob.value
 
   # Build natural-language question
   A_text = "\n".join(
@@ -183,12 +182,14 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   
   template = random.choice([
       "Consider the semidefinite program over a symmetric {k}x{k} matrix X:\n"
-      # "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, and X is positive semidefinite (X ⪰ 0).\n\n"
-      "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, trace(X) = {trace_val}, and X is positive semidefinite (X ⪰ 0)."
+      "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, trace(X) = {trace_val}, and X is positive semidefinite (X ⪰ 0).\n"
       "C = {C}\n"
       "{A_text}\n"
       "{b_text}\n\n"
-      "What is the minimum value of <C, X> (rounded to 3 decimals)?"
+      "What is the minimum value of <C, X>?\n"
+      "You must solve it using only mental mathematical reasoning. "
+      "Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. "
+      "Do NOT use CVXPY, scipy, numpy, or any solver library.",
   ])
 
   question = example.question(
