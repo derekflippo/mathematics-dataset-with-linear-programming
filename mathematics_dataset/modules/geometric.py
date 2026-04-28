@@ -46,7 +46,7 @@ def test():
 
 
 def test_extra():
-    return _make_modules(_ENTROPY_EXTRAPOLATE)
+  return _make_modules(_ENTROPY_EXTRAPOLATE)
 
 
 
@@ -76,6 +76,9 @@ def _monomial_str(exponents, coeff):
 
   return str(coeff) + "*" + "*".join(parts)
 
+
+
+
 def basic_geometric_programming(min_entropy, max_entropy):
   entropy = random.uniform(min_entropy, max_entropy)
   context = composition.Context()
@@ -85,12 +88,11 @@ def basic_geometric_programming(min_entropy, max_entropy):
   x = cp.Variable(n, pos=True)
 
   # Feasible reference point
-  x_star = np.ones(n)
+  x_star = np.random.uniform(1.2, 2.0, size=n)
 
   # Objective construction
   objective_expr = 0
   obj_strings = []
-  theoretical_value = 0
 
   coeff_max = 5 + level
   tightness = (1.05 - level * 0.005, 1.2 - level * 0.01)
@@ -102,19 +104,21 @@ def basic_geometric_programming(min_entropy, max_entropy):
     while True:
       exponents = tuple(np.random.randint(exp_min, exp_max + 1, size=n))
 
+      if all(e == 0 for e in exponents):
+        continue
+
       if all(e >= 0 for e in exponents):
         exponents = list(exponents)
         exponents[random.randint(0, n - 1)] = -1
         exponents = tuple(exponents)
 
-    for exponents in group:
-      used.add(exponents)
-      term = _make_monomial(x, exponents, coeff)
-      objective_expr += term
-      obj_strings.append(_monomial_str(exponents, coeff))
+      if exponents not in used:
+        used.add(exponents)
+        break
 
-    theoretical_value += group_size * coeff
-    groups_made += 1
+    term = _make_monomial(x, exponents, coeff)
+    objective_expr += term
+    obj_strings.append(_monomial_str(exponents, coeff))
 
   objective = cp.Minimize(objective_expr)
   obj_str = " + ".join(obj_strings)
@@ -157,7 +161,7 @@ def basic_geometric_programming(min_entropy, max_entropy):
   # Lower coupling constraint
   i, j = random.sample(range(n), 2)
   val = x_star[i] * x_star[j]
-  c = val
+  c = val * random.uniform(0.8, 1.2)
 
   rhs = round(1 / c, 2)
 
@@ -177,9 +181,6 @@ def basic_geometric_programming(min_entropy, max_entropy):
     return basic_geometric_programming(min_entropy, max_entropy)
 
   if prob.status in ["infeasible", "unbounded", "infeasible_inaccurate", "unbounded_inaccurate"]:
-    return basic_geometric_programming(min_entropy, max_entropy)
-
-  if abs(prob.value - theoretical_value) > 1e-3:
     return basic_geometric_programming(min_entropy, max_entropy)
 
   constraints_text = ", ".join(constraint_strings)
