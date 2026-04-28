@@ -168,8 +168,8 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
     raise ValueError("SDP solve failed with status: {}".format(prob.status))
 
   # Extract the numeric optimal value as the "answer" (rounded)
-  # answer = _safe_round(prob.value, ndigits=3)
-  answer = prob.value
+  answer = _safe_round(prob.value, ndigits=3)
+  # answer = prob.value
 
   # Build natural-language question
   A_text = "\n".join(
@@ -179,9 +179,12 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
       ["b_{} = {}".format(i + 1, _safe_round(b_list[i], 3)) for i in range(m)]
   )
 
+  trace_val=_safe_round(np.trace(X_star), 3)
+  
   template = random.choice([
       "Consider the semidefinite program over a symmetric {k}x{k} matrix X:\n"
-      "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, and X is positive semidefinite (X ⪰ 0).\n\n"
+      # "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, and X is positive semidefinite (X ⪰ 0).\n\n"
+      "Minimize <C, X> subject to <A_i, X> = b_i for i=1..{m}, trace(X) = {trace_val}, and X is positive semidefinite (X ⪰ 0)."
       "C = {C}\n"
       "{A_text}\n"
       "{b_text}\n\n"
@@ -189,14 +192,15 @@ def basic_semidefinite_programming(min_entropy, max_entropy):
   ])
 
   question = example.question(
-      context,
-      template,
-      k=k,
-      m=m,
-      C=_format_matrix(C),
-      A_text=A_text,
-      b_text=b_text
-  )
+    context,
+    template,
+    k=k,
+    m=m,
+    C=_format_matrix(C),
+    A_text=A_text,
+    b_text=b_text,
+    trace_val=trace_val,
+)
 
   # Return an example.Problem object the dataset framework expects
   # question: formatted string
