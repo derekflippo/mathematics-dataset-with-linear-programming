@@ -36,11 +36,26 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('output_dir', None, 'Where to write output JSON')
 flags.DEFINE_boolean('train_split', True,
                      'Whether to split training data by difficulty')
+flags.DEFINE_string('levels', None, 'Levels to generate, e.g. "1-4" or "2,5,7"')
 flags.mark_flag_as_required('output_dir')
+
+
+def _parse_levels(levels_str):
+  levels = set()
+  for part in levels_str.split(','):
+    part = part.strip()
+    if '-' in part:
+      start, end = part.split('-')
+      levels.update(range(int(start), int(end) + 1))
+    else:
+      levels.add(int(part))
+  return levels
 
 
 def main(unused_argv):
   generate.init_modules(FLAGS.train_split)
+
+  allowed_levels = _parse_levels(FLAGS.levels) if FLAGS.levels else None
 
   output_dir = os.path.expanduser(FLAGS.output_dir)
   if os.path.exists(output_dir):
@@ -50,6 +65,13 @@ def main(unused_argv):
   os.makedirs(output_dir)
 
   for regime, flat_modules in six.iteritems(generate.filtered_modules):
+    if allowed_levels is not None:
+      try:
+        level_num = int(regime.split('-')[-1])
+      except ValueError:
+        continue
+      if level_num not in allowed_levels:
+        continue
     regime_dir = os.path.join(output_dir, regime)
     os.mkdir(regime_dir)
     per_module = generate.counts[regime]
@@ -61,6 +83,7 @@ def main(unused_argv):
         problems.append({
             'question': str(problem.question),
             'answer': str(problem.answer),
+            'level': regime,
         })
       path = os.path.join(regime_dir, module_name + '.json')
       with open(path, 'w') as json_file:
