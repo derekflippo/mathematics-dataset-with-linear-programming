@@ -1,42 +1,102 @@
 [
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 9.0, and X is positive semidefinite (X \u2ab0 0).C = [[-4, 3.5], [3.5, 3]]\nA_1 = [[3, -0.5], [-0.5, 4]]\nA_2 = [[-2, 0], [0, -2]]\nb_1 = 37.0, b_2 = -18.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "-26.910934827058497"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 4.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 3], [3, 4]]\nA_1 = [[-3, 0], [0, -4]]\nA_2 = [[-4, 1], [1, 4]]\nb_1 = -14.0, b_2 = -4.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "4.000000000000437",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 2.0, and X is positive semidefinite (X \u2ab0 0).C = [[4, -2], [-2, -3]]\nA_1 = [[-1, -0.5], [-0.5, -4]]\nA_2 = [[-1, 3], [3, -3]]\nb_1 = -5.0, b_2 = -4.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "1.0"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 16.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[2, -0.5], [-0.5, -3]]\nA_1 = [[-3, 2], [2, 0]]\nA_2 = [[-3, 0.5], [0.5, -4]]\nb_1 = -24.0, b_2 = -56.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-7.999999999999989",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 9.0, and X is positive semidefinite (X \u2ab0 0).C = [[-1, 1], [1, 1]]\nA_1 = [[3, 3], [3, -4]]\nA_2 = [[4, 0.5], [0.5, 3]]\nb_1 = -20.0, b_2 = 29.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "-2.999999999999882"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 12.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 0], [0, -4]]\nA_1 = [[0, 1.5], [1.5, -1]]\nA_2 = [[4, 0], [0, 2]]\nb_1 = -20.0, b_2 = 32.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-16.000000000000032",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 10.0, and X is positive semidefinite (X \u2ab0 0).C = [[3, 0.5], [0.5, -1]]\nA_1 = [[-4, -3], [-3, -3]]\nA_2 = [[4, -2], [-2, -4]]\nb_1 = -32.0, b_2 = -24.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "-2.0"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 5.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-1, -3.5], [-3.5, -1]]\nA_1 = [[1, -0.5], [-0.5, 0]]\nA_2 = [[3, 3.5], [3.5, 1]]\nb_1 = 2.0, b_2 = 27.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-18.99999999999999",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).C = [[1, -2.5], [-2.5, 4]]\nA_1 = [[-1, 1], [1, -2]]\nA_2 = [[0, -1.5], [-1.5, 2]]\nb_1 = -33.0, b_2 = 34.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "67.0000000000004"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 7.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[1, 2.5], [2.5, 2]]\nA_1 = [[-2, -1.5], [-1.5, 1]]\nA_2 = [[-4, -0.5], [-0.5, -2]]\nb_1 = -17.0, b_2 = -27.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "24.000000000018122",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 2.0, and X is positive semidefinite (X \u2ab0 0).C = [[-4, 2.5], [2.5, 2]]\nA_1 = [[4, -2], [-2, 0]]\nA_2 = [[-1, -1.5], [-1.5, -3]]\nb_1 = 8.0, b_2 = -2.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "-7.999999999999751"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[2, 0], [0, -4]]\nA_1 = [[-3, 0.5], [0.5, 0]]\nA_2 = [[0, 0.5], [0.5, 1]]\nb_1 = -13.0, b_2 = 10.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-21.999999999999993",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 6.0, and X is positive semidefinite (X \u2ab0 0).C = [[2, -1], [-1, -3]]\nA_1 = [[1, -0.5], [-0.5, 3]]\nA_2 = [[-1, 2.5], [2.5, 3]]\nb_1 = 7.0, b_2 = 3.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "5.000000000000001"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 16.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, -0.5], [-0.5, 3]]\nA_1 = [[3, -2], [-2, 2]]\nA_2 = [[-3, -3.5], [-3.5, 2]]\nb_1 = 72.0, b_2 = 48.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "64.00000000000004",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).C = [[-1, 0.5], [0.5, 0]]\nA_1 = [[0, -1.5], [-1.5, 3]]\nA_2 = [[-4, 1], [1, 1]]\nb_1 = 33.0, b_2 = -39.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "-14.000000000000135"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 5.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[3, -0.5], [-0.5, -4]]\nA_1 = [[1, 1], [1, 4]]\nA_2 = [[-4, -1], [-1, 4]]\nb_1 = 17.0, b_2 = 12.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-13.000000000000004",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 7.0, and X is positive semidefinite (X \u2ab0 0).C = [[1, 0.5], [0.5, 1]]\nA_1 = [[2, 1], [1, 3]]\nA_2 = [[4, 4], [4, 3]]\nb_1 = 18.0, b_2 = 34.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "8.0"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 5.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[0, -1.5], [-1.5, 3]]\nA_1 = [[3, -1], [-1, 2]]\nA_2 = [[0, -0.5], [-0.5, 1]]\nb_1 = 15.0, b_2 = 0.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "3.3145451060508024e-14",
+    "level": "level-2"
   },
   {
-    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 10.0, and X is positive semidefinite (X \u2ab0 0).C = [[4, 3], [3, 1]]\nA_1 = [[4, -0.5], [-0.5, 4]]\nA_2 = [[0, -1.5], [-1.5, -4]]\nb_1 = 40.0, b_2 = -20.0\n\nWhat is the minimum value of <C, X> (rounded to 3 decimals)?",
-    "answer": "25.00000000000002"
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 10.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[3, 2.5], [2.5, 1]]\nA_1 = [[-1, 1], [1, 4]]\nA_2 = [[4, -2.5], [-2.5, 2]]\nb_1 = 15.0, b_2 = 30.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "20.000000000000018",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 9.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-2, -1.5], [-1.5, 4]]\nA_1 = [[4, -3], [-3, 2]]\nA_2 = [[-4, 1], [1, -1]]\nb_1 = 46.0, b_2 = -37.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-6.0000000000005524",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 9.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, -3], [-3, -3]]\nA_1 = [[-3, 1.5], [1.5, -1]]\nA_2 = [[-4, -0.5], [-0.5, -3]]\nb_1 = -23.0, b_2 = -29.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-14.999999999999998",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 10.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[0, -3], [-3, -2]]\nA_1 = [[0, 2.5], [2.5, 1]]\nA_2 = [[2, 1.5], [1.5, -4]]\nb_1 = -18.0, b_2 = -4.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "19.999999999999957",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[2, 0], [0, -2]]\nA_1 = [[-1, -1.5], [-1.5, 2]]\nA_2 = [[-2, 1], [1, -2]]\nb_1 = -7.0, b_2 = -14.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-6.000000000001565",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 2], [2, -1]]\nA_1 = [[0, -0.5], [-0.5, -3]]\nA_2 = [[-2, 1.5], [1.5, 3]]\nb_1 = -26.0, b_2 = 20.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "20.00000000000003",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 10.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, 0.5], [0.5, -2]]\nA_1 = [[4, 0.5], [0.5, -4]]\nA_2 = [[-4, 1.5], [1.5, 1]]\nb_1 = -24.0, b_2 = 0.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-22.0",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 4.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[0, -1.5], [-1.5, -4]]\nA_1 = [[3, 3.5], [3.5, 0]]\nA_2 = [[0, 2], [2, -1]]\nb_1 = 0.0, b_2 = -4.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-15.999999999999368",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 6.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[0, -0.5], [-0.5, 0]]\nA_1 = [[4, -0.5], [-0.5, 1]]\nA_2 = [[0, 0], [0, -2]]\nb_1 = 20.0, b_2 = -4.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "2.000000000000001",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 9.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[1, -1.5], [-1.5, 2]]\nA_1 = [[-1, 0], [0, 2]]\nA_2 = [[3, -1.5], [-1.5, -3]]\nb_1 = 6.0, b_2 = -9.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "7.999999999999998",
+    "level": "level-2"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 2x2 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..2, trace(X) = 7.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-1, 1], [1, 0]]\nA_1 = [[2, -3.5], [-3.5, 2]]\nA_2 = [[-3, 1.5], [1.5, -1]]\nb_1 = -7.0, b_2 = -2.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "4.000000000000294",
+    "level": "level-2"
   }
 ]

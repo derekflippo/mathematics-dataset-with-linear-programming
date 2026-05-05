@@ -33,7 +33,6 @@ _LEVEL_DIMS = [
 
 def _make_modules(entropy):
   return {
-      'basic_linear_programming': functools.partial(basic_linear_programming, *entropy),
       'non_trivial_linear_programming': functools.partial(non_trivial_linear_programming, *entropy),
   }
 

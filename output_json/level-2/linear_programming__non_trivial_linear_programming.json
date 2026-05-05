@@ -1,0 +1,102 @@
+[
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [12. -9.], subject to the constraints \nA * x <= b, where \nA = [[ 4. -3.]\n [ 1. -4.]\n [-4.  3.]] and \nb = [ 3. -3. -1.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "3",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 6. -6.], subject to the constraints \nA * x <= b, where \nA = [[-4. -4.]\n [-3.  3.]\n [ 0. -1.]] and \nb = [-22.  -6.   1.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "12",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-12.   4.], subject to the constraints \nA * x <= b, where \nA = [[ 3. -1.]\n [ 4. -2.]\n [-4. -1.]] and \nb = [  7.  11. -14.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-28",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-12. -12.], subject to the constraints \nA * x <= b, where \nA = [[ 3.  3.]\n [ 2. -3.]\n [-4.  3.]] and \nb = [18. -5.  5.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-72",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-2.  8.], subject to the constraints \nA * x <= b, where \nA = [[ 1. -4.]\n [ 3.  1.]\n [-4. -4.]] and \nb = [ -7.   5. -12.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "14",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [9. 6.], subject to the constraints \nA * x <= b, where \nA = [[ 0. -4.]\n [-3. -2.]\n [ 4.  3.]] and \nb = [-11.  -9.  15.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "27",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [12. -8.], subject to the constraints \nA * x <= b, where \nA = [[ 1.  4.]\n [-2.  1.]\n [-3.  2.]] and \nb = [21.  0. -1.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "4",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-2.  4.], subject to the constraints \nA * x <= b, where \nA = [[ 1.  3.]\n [ 0. -2.]\n [ 2. -4.]] and \nb = [17. -8. -8.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "8",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-3. -8.], subject to the constraints \nA * x <= b, where \nA = [[-3. -1.]\n [ 3. -1.]\n [ 1.  4.]] and \nb = [-13.  11.   8.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-20",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 0. -4.], subject to the constraints \nA * x <= b, where \nA = [[-1.  4.]\n [ 0.  1.]\n [-2.  2.]] and \nb = [5. 1. 0.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-4",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 8. -8.], subject to the constraints \nA * x <= b, where \nA = [[ 4.  3.]\n [-2.  4.]\n [-2.  0.]] and \nb = [22.  0. -8.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "16",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 4. -1.], subject to the constraints \nA * x <= b, where \nA = [[-4.  1.]\n [ 1.  2.]\n [-4.  1.]] and \nb = [ 0.  8. -2.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "2",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [8. 0.], subject to the constraints \nA * x <= b, where \nA = [[-4.  3.]\n [-2.  0.]\n [ 0.  0.]] and \nb = [ 9. -2.  4.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "8",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-10.  -9.], subject to the constraints \nA * x <= b, where \nA = [[ 4. -2.]\n [ 3.  3.]\n [-2. -3.]] and \nb = [  6.  18. -15.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-57",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-17.  16.], subject to the constraints \nA * x <= b, where \nA = [[ 1.  0.]\n [ 4. -4.]\n [ 3.  4.]] and \nb = [ 1. -8. 18.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "31",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [ 2. -8.], subject to the constraints \nA * x <= b, where \nA = [[-1. -4.]\n [ 4.  3.]\n [-1.  4.]] and \nb = [-12.  23.   9.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-18",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [5. 3.], subject to the constraints \nA * x <= b, where \nA = [[ 2.  0.]\n [-3. -1.]\n [ 0.  3.]] and \nb = [  6. -11.   6.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "21",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [4. 7.], subject to the constraints \nA * x <= b, where \nA = [[-2. -3.]\n [-4. -1.]\n [ 0. -3.]] and \nb = [-6. -6. -6.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "18",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-9.  6.], subject to the constraints \nA * x <= b, where \nA = [[ 0. -2.]\n [ 3. -2.]\n [ 0.  0.]] and \nb = [-4. -5.  0.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "15",
+    "level": "level-2"
+  },
+  {
+    "question": "Minimize the objective function c^T * x where \nc = [-20.   4.], subject to the constraints \nA * x <= b, where \nA = [[ 4.  0.]\n [ 2. -1.]\n [-2.  0.]] and \nb = [ 4. -1.  1.]. What is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-8",
+    "level": "level-2"
+  }
+]

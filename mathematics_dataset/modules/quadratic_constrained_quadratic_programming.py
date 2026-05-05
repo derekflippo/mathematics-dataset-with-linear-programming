@@ -204,10 +204,7 @@ def basic_qcqp(min_entropy, max_entropy):
       "Q_0 = {Q0}\n"
       "c_0 = {c0}\n"
       "{constraints_text}\n\n"
-      "What is the minimum value of the objective?\n"
-      "You must solve it using only mental mathematical reasoning. "
-      "Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. "
-      "Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "What is the minimum value of the objective?",
   ])
 
   question = example.question(
