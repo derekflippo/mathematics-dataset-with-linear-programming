@@ -6,6 +6,7 @@ to an LLM, and compares the response to the verified answer.
 Usage:
   export OPENAI_API_KEY=sk-...
   export ANTHROPIC_API_KEY=sk-ant-...
+  export GEMINI_API_KEY=...
   python -m mathematics_dataset.evaluate \
     --input_json=output_json/train-easy/quadratic_programming__quadratic_programming.json \
     --output_dir=eval_results
@@ -17,14 +18,15 @@ from __future__ import print_function
 
 import json
 import os
-import re
-
+import time
 
 from absl import app
 from absl import flags
 from absl import logging
 from openai import OpenAI
 import anthropic
+from google import genai as google_genai
+from google.genai import types as google_types
 
 FLAGS = flags.FLAGS
 
@@ -34,7 +36,8 @@ flags.DEFINE_string('output_dir', None, 'Directory to write per-model evaluation
 flags.DEFINE_string('levels', None, 'Levels to evaluate, e.g. "1-4" or "2,5,7" (only used with --input_dir)')
 flags.mark_flag_as_required('output_dir')
 
-############## Configurations ###############
+# ── Configurations ────────────────────────────────────────────────────────────
+
 ENGINES = [
     # "gpt-4o-mini",
     # "gpt-4.1-mini",
@@ -43,15 +46,19 @@ ENGINES = [
     # "o4-mini",
     # "o3",
     # "claude-opus-4-7",
-    # "claude-sonnet-4-6",
-    "claude-haiku-4-5-20251001",
+    "claude-sonnet-4-6",
+    # "claude-haiku-4-5-20251001",
+    # "gemini-2.5-pro",
+    # "gemini-2.5-flash",
 ]
 
 TOLERANCE = 0.01
-MAX_COMPLETION_TOKENS = 16000
-#############################################
+MAX_COMPLETION_TOKENS = 20000
 
-# Models that route to the Anthropic API
+SYSTEM_PROMPT = ""
+
+# ─────────────────────────────────────────────────────────────────────────────
+
 ANTHROPIC_MODELS = {
     "claude-opus-4-7",
     "claude-opus-4-5",
@@ -59,81 +66,22 @@ ANTHROPIC_MODELS = {
     "claude-haiku-4-5-20251001",
 }
 
-SYSTEM_PROMPT = (
-    # "You are a math solver. The user will give you an optimization problem. "
-    # "You must solve it using only your own mathematical reasoning — no tools, no code, no solvers. "
-    # "Do NOT use or call any of the following: Python, MATLAB, Julia, R, CVXPY, scipy, numpy, "
-    # "Gurobi, CPLEX, MOSEK, or any other solver or programming language. "
-    # "Show your reasoning in the 'reasoning' field, then provide the final numeric answer in the 'answer' field."
-)
+OPENAI_MODELS = {
+    "gpt-4o-mini",
+    "gpt-4.1-mini",
+    "gpt-4.1",
+    "gpt-5",
+    "o4-mini",
+    "o3",
+}
 
-
-def _is_anthropic(model):
-    return model in ANTHROPIC_MODELS or model.startswith("claude")
-
-
-def _parse_answer(answer_text):
-    """Parse a float from model output. Returns (float or None)."""
-    text = answer_text.strip()
-
-    # 1. Try the last non-empty line first — model consistently puts final answer there
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-    if lines:
-        last_line = lines[-1]
-        try:
-            return float(last_line)
-        except ValueError:
-            pass
-
-    # 2. Direct float of entire response
-    try:
-        return float(text)
-    except ValueError:
-        pass
-
-    # 3. LaTeX boxed: \boxed{...}
-    boxed = re.search(r'\\boxed\{([^}]+)\}', text)
-    if boxed:
-        inner = boxed.group(1).strip()
-        frac = re.search(r'\\d?frac\{(-?\d+)\}\{(\d+)\}', inner)
-        if frac:
-            return int(frac.group(1)) / int(frac.group(2))
-        frac = re.search(r'(-?\d+)\s*/\s*(\d+)', inner)
-        if frac:
-            return int(frac.group(1)) / int(frac.group(2))
-        try:
-            return float(inner)
-        except ValueError:
-            pass
-
-    # 4. Last number in entire text
-    matches = re.findall(r'-?\d+\.?\d*', text)
-    if matches:
-        logging.warning('Falling back to last number: %s -> %s', text[:80], matches[-1])
-        return float(matches[-1])
-
-    logging.warning('Could not parse model response as float: %s', text[:80])
-    return None
-
-
-def _evaluate_openai(client, question, model):
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": question},
-        ],
-        temperature=1,
-        max_completion_tokens=MAX_COMPLETION_TOKENS,
-    )
-    content = response.choices[0].message.content
-    finish_reason = response.choices[0].finish_reason
-    raw = content if content else ''
-    if not content:
-        logging.warning('Model returned no content (finish_reason=%s)', finish_reason)
-        return None, raw, finish_reason
-    return _parse_answer(content), raw, finish_reason, None, None
-
+GEMINI_MODELS = {
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-pro",
+    "gemini-1.5-flash",
+}
 
 _ANSWER_SCHEMA = {
     "type": "object",
@@ -145,37 +93,139 @@ _ANSWER_SCHEMA = {
     "additionalProperties": False,
 }
 
-def _evaluate_anthropic(client, question, model):
-    response = client.messages.create(
+
+def _is_anthropic(model):
+    return model in ANTHROPIC_MODELS or model.startswith("claude")
+
+def _is_openai(model):
+    return model in OPENAI_MODELS or model.startswith(("gpt-", "o1", "o3", "o4"))
+
+def _is_gemini(model):
+    return model in GEMINI_MODELS or model.startswith("gemini")
+
+
+def _parse_levels(levels_str):
+    levels = set()
+    for part in levels_str.split(','):
+        part = part.strip()
+        if '-' in part:
+            start, end = part.split('-')
+            levels.update(range(int(start), int(end) + 1))
+        else:
+            levels.add(int(part))
+    return levels
+
+
+def _evaluate_openai(client, question, model):
+    response = client.chat.completions.create(
         model=model,
-        max_tokens=MAX_COMPLETION_TOKENS,
-        temperature=0,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": question}],
-        output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}},
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": question},
+        ],
+        max_completion_tokens=MAX_COMPLETION_TOKENS,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "math_answer",
+                "schema": _ANSWER_SCHEMA,
+                "strict": True,
+            },
+        },
     )
-    content = response.content[0].text if response.content else ''
-    stop_reason = response.stop_reason
-    input_tokens = response.usage.input_tokens
-    output_tokens = response.usage.output_tokens
+    content = response.choices[0].message.content
+    finish_reason = response.choices[0].finish_reason
+    input_tokens = response.usage.prompt_tokens if response.usage else None
+    output_tokens = response.usage.completion_tokens if response.usage else None
     if not content:
-        logging.warning('Model returned no content (stop_reason=%s)', stop_reason)
-        return None, content, stop_reason, input_tokens, output_tokens
+        logging.warning('Model returned no content (finish_reason=%s)', finish_reason)
+        return None, '', finish_reason, input_tokens, output_tokens
     try:
-        return json.loads(content)["answer"], content, stop_reason, input_tokens, output_tokens
+        return json.loads(content)["answer"], content, finish_reason, input_tokens, output_tokens
     except (json.JSONDecodeError, KeyError):
-        logging.warning('Failed to parse structured output (stop_reason=%s): %s', stop_reason, content[:80])
-        return None, content, stop_reason, input_tokens, output_tokens
+        logging.warning('Failed to parse structured output (finish_reason=%s): %s', finish_reason, content[:80])
+        return None, content, finish_reason, input_tokens, output_tokens
 
 
-def evaluate_problem(openai_client, anthropic_client, question, model):
+def _evaluate_anthropic(client, question, model):
+    for attempt in range(3):
+        try:
+            response = client.messages.create(
+                model=model,
+                max_tokens=MAX_COMPLETION_TOKENS,
+                temperature=0,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": question}],
+                output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}},
+            )
+            content = response.content[0].text if response.content else ''
+            stop_reason = response.stop_reason
+            input_tokens = response.usage.input_tokens
+            output_tokens = response.usage.output_tokens
+            if not content:
+                logging.warning('Model returned no content (stop_reason=%s)', stop_reason)
+                return None, content, stop_reason, input_tokens, output_tokens
+            try:
+                return json.loads(content)["answer"], content, stop_reason, input_tokens, output_tokens
+            except (json.JSONDecodeError, KeyError):
+                logging.warning('Failed to parse structured output (stop_reason=%s): %s', stop_reason, content[:80])
+                return None, content, stop_reason, input_tokens, output_tokens
+        except anthropic.InternalServerError:
+            if attempt < 2:
+                logging.warning('Anthropic 500 error on attempt %d, retrying in 5s...', attempt + 1)
+                time.sleep(5)
+            else:
+                logging.warning('Anthropic 500 error after 3 attempts, skipping problem')
+                return None, '', 'error_500', None, None
+
+
+def _evaluate_gemini(client, question, model):
+    for attempt in range(3):
+        try:
+            config = google_types.GenerateContentConfig(
+                response_mime_type='application/json',
+                response_schema=_ANSWER_SCHEMA,
+                temperature=0,
+                max_output_tokens=MAX_COMPLETION_TOKENS,
+                system_instruction=SYSTEM_PROMPT or None,
+            )
+            response = client.models.generate_content(
+                model=model,
+                contents=question,
+                config=config,
+            )
+            content = response.text or ''
+            finish_reason = str(response.candidates[0].finish_reason) if response.candidates else 'unknown'
+            input_tokens = response.usage_metadata.prompt_token_count if response.usage_metadata else None
+            output_tokens = response.usage_metadata.candidates_token_count if response.usage_metadata else None
+            if not content:
+                logging.warning('Gemini returned no content (finish_reason=%s)', finish_reason)
+                return None, '', finish_reason, input_tokens, output_tokens
+            try:
+                return json.loads(content)["answer"], content, finish_reason, input_tokens, output_tokens
+            except (json.JSONDecodeError, KeyError):
+                logging.warning('Failed to parse Gemini structured output (finish_reason=%s): %s', finish_reason, content[:80])
+                return None, content, finish_reason, input_tokens, output_tokens
+        except Exception as e:
+            if attempt < 2:
+                logging.warning('Gemini error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
+                time.sleep(5)
+            else:
+                logging.warning('Gemini error after 3 attempts, skipping problem: %s', e)
+                return None, '', 'error', None, None
+
+
+def evaluate_problem(openai_client, anthropic_client, gemini_client, question, model):
     if _is_anthropic(model):
         return _evaluate_anthropic(anthropic_client, question, model)
-    return _evaluate_openai(openai_client, question, model)
+    if _is_openai(model):
+        return _evaluate_openai(openai_client, question, model)
+    if _is_gemini(model):
+        return _evaluate_gemini(gemini_client, question, model)
+    raise ValueError(f'Unknown model: {model}')
 
 
-def evaluate_model(openai_client, anthropic_client, model, problems, output_path):
-    """Evaluates a model on all problems, writing results to file after each answer."""
+def evaluate_model(openai_client, anthropic_client, gemini_client, model, problems, output_path):
     results = []
     correct_count = 0
 
@@ -185,16 +235,12 @@ def evaluate_model(openai_client, anthropic_client, model, problems, output_path
 
         logging.info('[%s] Problem %d/%d', model, i + 1, len(problems))
         model_answer, raw_response, finish_reason, input_tokens, output_tokens = evaluate_problem(
-            openai_client, anthropic_client, question, model
+            openai_client, anthropic_client, gemini_client, question, model
         )
 
-        is_correct = (
-            model_answer is not None
-            and abs(expected - model_answer) <= TOLERANCE
-        )
-        if model_answer is not None:
-            if is_correct:
-                correct_count += 1
+        is_correct = model_answer is not None and abs(expected - model_answer) <= TOLERANCE
+        if is_correct:
+            correct_count += 1
 
         results.append({
             'question': question,
@@ -207,9 +253,11 @@ def evaluate_model(openai_client, anthropic_client, model, problems, output_path
             'output_tokens': output_tokens,
         })
 
-        # Write after every answer so progress is never lost
         evaluated = i + 1
         answered = sum(1 for r in results if r['model_answer'] is not None)
+        total_input = sum(r['input_tokens'] for r in results if r['input_tokens'] is not None)
+        total_output = sum(r['output_tokens'] for r in results if r['output_tokens'] is not None)
+        token_count = sum(1 for r in results if r['input_tokens'] is not None)
         output = {
             'model': model,
             'total': len(problems),
@@ -217,6 +265,8 @@ def evaluate_model(openai_client, anthropic_client, model, problems, output_path
             'answered': answered,
             'correct': correct_count,
             'accuracy': correct_count / answered if answered > 0 else 0,
+            'avg_input_tokens': total_input / token_count if token_count > 0 else 0,
+            'avg_output_tokens': total_output / token_count if token_count > 0 else 0,
             'tolerance': TOLERANCE,
             'results': results,
         }
@@ -231,38 +281,29 @@ def evaluate_model(openai_client, anthropic_client, model, problems, output_path
 def main(unused_argv):
     openai_key = os.environ.get('OPENAI_API_KEY')
     anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+    gemini_key = os.environ.get('GEMINI_API_KEY')
 
     openai_client = OpenAI(api_key=openai_key) if openai_key else None
     anthropic_client = anthropic.Anthropic(api_key=anthropic_key) if anthropic_key else None
+    gemini_client = google_genai.Client(api_key=gemini_key) if gemini_key else None
 
-    # Validate that required clients are available
     for model in ENGINES:
         if _is_anthropic(model) and anthropic_client is None:
             logging.fatal('ANTHROPIC_API_KEY not set but model %s requires it', model)
             return
-        if not _is_anthropic(model) and openai_client is None:
+        if _is_openai(model) and openai_client is None:
             logging.fatal('OPENAI_API_KEY not set but model %s requires it', model)
+            return
+        if _is_gemini(model) and gemini_client is None:
+            logging.fatal('GEMINI_API_KEY not set but model %s requires it', model)
             return
 
     if not FLAGS.input_json and not FLAGS.input_dir:
         logging.fatal('Must specify either --input_json or --input_dir')
         return
 
-    # Parse --levels into a set of ints, e.g. "1-4" -> {1,2,3,4}, "2,5,7" -> {2,5,7}
-    def _parse_levels(levels_str):
-        levels = set()
-        for part in levels_str.split(','):
-            part = part.strip()
-            if '-' in part:
-                start, end = part.split('-')
-                levels.update(range(int(start), int(end) + 1))
-            else:
-                levels.add(int(part))
-        return levels
-
     allowed_levels = _parse_levels(FLAGS.levels) if FLAGS.levels else None
 
-    # Build list of (input_json_path, level) to evaluate
     jobs = []
     if FLAGS.input_dir:
         input_dir = os.path.expanduser(FLAGS.input_dir)
@@ -279,7 +320,7 @@ def main(unused_argv):
                     continue
             for fname in os.listdir(level_path):
                 if fname.endswith('.json'):
-                    module_name = fname[:-5]  # strip .json
+                    module_name = fname[:-5]
                     jobs.append((os.path.join(level_path, fname), level_name, module_name))
     else:
         level = os.path.basename(os.path.dirname(os.path.abspath(FLAGS.input_json)))
@@ -294,9 +335,9 @@ def main(unused_argv):
         os.makedirs(output_dir, exist_ok=True)
 
         for model in ENGINES:
-            logging.info('Starting evaluation with model: %s, level: %s, module: %s', model, level, module_name)
+            logging.info('Evaluating model=%s level=%s module=%s', model, level, module_name)
             output_path = os.path.join(output_dir, module_name + '__' + model.replace('/', '_') + '.json')
-            evaluate_model(openai_client, anthropic_client, model, problems, output_path)
+            evaluate_model(openai_client, anthropic_client, gemini_client, model, problems, output_path)
             logging.info('Results written to %s', output_path)
 
     logging.info('All evaluations complete.')
