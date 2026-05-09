@@ -1,0 +1,150 @@
+{
+  "source_file": "eval_results/level-1/quadratic_constrained_quadratic_programming__basic_qcqp__claude-haiku-4-5-20251001.json",
+  "judge_model": "gpt-4.1-mini",
+  "include_correct": false,
+  "summary": {
+    "num_judged_examples": 6,
+    "primary_error_type_counts": {
+      "complexity": 4,
+      "constraints": 1,
+      "algebra": 1
+    },
+    "secondary_error_type_counts": {
+      "algebra": 1,
+      "complexity": 2
+    },
+    "stepwise_error_tag_counts": {
+      "numerical_approximation_error": 3,
+      "logical_gap": 2,
+      "numerical_computation_error": 1
+    }
+  },
+  "judged_examples": [
+    {
+      "index": 0,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 27.416.\n\nQ_0 = [[3, 1], [1, 6]]\nc_0 = [3, 0]\nQ_1 = [[5.5, 2], [2, 1.5]], c_1 = [-1, 0], d_1 = 5.5\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -1.5762359920953852,
+      "model_answer": -1.49,
+      "correct": false,
+      "judgment": {
+        "primary_error_type": "complexity",
+        "secondary_error_types": [],
+        "stepwise_error_tags": {
+          "logical_gap": false,
+          "numerical_computation_error": false,
+          "numerical_approximation_error": true
+        },
+        "final_answer_status": "incorrect",
+        "confidence": 0.9,
+        "short_rationale": "The model attempts a partial analytic and numeric approach but fails to fully solve the QCQP with all constraints, settling on a rough approximate boundary check and a suboptimal point, yielding an inaccurate objective minimum compared to the gold answer.",
+        "evidence_span": "The model does not fully solve the QCQP optimization and uses a numeric approximation with limited search, resulting in the approximate answer -1.49 instead of the more precise -1.5762."
+      }
+    },
+    {
+      "index": 1,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 16.0.\n\nQ_0 = [[6, -3], [-3, 6]]\nc_0 = [4, 3]\nQ_1 = [[8.5, -4], [-4, 4.5]], c_1 = [4, -1], d_1 = 5.5\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -4.111111111111111,
+      "model_answer": -3.6667,
+      "correct": false,
+      "judgment": {
+        "primary_error_type": "complexity",
+        "secondary_error_types": [],
+        "stepwise_error_tags": {
+          "logical_gap": false,
+          "numerical_computation_error": false,
+          "numerical_approximation_error": true
+        },
+        "final_answer_status": "incorrect",
+        "confidence": 0.9,
+        "short_rationale": "The model identifies the unconstrained minimizer and checks feasibility correctly, but fails to consider whether the boundary constraint ||x||_2^2 <=16 or the quadratic constraint could lead to a better solution; the final answer is a rounded approximation and does not match the precise optimal value.",
+        "evidence_span": "The model computes the unconstrained minimum at x* = [-11/9, -10/9], confirms both constraints are satisfied, and concludes this is the optimal solution with a value approximately -3.667, whereas the expected answer is -4.111111111111111."
+      }
+    },
+    {
+      "index": 2,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 27.416.\n\nQ_0 = [[1, 0], [0, 6]]\nc_0 = [-4, 1]\nQ_1 = [[4.5, -2], [-2, 1.5]], c_1 = [-1, 2], d_1 = 27.5\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -7.017605483423269,
+      "model_answer": -8.0833,
+      "correct": false,
+      "judgment": {
+        "primary_error_type": "complexity",
+        "secondary_error_types": [
+          "algebra"
+        ],
+        "stepwise_error_tags": {
+          "logical_gap": true,
+          "numerical_computation_error": false,
+          "numerical_approximation_error": false
+        },
+        "final_answer_status": "incorrect",
+        "confidence": 0.9,
+        "short_rationale": "The model correctly computed the unconstrained minimum and verified its infeasibility but failed to adequately solve the constrained problem, instead outputting the infeasible unconstrained minimum as the answer. It also made a logical leap claiming the minimum is approximately -8.0833 without fully addressing the boundary or KKT conditions, leading to an incorrect final solution.",
+        "evidence_span": "The unconstrained minimum violates constraint 1, so we need to check the boundary... Given the complexity... the minimum value is approximately -8.0833, but we need to verify it's feasible... After careful analysis, the minimum value is -97/12 \u2248 -8.0833."
+      }
+    },
+    {
+      "index": 3,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 27.416.\n\nQ_0 = [[3, -2], [-2, 5]]\nc_0 = [-1, -3]\nQ_1 = [[4.5, 4], [4, 8.5]], c_1 = [4, 3], d_1 = 9.5\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -1.5736059050732338,
+      "model_answer": null,
+      "correct": null,
+      "judgment": {
+        "primary_error_type": "complexity",
+        "secondary_error_types": [],
+        "stepwise_error_tags": {
+          "logical_gap": false,
+          "numerical_computation_error": false,
+          "numerical_approximation_error": false
+        },
+        "final_answer_status": "missing_or_unparseable",
+        "confidence": 0.9,
+        "short_rationale": "The model's reasoning is a detailed symbolic and numeric exploration but does not conclude with a final minimum value; the approach is complex but incomplete and lacks a final answer, showing high complexity without completeness.",
+        "evidence_span": "The model attempts extensive calculations and constraint checks but never outputs a final minimum value, ending abruptly and providing only partial numeric results."
+      }
+    },
+    {
+      "index": 4,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 19.485.\n\nQ_0 = [[1, 0], [0, 3]]\nc_0 = [0, -4]\nQ_1 = [[5.5, -4], [-4, 4.5]], c_1 = [-3, -1], d_1 = -1.0\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -2.377997243105339,
+      "model_answer": -4.0,
+      "correct": false,
+      "judgment": {
+        "primary_error_type": "constraints",
+        "secondary_error_types": [
+          "complexity"
+        ],
+        "stepwise_error_tags": {
+          "logical_gap": true,
+          "numerical_computation_error": true,
+          "numerical_approximation_error": false
+        },
+        "final_answer_status": "incorrect",
+        "confidence": 0.9,
+        "short_rationale": "The model made unsupported leaps in logic, and numerical verification shows violations of constraints; the solution incorrectly assumes feasibility and boundary conditions without fully exploring constraint interactions or using precise optimization methods.",
+        "evidence_span": "The model incorrectly assumes the optimal point lies on the boundary of constraint 1, attempts crude parameterization and numerical guesses, fails to confirm constraint satisfaction reliably, and concludes an answer (-4.0) that is inconsistent with both constraints and the gold answer (-2.378)."
+      }
+    },
+    {
+      "index": 5,
+      "question": "Consider the convex quadratically constrained quadratic program over x in R^2:\nMinimize (1/2) x^T Q_0 x + c_0^T x\nsubject to x^T Q_i x + c_i^T x <= d_i for i=1..1,\nand ||x||_2^2 <= 9.0.\n\nQ_0 = [[2, 0], [0, 5]]\nc_0 = [4, 0]\nQ_1 = [[5.5, 5], [5, 5.5]], c_1 = [-3, 4], d_1 = 1.0\n\nWhat is the minimum value of the objective?",
+      "expected_answer": -0.9168610289970114,
+      "model_answer": -0.879,
+      "correct": false,
+      "judgment": {
+        "primary_error_type": "algebra",
+        "secondary_error_types": [
+          "complexity"
+        ],
+        "stepwise_error_tags": {
+          "logical_gap": false,
+          "numerical_computation_error": false,
+          "numerical_approximation_error": true
+        },
+        "final_answer_status": "incorrect",
+        "confidence": 0.9,
+        "short_rationale": "The model correctly sets up the problem and attempts to solve via KKT conditions but makes approximation errors and does not fully or precisely resolve the nonlinear system with both constraints active, leading to an incorrect minimum value estimate.",
+        "evidence_span": "The solution approximates eigenvalues and roots, uses rounded intermediate calculations, and stops after partial KKT analysis with only one constraint boundary explored in detail, resulting in a final answer -0.879 instead of the correct -0.9168610289970114."
+      }
+    }
+  ]
+}
