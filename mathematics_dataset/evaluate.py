@@ -7,6 +7,8 @@ Usage:
   export OPENAI_API_KEY=sk-...
   export ANTHROPIC_API_KEY=sk-ant-...
   export GEMINI_API_KEY=...
+  export DEEPSEEK_API_KEY=sk-...
+  export DASHSCOPE_API_KEY=sk-...
   python -m mathematics_dataset.evaluate \
     --input_json=output_json/train-easy/quadratic_programming__quadratic_programming.json \
     --output_dir=eval_results
@@ -53,9 +55,15 @@ ENGINES = [
 ]
 
 TOLERANCE = 0.01
-MAX_COMPLETION_TOKENS = 20000
+MAX_COMPLETION_TOKENS = 16000
 
-SYSTEM_PROMPT = ""
+SYSTEM_PROMPT = (
+    "You are a math solver. Solve the given optimization problem step by step. "
+    "Your answer only needs to be accurate to within 0.01 of the true optimal value. "
+    "As soon as you compute any candidate objective value — even from a first pass — output it immediately as your final answer. "
+    "Do NOT iterate, refine dual variables, or run bisection beyond a single attempt. "
+    "Commit to your first reasonable estimate and stop."
+)
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -83,6 +91,18 @@ GEMINI_MODELS = {
     "gemini-1.5-flash",
 }
 
+DEEPSEEK_MODELS = {
+    "deepseek-chat",
+    "deepseek-reasoner",
+}
+
+QWEN_MODELS = {
+    "qwen-plus",
+    "qwen-max",
+    "qwen-turbo",
+    "qwen3-235b-a22b",
+}
+
 _ANSWER_SCHEMA = {
     "type": "object",
     "properties": {
@@ -102,6 +122,12 @@ def _is_openai(model):
 
 def _is_gemini(model):
     return model in GEMINI_MODELS or model.startswith("gemini")
+
+def _is_deepseek(model):
+    return model in DEEPSEEK_MODELS or model.startswith("deepseek")
+
+def _is_qwen(model):
+    return model in QWEN_MODELS or model.startswith("qwen")
 
 
 def _parse_levels(levels_str):
@@ -215,17 +241,61 @@ def _evaluate_gemini(client, question, model):
                 return None, '', 'error', None, None
 
 
-def evaluate_problem(openai_client, anthropic_client, gemini_client, question, model):
+_DEEPSEEK_SYSTEM_PROMPT = (
+    SYSTEM_PROMPT +
+    "\n\nYou must respond in JSON format with exactly two keys. Example:\n"
+    '{"reasoning": "step by step work here", "answer": 3.14}'
+)
+
+
+def _evaluate_deepseek(client, question, model):
+    for attempt in range(3):
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": _DEEPSEEK_SYSTEM_PROMPT},
+                    {"role": "user", "content": question},
+                ],
+                max_tokens=MAX_COMPLETION_TOKENS,
+                response_format={"type": "json_object"},
+            )
+            content = response.choices[0].message.content
+            finish_reason = response.choices[0].finish_reason
+            input_tokens = response.usage.prompt_tokens if response.usage else None
+            output_tokens = response.usage.completion_tokens if response.usage else None
+            if not content:
+                logging.warning('DeepSeek returned no content (finish_reason=%s)', finish_reason)
+                return None, '', finish_reason, input_tokens, output_tokens
+            try:
+                return json.loads(content)["answer"], content, finish_reason, input_tokens, output_tokens
+            except (json.JSONDecodeError, KeyError):
+                logging.warning('Failed to parse DeepSeek output (finish_reason=%s): %s', finish_reason, content[:80])
+                return None, content, finish_reason, input_tokens, output_tokens
+        except Exception as e:
+            if attempt < 2:
+                logging.warning('DeepSeek error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
+                time.sleep(5)
+            else:
+                logging.warning('DeepSeek error after 3 attempts, skipping problem: %s', e)
+                return None, '', 'error', None, None
+
+
+def evaluate_problem(openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, question, model):
     if _is_anthropic(model):
         return _evaluate_anthropic(anthropic_client, question, model)
     if _is_openai(model):
         return _evaluate_openai(openai_client, question, model)
     if _is_gemini(model):
         return _evaluate_gemini(gemini_client, question, model)
+    if _is_deepseek(model):
+        return _evaluate_deepseek(deepseek_client, question, model)
+    if _is_qwen(model):
+        return _evaluate_deepseek(qwen_client, question, model)
     raise ValueError(f'Unknown model: {model}')
 
 
-def evaluate_model(openai_client, anthropic_client, gemini_client, model, problems, output_path):
+def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, model, problems, output_path):
     results = []
     correct_count = 0
 
@@ -235,7 +305,7 @@ def evaluate_model(openai_client, anthropic_client, gemini_client, model, proble
 
         logging.info('[%s] Problem %d/%d', model, i + 1, len(problems))
         model_answer, raw_response, finish_reason, input_tokens, output_tokens = evaluate_problem(
-            openai_client, anthropic_client, gemini_client, question, model
+            openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, question, model
         )
 
         is_correct = model_answer is not None and abs(expected - model_answer) <= TOLERANCE
@@ -282,10 +352,14 @@ def main(unused_argv):
     openai_key = os.environ.get('OPENAI_API_KEY')
     anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
     gemini_key = os.environ.get('GEMINI_API_KEY')
+    deepseek_key = os.environ.get('DEEPSEEK_API_KEY')
+    qwen_key = os.environ.get('DASHSCOPE_API_KEY')
 
     openai_client = OpenAI(api_key=openai_key) if openai_key else None
     anthropic_client = anthropic.Anthropic(api_key=anthropic_key) if anthropic_key else None
     gemini_client = google_genai.Client(api_key=gemini_key) if gemini_key else None
+    deepseek_client = OpenAI(api_key=deepseek_key, base_url='https://api.deepseek.com') if deepseek_key else None
+    qwen_client = OpenAI(api_key=qwen_key, base_url='https://dashscope-intl.aliyuncs.com/compatible-mode/v1') if qwen_key else None
 
     for model in ENGINES:
         if _is_anthropic(model) and anthropic_client is None:
@@ -296,6 +370,12 @@ def main(unused_argv):
             return
         if _is_gemini(model) and gemini_client is None:
             logging.fatal('GEMINI_API_KEY not set but model %s requires it', model)
+            return
+        if _is_deepseek(model) and deepseek_client is None:
+            logging.fatal('DEEPSEEK_API_KEY not set but model %s requires it', model)
+            return
+        if _is_qwen(model) and qwen_client is None:
+            logging.fatal('DASHSCOPE_API_KEY not set but model %s requires it', model)
             return
 
     if not FLAGS.input_json and not FLAGS.input_dir:
@@ -337,7 +417,7 @@ def main(unused_argv):
         for model in ENGINES:
             logging.info('Evaluating model=%s level=%s module=%s', model, level, module_name)
             output_path = os.path.join(output_dir, module_name + '__' + model.replace('/', '_') + '.json')
-            evaluate_model(openai_client, anthropic_client, gemini_client, model, problems, output_path)
+            evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, model, problems, output_path)
             logging.info('Results written to %s', output_path)
 
     logging.info('All evaluations complete.')
