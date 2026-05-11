@@ -31,10 +31,10 @@ _LEVEL_DIMS = [
     (2,  2),  # level 2
     (3,  2),  # level 3
     (3,  3),  # level 4
-    (4,  3),  # level 5
-    (5,  4),  # level 6
-    (7,  5),  # level 7
-    (10, 7),  # level 8
+    (3,  3),  # level 5
+    (3,  4),  # level 6
+    (3,  5),  # level 7
+    (3, 7),  # level 8
 ]
 
 
