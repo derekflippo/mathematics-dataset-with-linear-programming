@@ -21,6 +21,7 @@ from __future__ import print_function
 import json
 import os
 import time
+import re
 
 from absl import app
 from absl import flags
@@ -48,8 +49,10 @@ ENGINES = [
     # "o4-mini",
     # "o3",
     # "claude-opus-4-7",
-    "claude-sonnet-4-6",
+    # "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
+    # "deepseek-chat",
+    "deepseek-reasoner",
     # "gemini-2.5-pro",
     # "gemini-2.5-flash",
 ]
@@ -267,11 +270,15 @@ def _evaluate_deepseek(client, question, model):
             if not content:
                 logging.warning('DeepSeek returned no content (finish_reason=%s)', finish_reason)
                 return None, '', finish_reason, input_tokens, output_tokens
-            try:
-                return json.loads(content)["answer"], content, finish_reason, input_tokens, output_tokens
-            except (json.JSONDecodeError, KeyError):
-                logging.warning('Failed to parse DeepSeek output (finish_reason=%s): %s', finish_reason, content[:80])
-                return None, content, finish_reason, input_tokens, output_tokens
+            model_answer = _extract_answer_from_text(content)
+
+            if model_answer is None:
+                logging.warning(
+                    'Failed to extract answer (finish_reason=%s): %s',
+                    finish_reason,
+                    content[:120]
+                )
+            return model_answer, content, finish_reason, input_tokens, output_tokens
         except Exception as e:
             if attempt < 2:
                 logging.warning('DeepSeek error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
@@ -347,6 +354,55 @@ def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_clie
                  model, correct_count, answered, 100 * correct_count / answered if answered > 0 else 0)
     return output
 
+def _extract_answer_from_text(content):
+    if not content:
+        return None
+
+    # Remove markdown fences
+    content = content.strip()
+    content = re.sub(r"^```json\s*", "", content)
+    content = re.sub(r"^```\s*", "", content)
+    content = re.sub(r"\s*```$", "", content)
+
+    # Try normal JSON first
+    try:
+        parsed = json.loads(content)
+        answer = parsed.get("answer")
+        if isinstance(answer, (int, float)):
+            return float(answer)
+        if isinstance(answer, str):
+            return float(answer)
+    except Exception:
+        pass
+
+    # Try to find "answer": 47.7439
+    match = re.search(
+        r'"answer"\s*:\s*(-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)',
+        content
+    )
+    if match:
+        return float(match.group(1))
+
+    # Try to find fractions like "answer": 55/18
+    match = re.search(
+        r'"answer"\s*:\s*(-?\d+)\s*/\s*(-?\d+)',
+        content
+    )
+    if match:
+        numerator = float(match.group(1))
+        denominator = float(match.group(2))
+        if denominator != 0:
+            return numerator / denominator
+
+    # Last fallback: grab the last decimal-looking number
+    numbers = re.findall(
+        r'-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?',
+        content
+    )
+    if numbers:
+        return float(numbers[-1])
+
+    return None
 
 def main(unused_argv):
     openai_key = os.environ.get('OPENAI_API_KEY')
