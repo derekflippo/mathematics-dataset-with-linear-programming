@@ -277,29 +277,6 @@ def _first_present_with_nested(example, aliases):
     return None
 
 
-def _parse_raw_response(raw_response):
-    parsed = None
-    normalized_raw_response = raw_response
-    parsed_model_answer = None
-
-    if isinstance(raw_response, str):
-        try:
-            parsed = json.loads(raw_response)
-        except (TypeError, ValueError, json.JSONDecodeError):
-            parsed = None
-    elif isinstance(raw_response, dict):
-        parsed = raw_response
-
-    if isinstance(parsed, dict):
-        reasoning = parsed.get("reasoning")
-        if reasoning is not None:
-            if isinstance(reasoning, str):
-                normalized_raw_response = reasoning
-            else:
-                normalized_raw_response = json.dumps(reasoning, ensure_ascii=True)
-        parsed_model_answer = parsed.get("answer")
-
-    return normalized_raw_response, parsed_model_answer
 
 
 def _infer_problem_type_from_path(input_json_path):
@@ -340,10 +317,6 @@ def _normalize_example(example, input_json_path=None):
     for canonical_key, aliases in FIELD_ALIASES.items():
         normalized[canonical_key] = _first_present_with_nested(example, aliases)
 
-    normalized_raw_response, parsed_model_answer = _parse_raw_response(normalized.get("raw_response"))
-    normalized["raw_response"] = normalized_raw_response
-    if normalized.get("model_answer") is None and parsed_model_answer is not None:
-        normalized["model_answer"] = parsed_model_answer
     if normalized.get("problem_type") is None:
         normalized["problem_type"] = _infer_problem_type_from_question(normalized.get("question"))
     if normalized.get("problem_type") is None and input_json_path:
