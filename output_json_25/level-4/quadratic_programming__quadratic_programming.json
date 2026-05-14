@@ -1,0 +1,127 @@
+[
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 18.   2. -21.]\n [  2.   3.   1.]\n [-21.   1.  33.]] and q = [ 3.  2. -4.],\nsubject to G x <= h and A x = b, where\nG = [[ 3.  2. -1.]\n [-2.  2.  1.]\n [-2. -1. -4.]\n [ 0.  3.  2.]], h = [  6.  10. -17.  16.],\nA = [[-3. -1.  3.]], b = [7.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "43.498100666611094",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[14. 20.  4.]\n [20. 36.  8.]\n [ 4.  8.  2.]] and q = [1. 1. 1.],\nsubject to G x <= h and A x = b, where\nG = [[-4. -1.  4.]\n [-1. -2. -3.]\n [-4. -4.  0.]\n [-3.  4.  2.]], h = [ -1. -16. -26.  16.],\nA = [[-3. -4. -4.]], b = [-37.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "300.30384621433706",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 41.  25.  -6.]\n [ 25.  19. -12.]\n [ -6. -12.  22.]] and q = [3. 1. 2.],\nsubject to G x <= h and A x = b, where\nG = [[ 4.  2. -4.]\n [-1. -2. -1.]\n [-4. -2. -2.]\n [ 2.  0. -2.]], h = [ 8. -3. -8.  3.],\nA = [[-3.  0.  3.]], b = [0.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "50.87500000108809",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 25.  10. -19.]\n [ 10.  24.  -8.]\n [-19.  -8.  26.]] and q = [-3. -2. -1.],\nsubject to G x <= h and A x = b, where\nG = [[-4. -2. -1.]\n [ 1.  3. -1.]\n [ 3. -2.  3.]\n [-2.  4. -1.]], h = [-20.  10.  15.   5.],\nA = [[-3.  3. -1.]], b = [-3.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "146.73106152507924",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 17.   0. -11.]\n [  0.   9.  -1.]\n [-11.  -1.  34.]] and q = [ 2.  1. -1.],\nsubject to G x <= h and A x = b, where\nG = [[ 3. -2. -2.]\n [-2.  2.  1.]\n [-4.  4. -1.]\n [-1.  1.  4.]], h = [-7. 11.  7. 19.],\nA = [[ 1. -3.  1.]], b = [-4.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "41.85457064186488",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 2. -1.  4.]\n [-1. 14.  0.]\n [ 4.  0. 19.]] and q = [ 1. -3.  1.],\nsubject to G x <= h and A x = b, where\nG = [[-3.  0. -3.]\n [ 0.  1.  2.]\n [-2. -4.  4.]\n [-2.  1.  0.]], h = [-9.  8. -8.  0.],\nA = [[-1. -2. -3.]], b = [-10.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "49.49999999999946",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[  5.   3.  -6.]\n [  3.   9. -12.]\n [ -6. -12.  33.]] and q = [ 1.  3. -2.],\nsubject to G x <= h and A x = b, where\nG = [[-4.  2. -2.]\n [ 1. -3.  3.]\n [-1.  0.  1.]\n [ 2.  3.  4.]], h = [-3.  5.  5. 30.],\nA = [[ 0. -2. -2.]], b = [-14.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "73.85147476886699",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 29. -17. -23.]\n [-17.  22.   9.]\n [-23.   9.  22.]] and q = [-1.  3.  3.],\nsubject to G x <= h and A x = b, where\nG = [[-4. -2.  2.]\n [ 3.  3.  1.]\n [ 2. -3. -4.]\n [-2. -2. -4.]], h = [ -1.  16. -17. -18.],\nA = [[ 2. -2.  4.]], b = [8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "134.5320404989256",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 9.  7. -8.]\n [ 7. 18.  2.]\n [-8.  2. 21.]] and q = [-1. -3. -3.],\nsubject to G x <= h and A x = b, where\nG = [[ 0. -4.  1.]\n [ 3.  3. -4.]\n [-1.  0.  1.]\n [ 0.  0.  1.]], h = [-1.  9.  3.  4.],\nA = [[-4.  2.  2.]], b = [-6.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "12.724481329270606",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 10.   4.  -2.]\n [  4.  17. -10.]\n [ -2. -10.   6.]] and q = [1. 1. 4.],\nsubject to G x <= h and A x = b, where\nG = [[ 2. -1. -2.]\n [ 2.  1.  4.]\n [-4. -4.  0.]\n [-1.  1. -3.]], h = [ -1.  16. -12.  -4.],\nA = [[-3. -3.  4.]], b = [-4.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "30.848571428127517",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 9. -2. -4.]\n [-2. 24. 16.]\n [-4. 16. 48.]] and q = [-4.  0.  4.],\nsubject to G x <= h and A x = b, where\nG = [[ 4. -4. -2.]\n [ 0. -4.  0.]\n [-2.  4. -4.]\n [ 4.  3.  3.]], h = [-7. -5.  0. 20.],\nA = [[ 3.  1. -3.]], b = [-1.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "104.66089979132082",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[21. 28. -1.]\n [28. 48. 12.]\n [-1. 12. 17.]] and q = [-1.  3. -1.],\nsubject to G x <= h and A x = b, where\nG = [[-1.  3.  1.]\n [ 3.  1.  3.]\n [-3.  3. -1.]\n [-2.  1. -3.]], h = [16. 25.  2. -7.],\nA = [[-2.  3.  4.]], b = [18.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "132.55197390577683",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[17. 13. -6.]\n [13. 18. 10.]\n [-6. 10. 36.]] and q = [-3.  1. -1.],\nsubject to G x <= h and A x = b, where\nG = [[ 1.  2.  2.]\n [-3.  0.  1.]\n [ 3. -2.  2.]\n [-2.  4.  4.]], h = [17.  3.  6. 30.],\nA = [[ 2.  2. -4.]], b = [-8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "25.088152985393073",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 11.  -8. -14.]\n [ -8.  34.   4.]\n [-14.   4.  20.]] and q = [-1.  4.  0.],\nsubject to G x <= h and A x = b, where\nG = [[ 1.  2.  3.]\n [-2. -2.  1.]\n [ 3.  2. -1.]\n [-2. -2.  0.]], h = [ 19.  -9.  13. -11.],\nA = [[3. 3. 4.]], b = [26.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "22.95867768666089",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[21. -1. 18.]\n [-1. 14. -6.]\n [18. -6. 20.]] and q = [ 0.  3. -2.],\nsubject to G x <= h and A x = b, where\nG = [[-3. -2. -3.]\n [ 0. -2. -4.]\n [ 1.  0.  0.]\n [ 0.  4. -1.]], h = [-15. -14.   6.   7.],\nA = [[-1.  2.  1.]], b = [5.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "131.52000001709354",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[11.  7. -5.]\n [ 7. 17. -7.]\n [-5. -7. 41.]] and q = [ 3. -2. -1.],\nsubject to G x <= h and A x = b, where\nG = [[-2. -1.  3.]\n [ 4.  4. -1.]\n [-4.  3.  1.]\n [-4. -4.  4.]], h = [ -2.  30.  -1. -16.],\nA = [[-2.  0.  0.]], b = [-8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "99.71590911344391",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[17. -5. -6.]\n [-5.  9.  6.]\n [-6.  6. 17.]] and q = [ 1. -2.  0.],\nsubject to G x <= h and A x = b, where\nG = [[-2.  1. -3.]\n [-4.  4. -4.]\n [ 4.  2. -3.]\n [ 0.  0.  3.]], h = [-12. -12.   2.  16.],\nA = [[ 4.  2. -4.]], b = [-4.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "55.764171713980666",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[29. -8. 15.]\n [-8.  4. -6.]\n [15. -6. 10.]] and q = [ 1. -2. -3.],\nsubject to G x <= h and A x = b, where\nG = [[-4.  2.  0.]\n [ 2. -2.  2.]\n [ 4. -2.  0.]\n [ 2. -4.  1.]], h = [-5.  9.  9.  5.],\nA = [[-2.  1. -4.]], b = [-15.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "124.3804256229725",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 34. -21. -20.]\n [-21.  18.  15.]\n [-20.  15.  14.]] and q = [-2. -3.  4.],\nsubject to G x <= h and A x = b, where\nG = [[-4. -2. -2.]\n [ 3.  1. -2.]\n [ 1. -1. -4.]\n [ 1. -4.  3.]], h = [-16.   8.  -5.   6.],\nA = [[4. 1. 4.]], b = [21.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "20.686704527264528",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[14.  4.  3.]\n [ 4. 16.  0.]\n [ 3.  0. 10.]] and q = [-3. -4. -2.],\nsubject to G x <= h and A x = b, where\nG = [[ 0.  2.  4.]\n [ 2.  0. -2.]\n [ 1. -1.  2.]\n [ 3.  2.  0.]], h = [12.  4.  4. 13.],\nA = [[3. 4. 0.]], b = [14.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "60.484848489806765",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[18.  3. -9.]\n [ 3.  5. -5.]\n [-9. -5.  9.]] and q = [0. 4. 0.],\nsubject to G x <= h and A x = b, where\nG = [[-4.  0.  3.]\n [ 0.  1. -4.]\n [ 4. -3.  2.]\n [-2.  2.  0.]], h = [ 11. -11.   2.   7.],\nA = [[ 2. -3.  1.]], b = [-6.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "30.490822030473268",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 17.   0. -13.]\n [  0.  16. -12.]\n [-13. -12.  34.]] and q = [-1.  3.  4.],\nsubject to G x <= h and A x = b, where\nG = [[-3.  4.  0.]\n [-4.  4.  1.]\n [ 3. -1. -1.]\n [ 4.  0. -3.]], h = [ 5.  5.  3. -2.],\nA = [[ 2. -3.  1.]], b = [2.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "6.945308930228182",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 19.   8. -11.]\n [  8.  14.  -1.]\n [-11.  -1.  13.]] and q = [ 1. -4.  0.],\nsubject to G x <= h and A x = b, where\nG = [[ 2. -1.  0.]\n [ 2. -3.  0.]\n [-2.  4.  1.]\n [ 1.  1.  2.]], h = [ 6. -1.  9. 14.],\nA = [[-1.  4.  3.]], b = [15.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "54.63030399528724",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 10.   8. -11.]\n [  8.  17.   3.]\n [-11.   3.  26.]] and q = [-1. -1. -1.],\nsubject to G x <= h and A x = b, where\nG = [[-1.  1. -4.]\n [-2. -1.  1.]\n [ 4. -3. -2.]\n [-3. -4.  0.]], h = [-14.  -4.  -7. -23.],\nA = [[-3.  0.  2.]], b = [-1.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "328.9484912046852",
+    "level": "level-4"
+  },
+  {
+    "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 5.  7.  1.]\n [ 7. 29. -1.]\n [ 1. -1.  2.]] and q = [-2. -2.  0.],\nsubject to G x <= h and A x = b, where\nG = [[ 3. -1.  0.]\n [-3. -2. -4.]\n [-2. -4. -2.]\n [-4. -2.  2.]], h = [  3. -23. -18.  -1.],\nA = [[ 2. -2.  2.]], b = [4.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "118.77044754590194",
+    "level": "level-4"
+  }
+]

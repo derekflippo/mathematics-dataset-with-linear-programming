@@ -1,102 +1,12 @@
 [
   {
-    "question": "Find the minimum value of 2*x1^-1*x2^2 + 3*x1^2*x2^-1 subject to (5*x1^2*x2) <= 35.44, 1/(x2*x1) <= 0.33, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "8.528028192441546",
+    "question": "Find the minimum value of 3*x1^-1 + 4*x1^-1*x2^2 subject to (3*x1^2) <= 6.14, 1/(x1*x2) <= 0.56, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "6.453252002323249",
     "level": "level-1"
   },
   {
-    "question": "Find the minimum value of 4*x1^-1*x2^2 + 3*x1^-1 subject to (3*x1*x2) <= 7.86, 1/(x1*x2) <= 0.39, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "0.810387663292867",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 2*x1*x2^-1 + 2*x1^-1*x2^2 subject to (2*x1^2*x2) <= 9.14, 1/(x2*x1) <= 0.37, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "5.137614505826324",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 4*x1^-1*x2^2 + 5*x1^-1*x2 subject to (2*x2^2) <= 5.85, 1/(x1*x2) <= 0.36, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "0.8024691370156247",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 3*x1*x2^-1 + 4*x1^-1 subject to (3*x2) <= 3.93, 1/(x2*x1) <= 0.56, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "6.0560966631955075",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1*x2^-1 + 5*x2^-1 subject to (3*x1*x2) <= 10.44, 1/(x2*x1) <= 0.29, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "1.1379310940836578",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 5*x1^2*x2^-1 + 4*x1*x2^-1 subject to (x2) <= 1.31, 1/(x1*x2) <= 0.6, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "10.062860728751556",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 2*x1^-1*x2 + x1^-1*x2^2 subject to (x1) <= 2.09, 1/(x2*x1) <= 0.25, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "3.5840530645946918",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 2*x2^-1 + x1^-1 subject to (4*x2) <= 5.61, 1/(x1*x2) <= 0.6, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "1.62602489172313",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1^2*x2^-1 + 3*x2^-1 subject to (2*x2^2) <= 5.67, 1/(x1*x2) <= 0.36, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "3.3982036348293194",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 2*x1^-1 + x2^-1 subject to (4*x1^2*x2) <= 24.0, 1/(x2*x1) <= 0.39, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "1.6509633433169668",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 5*x1^2*x2^-1 + 5*x1*x2^-1 subject to (5*x1^2*x2) <= 13.75, 1/(x2*x1) <= 0.57, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "0.7500000017861328",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1^2*x2^-1 + 2*x1^-1*x2 subject to (3*x1) <= 5.15, 1/(x2*x1) <= 0.37, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "3.624623532930095",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1^-1*x2^2 + 3*x1^-1*x2 subject to (4*x1*x2) <= 10.56, 1/(x2*x1) <= 0.4, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "0.3500000118128103",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1^-1 + x1*x2^-1 subject to (x1^2) <= 1.84, 1/(x2*x1) <= 0.55, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "1.008503034738975",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1*x2^-1 + 3*x1^-1*x2^2 subject to (5*x1) <= 9.8, 1/(x2*x1) <= 0.38, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "4.219024956790865",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 3*x1^-1*x2^2 + x2^-1 subject to (4*x1) <= 7.88, 1/(x1*x2) <= 0.42, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "3.0518480122002503",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 5*x1^-1 + 2*x1^-1*x2^2 subject to (x2) <= 1.73, 1/(x1*x2) <= 0.34, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "1.138408140992345",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of x1^-1*x2^2 + 5*x1*x2^-1 subject to (3*x1^2*x2) <= 19.87, 1/(x1*x2) <= 0.29, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "6.594587833996721",
-    "level": "level-1"
-  },
-  {
-    "question": "Find the minimum value of 3*x1^-1 + 2*x1*x2^-1 subject to (x1^2*x2^2) <= 14.9, 1/(x2*x1) <= 0.3, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
-    "answer": "3.1573862806792246",
+    "question": "Find the minimum value of 3*x1*x2^-1 + 3*x1^2*x2^-1 subject to (4*x1^2*x2) <= 26.56, 1/(x1*x2) <= 0.33, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "0.5840263476392985",
     "level": "level-1"
   }
 ]
