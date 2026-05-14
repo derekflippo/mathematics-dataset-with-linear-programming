@@ -1,0 +1,127 @@
+[
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 15.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, -3.5, 3], [-3.5, 2, 2.5], [3, 2.5, 0]]\nA_1 = [[0, -2, 1], [-2, 3, -1], [1, -1, 2]]\nA_2 = [[0, 0.5, 0.5], [0.5, 2, 0], [0.5, 0, -4]]\nA_3 = [[-4, 2.5, 1.5], [2.5, 3, 1], [1.5, 1, -3]]\nb_1 = 41.0, b_2 = 4.0, b_3 = -19.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "20.101664445200377",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 19.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[3, 1.5, 0], [1.5, -1, 2.5], [0, 2.5, -1]]\nA_1 = [[-3, -4, -1], [-4, -3, -1], [-1, -1, -3]]\nA_2 = [[0, -0.5, 1], [-0.5, -3, 0], [1, 0, 0]]\nA_3 = [[1, -3, 1], [-3, -4, -1.5], [1, -1.5, 3]]\nb_1 = -45.0, b_2 = -22.0, b_3 = -11.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "8.801020094552678",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 20.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-4, 0.5, -0.5], [0.5, 3, 3.5], [-0.5, 3.5, 4]]\nA_1 = [[-4, -0.5, -1], [-0.5, 0, 0.5], [-1, 0.5, 0]]\nA_2 = [[-3, 1.5, 0.5], [1.5, -2, -0.5], [0.5, -0.5, -4]]\nA_3 = [[-2, -1, -3], [-1, 0, 0.5], [-3, 0.5, -4]]\nb_1 = -35.0, b_2 = -54.0, b_3 = -85.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-1.743111955593676",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 15.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[1, 1.5, 0.5], [1.5, -3, 0], [0.5, 0, -4]]\nA_1 = [[-4, 1, -0.5], [1, 3, 0.5], [-0.5, 0.5, -3]]\nA_2 = [[4, -0.5, -1], [-0.5, 1, 2.5], [-1, 2.5, 4]]\nA_3 = [[-1, -1.5, 0.5], [-1.5, -4, 1], [0.5, 1, 3]]\nb_1 = -19.0, b_2 = 62.0, b_3 = 13.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-56.756241333364514",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 18.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, 1.5, 1], [1.5, -3, 1.5], [1, 1.5, 3]]\nA_1 = [[-3, -1, 0.5], [-1, 0, -1], [0.5, -1, 3]]\nA_2 = [[-1, 1.5, -0.5], [1.5, 0, 0.5], [-0.5, 0.5, 3]]\nA_3 = [[-1, 2.5, 0.5], [2.5, 3, -1], [0.5, -1, 1]]\nb_1 = -16.0, b_2 = 17.0, b_3 = 6.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-35.00713097095208",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 21.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, -0.5, 2], [-0.5, 1, -2], [2, -2, -4]]\nA_1 = [[-1, 0, -1], [0, 3, 3], [-1, 3, -1]]\nA_2 = [[2, 0.5, 2.5], [0.5, 4, 0], [2.5, 0, -1]]\nA_3 = [[-1, 0, -0.5], [0, -3, 0], [-0.5, 0, 2]]\nb_1 = -43.0, b_2 = 51.0, b_3 = -11.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-29.421308854213603",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 23.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 2, 1], [2, -4, -1.5], [1, -1.5, 0]]\nA_1 = [[-2, 3.5, -0.5], [3.5, 1, 3.5], [-0.5, 3.5, 2]]\nA_2 = [[3, 1, 0.5], [1, -2, -2], [0.5, -2, -2]]\nA_3 = [[-3, -2.5, -3], [-2.5, 0, 3], [-3, 3, 2]]\nb_1 = -106.0, b_2 = 10.0, b_3 = -24.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-15.891064548447336",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 16.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-4, -2.5, -2], [-2.5, 1, -0.5], [-2, -0.5, -2]]\nA_1 = [[2, -1, -1], [-1, -1, 0.5], [-1, 0.5, 1]]\nA_2 = [[-4, 2.5, -2.5], [2.5, 2, -0.5], [-2.5, -0.5, 2]]\nA_3 = [[-3, -0.5, 0], [-0.5, 1, -1], [0, -1, -4]]\nb_1 = -9.0, b_2 = 11.0, b_3 = -11.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-35.20472189207617",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 17.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, -3, -3], [-3, 1, -1], [-3, -1, 4]]\nA_1 = [[3, 1.5, 0], [1.5, -2, 0], [0, 0, -3]]\nA_2 = [[-4, 0, 3], [0, -3, -3], [3, -3, -1]]\nA_3 = [[-1, 1, -2.5], [1, -4, 1.5], [-2.5, 1.5, -3]]\nb_1 = -9.0, b_2 = -8.0, b_3 = -75.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-24.667127806223636",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 16.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 0, 0], [0, 0, 2], [0, 2, 0]]\nA_1 = [[-4, -2.5, 2], [-2.5, 1, -2.5], [2, -2.5, -1]]\nA_2 = [[4, -1.5, -0.5], [-1.5, 2, -2], [-0.5, -2, 0]]\nA_3 = [[4, 2.5, 0], [2.5, -4, -3], [0, -3, 1]]\nb_1 = -30.0, b_2 = 7.0, b_3 = -18.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "11.27150138235411",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 18.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-2, -0.5, 2], [-0.5, 0, 0.5], [2, 0.5, 2]]\nA_1 = [[-2, 0.5, -1.5], [0.5, -4, 1.5], [-1.5, 1.5, -1]]\nA_2 = [[-4, 0.5, 2.5], [0.5, 3, 1], [2.5, 1, -1]]\nA_3 = [[1, -2.5, 1.5], [-2.5, -1, -2], [1.5, -2, -3]]\nb_1 = -62.0, b_2 = -14.0, b_3 = -7.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-14.611751690946578",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 20.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[2, 1, 1], [1, 3, -0.5], [1, -0.5, 1]]\nA_1 = [[3, -0.5, -0.5], [-0.5, 2, 2], [-0.5, 2, 1]]\nA_2 = [[4, 1.5, 0.5], [1.5, -2, -2], [0.5, -2, 3]]\nA_3 = [[-4, 0, -1], [0, -1, 0.5], [-1, 0.5, -4]]\nb_1 = 35.0, b_2 = 54.0, b_3 = -74.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "17.13447764455326",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 11.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-4, 4, -3.5], [4, 1, 0], [-3.5, 0, -4]]\nA_1 = [[0, -1.5, -3], [-1.5, -3, 0.5], [-3, 0.5, -2]]\nA_2 = [[0, -2.5, -2], [-2.5, -4, 3.5], [-2, 3.5, 2]]\nA_3 = [[3, -0.5, -0.5], [-0.5, 1, 1], [-0.5, 1, 2]]\nb_1 = -12.0, b_2 = -18.0, b_3 = 17.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-21.466643079149193",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 18.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[1, 1, 3.5], [1, 4, 3.5], [3.5, 3.5, -4]]\nA_1 = [[2, 0.5, 0], [0.5, -1, 2], [0, 2, -2]]\nA_2 = [[-4, 1.5, 3], [1.5, -3, 0], [3, 0, -2]]\nA_3 = [[0, -0.5, 1], [-0.5, 3, 0], [1, 0, -4]]\nb_1 = 1.0, b_2 = -5.0, b_3 = -17.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "32.480895703443736",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 24.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[3, 2, -2], [2, 0, 0], [-2, 0, 0]]\nA_1 = [[-4, 0, 0], [0, 1, 1], [0, 1, -1]]\nA_2 = [[1, 1.5, 0], [1.5, 4, -1], [0, -1, 4]]\nA_3 = [[-3, 2.5, 0.5], [2.5, 2, 1], [0.5, 1, 4]]\nb_1 = -47.0, b_2 = 95.0, b_3 = 16.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "45.78324719881671",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 15.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-1, 1.5, 0.5], [1.5, -1, 1.5], [0.5, 1.5, 2]]\nA_1 = [[0, 0.5, -4], [0.5, -4, 0], [-4, 0, 4]]\nA_2 = [[0, 1, -0.5], [1, 3, -0.5], [-0.5, -0.5, 3]]\nA_3 = [[2, 2.5, 2], [2.5, -2, 2], [2, 2, -2]]\nb_1 = 2.0, b_2 = 53.0, b_3 = -44.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-14.873867779587385",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 17.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-1, -0.5, -1.5], [-0.5, 3, 0.5], [-1.5, 0.5, 1]]\nA_1 = [[-1, 0.5, 2.5], [0.5, 0, 2.5], [2.5, 2.5, 0]]\nA_2 = [[-1, -2, 1.5], [-2, 2, 1], [1.5, 1, 4]]\nA_3 = [[0, 1.5, -2], [1.5, 1, -0.5], [-2, -0.5, -4]]\nb_1 = -27.0, b_2 = 24.0, b_3 = -8.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "16.75210867238699",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 19.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, -0.5, -3], [-0.5, -2, 1.5], [-3, 1.5, -2]]\nA_1 = [[-2, -2, -0.5], [-2, 3, 1.5], [-0.5, 1.5, 1]]\nA_2 = [[2, -2, -2.5], [-2, 3, 4], [-2.5, 4, -1]]\nA_3 = [[-4, -3, -2.5], [-3, 0, -0.5], [-2.5, -0.5, -1]]\nb_1 = -1.0, b_2 = 11.0, b_3 = -22.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-57.60996773943995",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 20.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-3, 0.5, -2.5], [0.5, 1, -2.5], [-2.5, -2.5, -4]]\nA_1 = [[2, 1, 1], [1, 0, -0.5], [1, -0.5, -3]]\nA_2 = [[-3, -2.5, -2.5], [-2.5, 0, 0], [-2.5, 0, 1]]\nA_3 = [[-3, -1.5, 2], [-1.5, -3, -2], [2, -2, 2]]\nb_1 = 22.0, b_2 = -56.0, b_3 = -74.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-51.33012409913301",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 19.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[4, 0, 2], [0, -4, 1.5], [2, 1.5, 3]]\nA_1 = [[2, -3.5, 4], [-3.5, 2, -1.5], [4, -1.5, -4]]\nA_2 = [[-2, -0.5, 1], [-0.5, -1, 0.5], [1, 0.5, 4]]\nA_3 = [[-3, 3, 0.5], [3, 0, 2], [0.5, 2, -4]]\nb_1 = -23.0, b_2 = 11.0, b_3 = -74.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-20.361276933552205",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 13.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[1, -1.5, -2], [-1.5, 2, -1.5], [-2, -1.5, 2]]\nA_1 = [[-2, 0.5, -1], [0.5, -4, -0.5], [-1, -0.5, -2]]\nA_2 = [[2, 0, -0.5], [0, 1, -1], [-0.5, -1, 3]]\nA_3 = [[0, -0.5, -4], [-0.5, -4, 1], [-4, 1, -3]]\nb_1 = -32.0, b_2 = 29.0, b_3 = -43.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "6.066585384127958",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 19.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-4, 0.5, 1.5], [0.5, 2, -2], [1.5, -2, 4]]\nA_1 = [[-4, 2, 0], [2, 0, 0], [0, 0, 2]]\nA_2 = [[-1, -0.5, -2], [-0.5, 3, 1], [-2, 1, -4]]\nA_3 = [[2, -3, 3.5], [-3, -2, 1], [3.5, 1, -1]]\nb_1 = -16.0, b_2 = 17.0, b_3 = -24.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-21.99764571379127",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 16.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[2, -0.5, -3.5], [-0.5, 0, 0], [-3.5, 0, -4]]\nA_1 = [[3, -3.5, -1.5], [-3.5, -4, -0.5], [-1.5, -0.5, 0]]\nA_2 = [[2, -1, -3], [-1, 4, -2.5], [-3, -2.5, 3]]\nA_3 = [[3, -2.5, 0.5], [-2.5, -2, 0.5], [0.5, 0.5, -3]]\nb_1 = -59.0, b_2 = 27.0, b_3 = -38.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-38.38593265770484",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 23.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-1, -4, -1.5], [-4, 2, 0.5], [-1.5, 0.5, -2]]\nA_1 = [[4, 4, -2.5], [4, 3, -1], [-2.5, -1, 3]]\nA_2 = [[-2, 3, 0], [3, 1, -0.5], [0, -0.5, -2]]\nA_3 = [[2, 0.5, -1.5], [0.5, 1, 2], [-1.5, 2, -2]]\nb_1 = 153.0, b_2 = 30.0, b_3 = 23.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-76.63035647755513",
+    "level": "level-4"
+  },
+  {
+    "question": "Consider the semidefinite program over a symmetric 3x3 matrix X:\nMinimize <C, X> subject to <A_i, X> = b_i for i=1..3, trace(X) = 26.0, and X is positive semidefinite (X \u2ab0 0).\nC = [[-2, 2.5, -0.5], [2.5, -3, 3], [-0.5, 3, 1]]\nA_1 = [[-2, 2.5, -1], [2.5, -3, -3], [-1, -3, 3]]\nA_2 = [[1, -1.5, 1.5], [-1.5, 2, -1], [1.5, -1, 0]]\nA_3 = [[-3, -4, -1.5], [-4, -4, 0.5], [-1.5, 0.5, 0]]\nb_1 = 60.0, b_2 = 16.0, b_3 = -109.0\n\nWhat is the minimum value of <C, X>?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+    "answer": "-63.317425305850136",
+    "level": "level-4"
+  }
+]
