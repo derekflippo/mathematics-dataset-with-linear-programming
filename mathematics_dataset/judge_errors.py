@@ -35,6 +35,8 @@ PRIMARY_ERROR_TYPES = (
     "reasoning_failure",
     "arithmetic_failure",
     "constraint_handling_failure",
+    "partial_reasoning_failure",
+    "partial_constraint_handling_failure",
     "hallucination",
     "continued_refinement",
     "dismissed_correct_answer",
@@ -46,22 +48,22 @@ PRIMARY_ERROR_TYPES = (
 REASONING_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "formulation_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "approach_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "constraint_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "hallucination": {"type": "boolean"},
         "hallucination_description": {"type": ["string", "null"]},
         "failure_point": {"type": "string"},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "formulation_score",
         "approach_score",
         "constraint_score",
         "hallucination",
         "hallucination_description",
         "failure_point",
-        "explanation",
     ],
     "additionalProperties": False,
 }
@@ -69,6 +71,7 @@ REASONING_SCHEMA = {
 ARITHMETIC_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "arithmetic_error_found": {"type": "boolean"},
         "first_error_step": {"type": ["string", "null"]},
         "computed_value": {"type": ["string", "null"]},
@@ -81,9 +84,9 @@ ARITHMETIC_SCHEMA = {
         "cascade_description": {"type": ["string", "null"]},
         "additional_independent_errors": {"type": "integer", "minimum": 0},
         "additional_independent_errors_description": {"type": ["string", "null"]},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "arithmetic_error_found",
         "first_error_step",
         "computed_value",
@@ -93,7 +96,6 @@ ARITHMETIC_SCHEMA = {
         "cascade_description",
         "additional_independent_errors",
         "additional_independent_errors_description",
-        "explanation",
     ],
     "additionalProperties": False,
 }
@@ -101,6 +103,7 @@ ARITHMETIC_SCHEMA = {
 FINAL_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "correct_value_in_reasoning": {"type": "boolean"},
         "correct_value_found": {"type": ["string", "null"]},
         "distance_from_expected": {"type": ["string", "null"]},
@@ -115,16 +118,15 @@ FINAL_SCHEMA = {
             ],
         },
         "context": {"type": ["string", "null"]},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "correct_value_in_reasoning",
         "correct_value_found",
         "distance_from_expected",
         "model_recognized_it",
         "reason_not_recognized",
         "context",
-        "explanation",
     ],
     "additionalProperties": False,
 }
@@ -141,9 +143,13 @@ Evaluate these dimensions:
 0 = fundamental error, such as wrong objective direction, constraints misread, or constraints ignored
 
 2. Solution Approach (0-2)
-2 = appropriate method chosen and correctly applied with valid logical steps
-1 = appropriate method chosen but incorrectly applied
-0 = wrong method or approach abandoned without valid reason
+2 = appropriate method chosen and correctly applied with valid logical steps that establish or justify global optimality
+1 = appropriate method chosen but incorrectly applied, or a partially valid approach that does not fully justify optimality
+0 = wrong method, purely heuristic search, or approach abandoned without valid reason
+
+For optimization problems, a method is only fully correct if it provides a valid path to proving global optimality (e.g., KKT conditions, active-set analysis, convexity arguments, or equivalent reasoning). Testing feasible points, following a descent direction, or performing local search without proving optimality cannot receive a score of 2.
+
+If the model abandons an exact optimization method (such as KKT or active-set analysis) and instead resorts to trial-and-error, point sampling, or heuristic guessing, the maximum approach_score is 1.
 
 3. Constraint Handling (0-2)
 2 = correctly identified binding constraints and applied them
@@ -525,8 +531,12 @@ def _derive_error_taxonomy(judged_example):
             tags.append("hallucination")
         if reasoning.get("formulation_score") == 0 or reasoning.get("approach_score") == 0:
             tags.append("reasoning_failure")
+        elif reasoning.get("approach_score") == 1:
+            tags.append("partial_reasoning_failure")
         if reasoning.get("constraint_score") == 0:
             tags.append("constraint_handling_failure")
+        elif reasoning.get("constraint_score") == 1:
+            tags.append("partial_constraint_handling_failure")
 
     if _is_valid_judgment(final) and final.get("correct_value_in_reasoning") is True:
         final_reason = final.get("reason_not_recognized")
@@ -567,6 +577,10 @@ def _derive_error_taxonomy(judged_example):
         primary_error_type = "reasoning_failure"
     elif "constraint_handling_failure" in seen:
         primary_error_type = "constraint_handling_failure"
+    elif "partial_constraint_handling_failure" in seen:
+        primary_error_type = "partial_constraint_handling_failure"
+    elif "partial_reasoning_failure" in seen:
+        primary_error_type = "partial_reasoning_failure"
     elif _is_valid_judgment(final) and final.get("correct_value_in_reasoning") is True:
         final_reason = final.get("reason_not_recognized")
         primary_error_type = {
