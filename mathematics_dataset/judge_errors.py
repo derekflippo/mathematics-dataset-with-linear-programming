@@ -15,10 +15,12 @@ import sys
 import time
 from collections import Counter
 
-from openai import OpenAI
+from openai import APIConnectionError, APITimeoutError, OpenAI, RateLimitError
 
 MAX_COMPLETION_TOKENS = 5000
 DEFAULT_MODEL = "gpt-4.1"
+MAX_JUDGE_RETRIES = 12
+INTER_JUDGE_DELAY_SECONDS = 1.5
 
 FIELD_ALIASES = {
     "question": ["question", "problem", "prompt"],
@@ -1062,6 +1064,44 @@ def _selected_judges(judge_arg):
     return [judge_arg]
 
 
+def _retry_wait_seconds(exc, attempt):
+    msg = str(exc)
+    match = re.search(r"Please try again in ([0-9]+(?:\.[0-9]+)?)(ms|s)", msg)
+    if match:
+        value = float(match.group(1))
+        unit = match.group(2)
+        if unit == "ms":
+            value /= 1000.0
+        return max(2.0, value + 1.0)
+
+    if isinstance(exc, RateLimitError):
+        return min(60.0, 5.0 * (attempt + 1))
+
+    if isinstance(exc, (APIConnectionError, APITimeoutError)):
+        return min(30.0, 2.0 * (attempt + 1))
+
+    return 0.0
+
+
+def _judge_with_retries(client, model, judge_name, example):
+    last_exc = None
+    for attempt in range(MAX_JUDGE_RETRIES):
+        try:
+            return _judge_example(client, model, judge_name, example)
+        except Exception as exc:
+            last_exc = exc
+            wait = _retry_wait_seconds(exc, attempt)
+            is_retryable = wait > 0.0
+            if not is_retryable or attempt == MAX_JUDGE_RETRIES - 1:
+                raise
+            print(
+                f"  {judge_name} judge hit {exc.__class__.__name__}, "
+                f"retrying in {wait:.1f}s... ({attempt + 1}/{MAX_JUDGE_RETRIES})"
+            )
+            time.sleep(wait)
+    raise last_exc
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_json", required=True, help="Path to input JSON file")
@@ -1107,7 +1147,6 @@ def main():
             "question": example.get("question") or "",
             "expected_answer": example.get("expected_answer"),
             "model_answer": example.get("model_answer"),
-            "raw_response": example.get("raw_response") or "",
             "correct": example.get("correct"),
             "problem_type": example.get("problem_type"),
             "level": example.get("level"),
@@ -1118,19 +1157,11 @@ def main():
 
         for judge_name in judges:
             output_key = JUDGE_SPECS[judge_name]["output_key"]
-            for attempt in range(5):
-                try:
-                    judged_example[output_key] = _judge_example(client, args.model, judge_name, example)
-                    break
-                except Exception as exc:
-                    msg = str(exc)
-                    if "429" in msg and attempt < 4:
-                        wait = 5 * (attempt + 1)
-                        print(f"  Rate limit hit, retrying in {wait}s...")
-                        time.sleep(wait)
-                    else:
-                        judged_example[output_key] = {"judgment_error": msg}
-                        break
+            try:
+                judged_example[output_key] = _judge_with_retries(client, args.model, judge_name, example)
+            except Exception as exc:
+                judged_example[output_key] = {"judgment_error": str(exc)}
+            time.sleep(INTER_JUDGE_DELAY_SECONDS)
 
         judged_example = _derive_error_taxonomy(judged_example)
         judged_examples.append(judged_example)
