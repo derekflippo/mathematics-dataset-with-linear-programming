@@ -1067,18 +1067,28 @@ def _selected_judges(judge_arg):
 def _retry_wait_seconds(exc, attempt):
     msg = str(exc)
     match = re.search(r"Please try again in ([0-9]+(?:\.[0-9]+)?)(ms|s)", msg)
+    parsed_wait = None
     if match:
         value = float(match.group(1))
         unit = match.group(2)
         if unit == "ms":
             value /= 1000.0
-        return max(2.0, value + 1.0)
+        parsed_wait = value + 1.0
 
     if isinstance(exc, RateLimitError):
-        return min(60.0, 5.0 * (attempt + 1))
+        ramp_wait = min(120.0, 15.0 * (attempt + 1))
+        if parsed_wait is not None:
+            return max(parsed_wait, ramp_wait)
+        return ramp_wait
 
     if isinstance(exc, (APIConnectionError, APITimeoutError)):
-        return min(30.0, 2.0 * (attempt + 1))
+        ramp_wait = min(60.0, 5.0 * (attempt + 1))
+        if parsed_wait is not None:
+            return max(parsed_wait, ramp_wait)
+        return ramp_wait
+
+    if parsed_wait is not None:
+        return max(2.0, parsed_wait)
 
     return 0.0
 
