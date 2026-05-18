@@ -388,6 +388,8 @@ You have access to a Python execution tool. Use it to verify critical arithmetic
 - When the model solves a system of linear equations, substitute the claimed solution back into the original equations to verify.
 - When the model evaluates the objective or constraints at a point, verify the numerical result.
 
+Verify in chronological order: check the earliest important numerical claim first, not only the final objective value. If an early computation (e.g., solving the KKT system, inverting a matrix, computing x*) is wrong, later values may be internally consistent with that wrong result and appear correct. Always verify the claimed x* before verifying the objective evaluated at x*.
+
 Always run at least one verification before concluding.
 
 What counts as arithmetic error:
@@ -414,38 +416,65 @@ If arithmetic_error_found=true, first_error_step, computed_value, and correct_va
 Prefer the earliest root cause in explanations.
 Return strict JSON only."""
 
-FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to recognize or commit to it as the final answer.
+FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to commit to it as the final answer.
 
 Use tolerance 0.01.
 
-You will be given the model's finish_reason. Use it carefully:
-- If finish_reason is "max_tokens", that is strong evidence for reason_not_recognized = "token_limit", but only if a correct value appeared in the reasoning and the model did not submit it.
-- If finish_reason is "end_turn", do not use token_limit unless the text itself clearly cuts off abruptly.
+Your main task is to identify the behavioral reason the model did not commit to a correct value that appeared in its reasoning.
 
-Only flag correct_value_in_reasoning true if all are true:
+Important distinction:
+- finish_reason describes how the API response ended.
+- reason_not_recognized should describe WHY the model failed to commit before the response ended.
+- Do NOT automatically classify max_tokens as token_limit.
+
+finish_reason rules:
+- If finish_reason is "max_tokens", do not assume token_limit. Check whether the model was still actively refining when the response ended.
+- If finish_reason is "end_turn", do not use token_limit unless the text itself cuts off abruptly mid-sentence or mid-computation.
+- finish_reason is only weak evidence. The content of the reasoning is primary.
+
+Only flag correct_value_in_reasoning=true if ALL are true:
 - A numerical value within 0.01 of the expected answer appears in the reasoning.
 - The value is clearly relevant to the final answer, not a coincidental intermediate value.
 - The model did not submit this value as its final answer.
-- The reason it did not commit is clearly one of:
-  - token_limit
-  - continued_refinement
-  - dismissed
+- The reason it did not commit is clearly one of: token_limit, continued_refinement, or dismissed.
 
 Definitions:
-- token_limit: output ends abruptly before the model could commit
-- continued_refinement: model has the value but explicitly chooses to keep refining or iterating
-- dismissed: model explicitly rejects the correct value as wrong or infeasible
-- If the model had the correct value but replaced it with a rounded incorrect value, classify that as dismissed.
+
+token_limit: Use this ONLY when:
+- A correct value appears near the very end of the response.
+- The text cuts off abruptly before the model had a reasonable chance to commit to it.
+- There is no evidence the model had already decided to keep refining, checking, or iterating after finding the correct value.
+- The model was mid-sentence, mid-output, or just about to state a final answer when the response ended.
+
+continued_refinement: Use this when:
+- A correct value within 0.01 of the expected answer appears in the reasoning.
+- The model appears to understand that this value is plausible or near-optimal ("approximately", "close to", "optimal value is about").
+- But instead of committing, the model continues: refining lambda, interpolating between values, recomputing with higher precision, checking nearby candidate points, running more iterations, or otherwise postponing the final answer.
+- The response eventually ends (including by max_tokens) while still in this refinement loop.
+- If both max_tokens and continued refinement behavior are present, prefer continued_refinement unless the cutoff happened immediately after the first appearance of the correct value.
+
+Specific evidence for continued_refinement in optimization problems:
+- "let me refine", "let me try", "let me improve", "let me check"
+- "interpolating between lambda=X and lambda=Y"
+- "try another lambda value", "bisect", "narrow down"
+- "more accurately", "more precisely", "let me be more careful"
+- Repeated KKT iterations after already stating an approximately correct objective
+- Stating "the objective is approximately X" then continuing to compute instead of finalizing
+- Running additional feasibility checks after already reaching a plausible solution
+
+dismissed: Use this when:
+- The model explicitly rejects the correct value as wrong, infeasible, or invalid.
+- The model replaces the correct value with a different final answer despite having it.
+- The model computes the correct value but rounds or adjusts it to an incorrect final answer — this is also dismissed.
+- Phrases: "this doesn't satisfy", "so this point is infeasible", "that can't be right", "let me reconsider".
 
 Additional consistency rules:
 - If correct_value_in_reasoning=true and model_recognized_it=false, reason_not_recognized must be one of token_limit, continued_refinement, or dismissed. It must never be null.
-- If you cannot confidently assign token_limit, continued_refinement, or dismissed, set correct_value_in_reasoning=false.
+- If you cannot confidently assign one of those three, set correct_value_in_reasoning=false.
+- If correct_value_in_reasoning=true, distance_from_expected must be <= 0.01.
+- If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, distance_from_expected must be null.
 
-Consistency requirements:
-- If correct_value_in_reasoning is true, distance_from_expected must be less than or equal to 0.01.
-- If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, and distance_from_expected must be null.
-
-Prefer the earliest root cause in explanations.
+Prefer the behavioral root cause over the API finish reason.
 Return strict JSON only."""
 
 JUDGE_SPECS = {

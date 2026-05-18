@@ -21,6 +21,7 @@ DEFAULT_DIRS = [
 MODEL_SUFFIXES = [
     "__claude-sonnet-4-6.json",
     "__claude-haiku-4-5-20251001.json",
+    "__gpt-5.5.json",
     "__gpt-5.4.json",
     "__gpt-5.json",
     "__gpt-4.1.json",
