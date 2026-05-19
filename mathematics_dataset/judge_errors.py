@@ -336,6 +336,7 @@ If the model uses a point that violates constraints as its final optimizer, cons
 Example 8:
 If the final answer is numerically wrong only because of arithmetic, but the method and constraint logic are otherwise valid, do not lower the reasoning scores for the arithmetic mistake. The arithmetic judge should handle that.
 
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
 EXECUTE_PYTHON_TOOL = {
@@ -414,6 +415,7 @@ Distinguish cascade errors from independent errors:
 If arithmetic_error_found=true, first_error_step, computed_value, and correct_value must describe a concrete incorrect computation. Do not mark arithmetic_error_found=true for vague mismatch with expected_answer.
 
 Prefer the earliest root cause in explanations.
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
 FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to commit to it as the final answer.
@@ -475,6 +477,7 @@ Additional consistency rules:
 - If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, distance_from_expected must be null.
 
 Prefer the behavioral root cause over the API finish reason.
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
 JUDGE_SPECS = {
@@ -1179,6 +1182,21 @@ def main():
     judged_examples = []
     total_examples = len(examples)
 
+    def _flush(path, examples_so_far):
+        output = {
+            "source_file": args.input_json,
+            "judge_model": args.model,
+            "judge": args.judge,
+            "include_correct": args.include_correct,
+            "max_examples": args.max_examples,
+            "summary": _summarize(examples_so_far),
+            "judged_examples": examples_so_far,
+        }
+        tmp = path + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(output, f, indent=2)
+        os.replace(tmp, path)
+
     for index, example in enumerate(examples):
         print(f"Judging example {index + 1}/{total_examples}")
         judged_example = {
@@ -1204,19 +1222,9 @@ def main():
 
         judged_example = _derive_error_taxonomy(judged_example)
         judged_examples.append(judged_example)
+        _flush(args.output_json, judged_examples)
 
-    output = {
-        "source_file": args.input_json,
-        "judge_model": args.model,
-        "judge": args.judge,
-        "include_correct": args.include_correct,
-        "max_examples": args.max_examples,
-        "summary": _summarize(judged_examples),
-        "judged_examples": judged_examples,
-    }
-
-    with open(args.output_json, "w") as f:
-        json.dump(output, f, indent=2)
+    print(f"Done. Results written to {args.output_json}")
 
     print(json.dumps(output["summary"], indent=2))
     _print_terminal_summary(output["summary"])
