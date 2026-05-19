@@ -208,15 +208,19 @@ def _evaluate_anthropic(client, question, model):
                 return None, '', 'error_500', None, None
 
 
+GEMINI_THINKING_BUDGETS = [1024,256, 0]
 def _evaluate_gemini(client, question, model):
     for attempt in range(3):
         try:
             config = google_types.GenerateContentConfig(
                 response_mime_type='application/json',
                 response_schema=_ANSWER_SCHEMA,
-                temperature=0,
+                temperature=0.0,
                 max_output_tokens=MAX_COMPLETION_TOKENS,
-                system_instruction=SYSTEM_PROMPT or None,
+                system_instruction=SYSTEM_PROMPT,
+                thinking_config=google_types.ThinkingConfig(
+                    thinking_budget=GEMINI_THINKING_BUDGETS[attempt]
+                ),
             )
             response = client.models.generate_content(
                 model=model,
