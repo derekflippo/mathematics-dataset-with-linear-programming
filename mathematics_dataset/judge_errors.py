@@ -10,12 +10,17 @@ import argparse
 import json
 import os
 import re
+import subprocess
+import sys
+import time
 from collections import Counter
 
-from openai import OpenAI
+from openai import APIConnectionError, APITimeoutError, OpenAI, RateLimitError
 
-MAX_COMPLETION_TOKENS = 2500
-DEFAULT_MODEL = "gpt-4.1-mini"
+MAX_COMPLETION_TOKENS = 5000
+DEFAULT_MODEL = "gpt-4.1"
+MAX_JUDGE_RETRIES = 12
+INTER_JUDGE_DELAY_SECONDS = 1.5
 
 FIELD_ALIASES = {
     "question": ["question", "problem", "prompt"],
@@ -35,6 +40,8 @@ PRIMARY_ERROR_TYPES = (
     "reasoning_failure",
     "arithmetic_failure",
     "constraint_handling_failure",
+    "partial_reasoning_failure",
+    "partial_constraint_handling_failure",
     "hallucination",
     "continued_refinement",
     "dismissed_correct_answer",
@@ -46,22 +53,22 @@ PRIMARY_ERROR_TYPES = (
 REASONING_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "formulation_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "approach_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "constraint_score": {"type": "integer", "minimum": 0, "maximum": 2},
         "hallucination": {"type": "boolean"},
         "hallucination_description": {"type": ["string", "null"]},
         "failure_point": {"type": "string"},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "formulation_score",
         "approach_score",
         "constraint_score",
         "hallucination",
         "hallucination_description",
         "failure_point",
-        "explanation",
     ],
     "additionalProperties": False,
 }
@@ -69,6 +76,7 @@ REASONING_SCHEMA = {
 ARITHMETIC_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "arithmetic_error_found": {"type": "boolean"},
         "first_error_step": {"type": ["string", "null"]},
         "computed_value": {"type": ["string", "null"]},
@@ -81,9 +89,9 @@ ARITHMETIC_SCHEMA = {
         "cascade_description": {"type": ["string", "null"]},
         "additional_independent_errors": {"type": "integer", "minimum": 0},
         "additional_independent_errors_description": {"type": ["string", "null"]},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "arithmetic_error_found",
         "first_error_step",
         "computed_value",
@@ -93,7 +101,6 @@ ARITHMETIC_SCHEMA = {
         "cascade_description",
         "additional_independent_errors",
         "additional_independent_errors_description",
-        "explanation",
     ],
     "additionalProperties": False,
 }
@@ -101,6 +108,7 @@ ARITHMETIC_SCHEMA = {
 FINAL_SCHEMA = {
     "type": "object",
     "properties": {
+        "explanation": {"type": "string"},
         "correct_value_in_reasoning": {"type": "boolean"},
         "correct_value_found": {"type": ["string", "null"]},
         "distance_from_expected": {"type": ["string", "null"]},
@@ -115,54 +123,275 @@ FINAL_SCHEMA = {
             ],
         },
         "context": {"type": ["string", "null"]},
-        "explanation": {"type": "string"},
     },
     "required": [
+        "explanation",
         "correct_value_in_reasoning",
         "correct_value_found",
         "distance_from_expected",
         "model_recognized_it",
         "reason_not_recognized",
         "context",
-        "explanation",
     ],
     "additionalProperties": False,
 }
 
-REASONING_PROMPT = """You are an expert judge evaluating the reasoning quality of an AI model solving a mathematical optimization problem. Your job is to assess the reasoning process, not whether the final answer is numerically correct, but whether the model understood and approached the problem correctly.
+REASONING_PROMPT = """You are an expert judge evaluating the reasoning quality of an AI model solving a mathematical optimization problem.
 
-The original problem forbids code, solvers, CVXPY, scipy, numpy, or any programming language. If the model claims it used a solver or CVXPY instead of mental mathematical reasoning, score approach_score=0. If it reports a solver-produced number without derivation, mark hallucination=true.
+Your job is to assess the reasoning process, not merely whether the final numerical answer matches the expected answer. Evaluate whether the model correctly understood the problem, chose a mathematically valid solution strategy, handled constraints properly, and justified global optimality.
+
+The original problem forbids code, solvers, CVXPY, scipy, numpy, or any programming language. If the model claims it used a solver, CVXPY, scipy, numpy, Python, or another computational tool instead of mental mathematical reasoning, set approach_score=0. If it reports a solver-produced number without derivation, mark hallucination=true.
 
 Evaluate these dimensions:
 
 1. Problem Formulation (0-2)
-2 = objective function and all constraints correctly identified and set up
-1 = minor formulation error, such as one coefficient wrong or one constraint mistranscribed
-0 = fundamental error, such as wrong objective direction, constraints misread, or constraints ignored
+
+2 = The objective function and all constraints are correctly identified and set up, including:
+- correct quadratic forms
+- correct linear terms
+- correct inequality directions
+- correct right-hand sides
+- correct norm/ball constraint if present
+
+1 = Minor formulation error, such as:
+- one coefficient copied incorrectly
+- one linear term omitted
+- one constraint slightly mistranscribed
+- notation is sloppy but the intended problem is mostly correct
+
+0 = Fundamental formulation error, such as:
+- wrong objective direction
+- objective function substantially incorrect
+- constraints ignored
+- constraints applied with wrong inequality direction
+- major constraint missing
+- solving a different problem from the one stated
+
 
 2. Solution Approach (0-2)
-2 = appropriate method chosen and correctly applied with valid logical steps
-1 = appropriate method chosen but incorrectly applied
-0 = wrong method or approach abandoned without valid reason
+
+2 = The model chooses and correctly applies a method that establishes or justifies global optimality for the original optimization problem.
+
+For optimization problems, approach_score=2 requires one of the following:
+- correctly finds the unconstrained minimizer, verifies it satisfies all constraints, and therefore concludes it is the constrained global optimum
+- correctly applies KKT conditions, including stationarity, feasibility, complementary slackness, and appropriate active constraints
+- correctly performs active-set or boundary analysis and solves the relevant active-constraint system
+- gives a valid convexity, symmetry, monotonicity, or geometric argument proving that the proposed point is globally optimal
+- otherwise provides a mathematically valid proof that no feasible point can achieve a better objective value
+
+1 = The model uses a partially valid approach but does not fully justify global optimality. Examples include:
+- checks the unconstrained minimizer but stops after finding it infeasible
+- identifies a likely active constraint but does not solve the active-set problem
+- writes down KKT or Lagrange multiplier equations but abandons them or does not solve them
+- performs a line search, ray search, coordinate-axis search, diagonal search, or reduced one-dimensional search without proving the optimizer lies there
+- tests feasible points and chooses the best sampled point
+- follows a descent direction without proving it reaches the global constrained optimum
+- gives an approximate answer from heuristic exploration
+- gives a plausible but incomplete boundary argument
+
+0 = The model uses a wrong or invalid approach, or abandons the optimization problem without a valid path to the solution. Examples include:
+- ignores constraints entirely when they matter
+- treats an infeasible point as feasible
+- uses only unsupported guessing
+- applies a method unrelated to the problem
+- claims global optimality from no meaningful argument
+- abandons the solution and gives a number without a coherent derivation
+
+Strict global-optimality rule:
+A method is only fully correct if it provides a valid path to proving global optimality for the original problem. Testing feasible points, following a descent direction, performing local search, or solving a simplified subproblem does not establish global optimality unless the model proves why that search covers the global optimizer.
+
+Restricted-subspace rule:
+If the model restricts the search to a line, ray, axis, diagonal, coordinate slice, or special form such as x = t v, x = [a,a], x = [a,0], x = [0,a], x1 = 0, or x2 = 0, then the maximum approach_score is 1 unless the model gives a valid mathematical argument proving that the global optimizer must lie in that restricted set.
+
+Valid justifications for a restricted subspace may include:
+- symmetry of the objective and all constraints forcing the optimizer into that subspace
+- KKT conditions implying that relation
+- full active-set equations deriving that relation
+- a convexity or monotonicity argument proving all other directions are suboptimal
+
+Invalid justifications include:
+- “this seems likely”
+- “let me try”
+- “this is close”
+- point testing
+- convenience
+- intuition without proof
+
+Abandoned-method rule:
+If the model starts an exact method such as KKT, Lagrange multipliers, or active-set analysis, then says it is too complex and switches to trial-and-error, point sampling, or heuristic guessing, the maximum approach_score is 1.
+
 
 3. Constraint Handling (0-2)
-2 = correctly identified binding constraints and applied them
-1 = partially correct, identified some active constraints but missed others or applied them with minor errors
-0 = constraints misidentified, ignored, or applied in the wrong direction
+
+2 = The model correctly handles the constraints in a way that supports the claimed optimizer. This means one of:
+- correctly verifies that the unconstrained minimizer satisfies all constraints, so no constraints are active
+- correctly identifies which constraints are active and inactive at the proposed optimizer
+- correctly applies the active constraints in KKT, active-set, boundary, or equivalent analysis
+- correctly verifies feasibility of the final proposed optimizer and explains why the relevant constraints determine optimality
+
+1 = The model partially handles constraints but does not fully justify the active set or constrained optimum. Examples include:
+- checks constraints only at sampled points
+- identifies a likely active constraint but does not prove it is the correct active set
+- solves constraints only after imposing an unjustified restricted subspace
+- verifies feasibility of a candidate point but does not prove optimality
+- misses one potentially active constraint
+- handles constraints correctly in arithmetic but not in the optimization logic
+
+0 = The model mishandles constraints in a fundamental way. Examples include:
+- ignores constraints that affect the solution
+- treats an infeasible point as feasible
+- applies inequality direction incorrectly
+- uses a point that violates constraints as the final optimizer
+- fails to check constraints after proposing a candidate
+- claims a constraint is binding or inactive without basis and uses that error centrally
+
 
 4. Hallucination
-Mark hallucination true if:
-- the model outputs a number with no derivation supporting it
-- the model computes a value from an infeasible or invalid point, acknowledges the issue, then commits to that value anyway
-- the model gets stuck, says it cannot solve it, then produces a number anyway
 
-Mark hallucination false if:
-- the answer follows logically from the model’s work, even if the work contains arithmetic or reasoning errors
+Hallucination means the model commits to a final answer that is unsupported by its own derivation, contradicts its own feasibility or validity checks, or is presented as a valid solution even though the model itself established that it is invalid.
+
+Mark hallucination=true if any of the following occur:
+
+A. Unsupported final number
+- the model outputs a final numerical answer with no derivation supporting it
+- the model gets stuck, says it cannot solve the problem, then produces a number anyway
+- the model jumps from incomplete work to a final answer without explaining where the number came from
+
+B. Infeasible or invalid point used as final answer
+- the model computes a value from a point that violates one or more constraints, acknowledges that violation, and then still commits to that value as the final answer
+- the model says a candidate is infeasible, invalid, or violates a constraint, but later reports that same candidate’s objective value as the minimum
+- the model finds the unconstrained minimizer, determines it violates a constraint, but still gives the unconstrained objective value as the constrained optimum
+- the model says the optimum must lie elsewhere, such as on a boundary or active constraint, but then reports the old invalid point’s value as the final answer without solving the new case
+
+C. Forbidden tool use
+- the model claims it used Python, CVXPY, scipy, numpy, MATLAB, a solver, or any computational tool to obtain the answer
+- the model reports a solver-produced number without mental derivation
+
+D. Invented problem facts
+- the model invents constraints, assumptions, active sets, feasibility claims, or numerical values not derived from the problem
+- the model changes the problem parameters and solves the modified problem
+- the model assumes a constraint is inactive, active, or irrelevant with no derivation and then treats that assumption as proven
+
+Category B is an absolute override. If the model explicitly acknowledged a constraint violation at a point — in any form, such as marking ✗, writing "> limit", saying "infeasible", "violated", or "not satisfied" — and then committed to that same point’s objective value as the final answer, hallucination=true. This applies even if the number follows logically from the model’s own calculations. "Follows from calculations" does not excuse committing to a known-infeasible point.
+
+Mark hallucination=false if:
+- the final answer follows logically from the model’s own shown work, AND the model did not explicitly acknowledge that the point was infeasible or violated a constraint before committing
+- the model uses an incomplete heuristic method, restricted line search, point sampling, or unjustified subspace search, but the final number is derived from a point the model did not identify as infeasible
+- the model makes a reasoning mistake but does not knowingly commit to an infeasible, invalid, or unsupported value
+- the model solves a restricted subproblem (such as x2=0 or x=[a,a]) and reports the value from that restricted subproblem — this is usually a reasoning failure, not hallucination, unless the model also contradicts its own feasibility checks
+- the model gives a feasible sampled point with a low objective value and incorrectly claims it is globally optimal — this is usually incomplete reasoning, not hallucination
+
+Required check before deciding hallucination:
+Scan the model’s reasoning for any constraint violation acknowledgment (✗, "> limit", "infeasible", "violated", "not satisfied", "does not satisfy"). If any such acknowledgment exists, check whether the final reported answer is the objective value at that same point. If yes, hallucination=true under category B regardless of anything else.
+
+Important distinction:
+A wrong answer is not automatically a hallucination. A heuristic or internally derived answer is usually a reasoning failure, not hallucination. A known-invalid or unsupported final answer is hallucination.
+
+Hallucination-specific examples:
+
+Example H1: The model finds unconstrained minimizer x*, checks constraints, constraint 2 is violated, then reports f(x*) as the final minimum. → hallucination=true (knowingly used infeasible point)
+Example H2: The model says "this point is infeasible" but later says "therefore the minimum is the objective value at this point." → hallucination=true
+Example H3: The model says "the optimum must lie on the boundary" after finding the unconstrained minimizer is infeasible, then gives the unconstrained objective value as the final answer without solving the boundary problem. → hallucination=true
+Example H4: The model tries several feasible points and picks the best one. → hallucination=false, approach_score=1 (weak reasoning, not hallucination)
+Example H5: The model restricts to x2=0 and solves the one-dimensional problem. → hallucination=false, approach_score=1 (unjustified restriction, not hallucination)
+Example H6: The model outputs "the answer is -2.31" with no supporting derivation. → hallucination=true
+Example H7: The model says "I cannot solve this exactly" then gives a final numerical answer with no derivation. → hallucination=true
+Example H8: The model reports "CVXPY gives the answer -1.23" even though tool use is forbidden. → hallucination=true
+
+When hallucination=true, the explanation must clearly state what made the answer unsupported, invalid, or contradictory.
+When hallucination=false but the answer is still wrong, explain whether the issue is reasoning, arithmetic, formulation, or constraint handling instead.
 
 Prefer the earliest root cause in explanations.
+
+When explaining the judgment:
+- explicitly state whether the model proved global optimality
+- if the model used a restricted subspace, say whether that restriction was justified
+- if constraints were only checked at sampled points, do not give constraint_score=2 unless optimality was also justified
+- distinguish arithmetic mistakes from reasoning mistakes
+- do not treat a mismatch with expected_answer as evidence of reasoning failure by itself
+
+Concrete examples:
+
+Example 1:
+If the model finds the unconstrained minimizer, checks every constraint, and the point is feasible, then approach_score=2 and constraint_score=2. This is a complete global optimality argument for a convex problem.
+
+Example 2:
+If the model finds the unconstrained minimizer, discovers it violates a constraint, but then reports the unconstrained objective value as the final minimum, then approach_score=1, constraint_score=1, and hallucination=true if it explicitly acknowledged infeasibility before committing to that value.
+
+Example 3:
+If the model searches only along x = t v or along the negative gradient direction without proving the optimizer lies on that line, then approach_score=1. Constraint_score is at most 1 unless the active constraints are correctly used to prove optimality.
+
+Example 4:
+If the model sets x2 = 0, x1 = 0, x = [a,a], x = [a,0], or x = [0,a] and solves the resulting one-dimensional problem without proving that the global optimum lies in that subspace, then approach_score=1. Do not give approach_score=2 merely because the restricted one-dimensional algebra is correct.
+
+Example 5:
+If the model writes KKT or Lagrange multiplier conditions but abandons them because they are complex and switches to point sampling or guessing, then approach_score=1.
+
+Example 6:
+If the model tests several feasible points and picks the best one found, then approach_score=1 at best. Feasibility plus a low objective value is not a proof of global optimality.
+
+Example 7:
+If the model uses a point that violates constraints as its final optimizer, constraint_score=0 or 1 depending on whether it recognized the violation. If it recognized the violation and still committed to that value, hallucination=true.
+
+Example 8:
+If the final answer is numerically wrong only because of arithmetic, but the method and constraint logic are otherwise valid, do not lower the reasoning scores for the arithmetic mistake. The arithmetic judge should handle that.
+
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
+EXECUTE_PYTHON_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "execute_python",
+        "description": (
+            "Execute Python code to verify arithmetic claims. Use numpy for matrix/vector "
+            "operations. Always print() your results. Use this to back-substitute claimed "
+            "solutions into gradient or constraint equations to verify they are correct."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Python code to execute. Must use print() to output results.",
+                }
+            },
+            "required": ["code"],
+        },
+    },
+}
+
+MAX_TOOL_CALLS = 6
+
+
+def _execute_python(code, timeout=15):
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        output = result.stdout.strip()
+        if result.stderr.strip():
+            output = (output + "\nSTDERR: " + result.stderr.strip()).strip()
+        return output or "(no output)"
+    except subprocess.TimeoutExpired:
+        return "Error: execution timed out"
+    except Exception as e:
+        return f"Error: {e}"
+
+
 ARITHMETIC_PROMPT = """You are an expert judge whose sole task is to verify the arithmetic in an AI model's solution to an optimization problem. You are not evaluating whether the approach was correct or the reasoning was sound, only whether each numerical calculation was computed accurately.
+
+You have access to a Python execution tool. Use it to verify critical arithmetic claims, especially:
+- When the model claims a point x* is the unconstrained minimum, back-substitute into the gradient and verify it equals zero.
+- When the model solves a system of linear equations, substitute the claimed solution back into the original equations to verify.
+- When the model evaluates the objective or constraints at a point, verify the numerical result.
+
+Verify in chronological order: check the earliest important numerical claim first, not only the final objective value. If an early computation (e.g., solving the KKT system, inverting a matrix, computing x*) is wrong, later values may be internally consistent with that wrong result and appear correct. Always verify the claimed x* before verifying the objective evaluated at x*.
+
+Always run at least one verification before concluding.
 
 What counts as arithmetic error:
 - incorrect multiplication, division, addition, or subtraction
@@ -186,40 +415,69 @@ Distinguish cascade errors from independent errors:
 If arithmetic_error_found=true, first_error_step, computed_value, and correct_value must describe a concrete incorrect computation. Do not mark arithmetic_error_found=true for vague mismatch with expected_answer.
 
 Prefer the earliest root cause in explanations.
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
-FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to recognize or commit to it as the final answer.
+FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to commit to it as the final answer.
 
 Use tolerance 0.01.
 
-You will be given the model's finish_reason. Use it carefully:
-- If finish_reason is "max_tokens", that is strong evidence for reason_not_recognized = "token_limit", but only if a correct value appeared in the reasoning and the model did not submit it.
-- If finish_reason is "end_turn", do not use token_limit unless the text itself clearly cuts off abruptly.
+Your main task is to identify the behavioral reason the model did not commit to a correct value that appeared in its reasoning.
 
-Only flag correct_value_in_reasoning true if all are true:
+Important distinction:
+- finish_reason describes how the API response ended.
+- reason_not_recognized should describe WHY the model failed to commit before the response ended.
+- Do NOT automatically classify max_tokens as token_limit.
+
+finish_reason rules:
+- If finish_reason is "max_tokens", do not assume token_limit. Check whether the model was still actively refining when the response ended.
+- If finish_reason is "end_turn", do not use token_limit unless the text itself cuts off abruptly mid-sentence or mid-computation.
+- finish_reason is only weak evidence. The content of the reasoning is primary.
+
+Only flag correct_value_in_reasoning=true if ALL are true:
 - A numerical value within 0.01 of the expected answer appears in the reasoning.
 - The value is clearly relevant to the final answer, not a coincidental intermediate value.
 - The model did not submit this value as its final answer.
-- The reason it did not commit is clearly one of:
-  - token_limit
-  - continued_refinement
-  - dismissed
+- The reason it did not commit is clearly one of: token_limit, continued_refinement, or dismissed.
 
 Definitions:
-- token_limit: output ends abruptly before the model could commit
-- continued_refinement: model has the value but explicitly chooses to keep refining or iterating
-- dismissed: model explicitly rejects the correct value as wrong or infeasible
-- If the model had the correct value but replaced it with a rounded incorrect value, classify that as dismissed.
+
+token_limit: Use this ONLY when:
+- A correct value appears near the very end of the response.
+- The text cuts off abruptly before the model had a reasonable chance to commit to it.
+- There is no evidence the model had already decided to keep refining, checking, or iterating after finding the correct value.
+- The model was mid-sentence, mid-output, or just about to state a final answer when the response ended.
+
+continued_refinement: Use this when:
+- A correct value within 0.01 of the expected answer appears in the reasoning.
+- The model appears to understand that this value is plausible or near-optimal ("approximately", "close to", "optimal value is about").
+- But instead of committing, the model continues: refining lambda, interpolating between values, recomputing with higher precision, checking nearby candidate points, running more iterations, or otherwise postponing the final answer.
+- The response eventually ends (including by max_tokens) while still in this refinement loop.
+- If both max_tokens and continued refinement behavior are present, prefer continued_refinement unless the cutoff happened immediately after the first appearance of the correct value.
+
+Specific evidence for continued_refinement in optimization problems:
+- "let me refine", "let me try", "let me improve", "let me check"
+- "interpolating between lambda=X and lambda=Y"
+- "try another lambda value", "bisect", "narrow down"
+- "more accurately", "more precisely", "let me be more careful"
+- Repeated KKT iterations after already stating an approximately correct objective
+- Stating "the objective is approximately X" then continuing to compute instead of finalizing
+- Running additional feasibility checks after already reaching a plausible solution
+
+dismissed: Use this when:
+- The model explicitly rejects the correct value as wrong, infeasible, or invalid.
+- The model replaces the correct value with a different final answer despite having it.
+- The model computes the correct value but rounds or adjusts it to an incorrect final answer — this is also dismissed.
+- Phrases: "this doesn't satisfy", "so this point is infeasible", "that can't be right", "let me reconsider".
 
 Additional consistency rules:
 - If correct_value_in_reasoning=true and model_recognized_it=false, reason_not_recognized must be one of token_limit, continued_refinement, or dismissed. It must never be null.
-- If you cannot confidently assign token_limit, continued_refinement, or dismissed, set correct_value_in_reasoning=false.
+- If you cannot confidently assign one of those three, set correct_value_in_reasoning=false.
+- If correct_value_in_reasoning=true, distance_from_expected must be <= 0.01.
+- If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, distance_from_expected must be null.
 
-Consistency requirements:
-- If correct_value_in_reasoning is true, distance_from_expected must be less than or equal to 0.01.
-- If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, and distance_from_expected must be null.
-
-Prefer the earliest root cause in explanations.
+Prefer the behavioral root cause over the API finish reason.
+Keep your explanation under 150 words.
 Return strict JSON only."""
 
 JUDGE_SPECS = {
@@ -346,6 +604,61 @@ def _build_user_prompt(example):
     )
 
 
+def _judge_arithmetic_with_tools(client, model, example):
+    spec = JUDGE_SPECS["arithmetic"]
+    messages = [
+        {"role": "system", "content": spec["prompt"]},
+        {"role": "user", "content": _build_user_prompt(example)},
+    ]
+
+    for _ in range(MAX_TOOL_CALLS):
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_completion_tokens=MAX_COMPLETION_TOKENS,
+            tools=[EXECUTE_PYTHON_TOOL],
+            tool_choice="auto",
+        )
+        choice = response.choices[0]
+        msg = choice.message
+        messages.append(msg)
+
+        if choice.finish_reason != "tool_calls":
+            break
+
+        for tool_call in msg.tool_calls:
+            if tool_call.function.name == "execute_python":
+                code = json.loads(tool_call.function.arguments)["code"]
+                result = _execute_python(code)
+            else:
+                result = "Unknown tool"
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call.id,
+                "content": result,
+            })
+
+    messages.append({
+        "role": "user",
+        "content": "Based on your analysis and any code execution results, produce the final arithmetic judgment.",
+    })
+    final = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        max_completion_tokens=MAX_COMPLETION_TOKENS,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": spec["schema_name"],
+                "schema": spec["schema"],
+                "strict": True,
+            },
+        },
+    )
+    judgment = json.loads(final.choices[0].message.content)
+    return _normalize_arithmetic_judgment(judgment)
+
+
 def _judge_example(client, model, judge_name, example):
     spec = JUDGE_SPECS[judge_name]
     if judge_name == "reasoning":
@@ -360,6 +673,8 @@ def _judge_example(client, model, judge_name, example):
                 "failure_point": "empty_response",
                 "explanation": "The model produced an empty response, so reasoning quality is scored as zero across formulation, approach, and constraint handling.",
             }
+    if judge_name == "arithmetic":
+        return _judge_arithmetic_with_tools(client, model, example)
     response = client.chat.completions.create(
         model=model,
         messages=[
@@ -378,8 +693,6 @@ def _judge_example(client, model, judge_name, example):
     )
     content = response.choices[0].message.content
     judgment = json.loads(content)
-    if judge_name == "arithmetic":
-        judgment = _normalize_arithmetic_judgment(judgment)
     if judge_name == "final":
         judgment = _normalize_final_judgment(judgment)
     return judgment
@@ -525,8 +838,12 @@ def _derive_error_taxonomy(judged_example):
             tags.append("hallucination")
         if reasoning.get("formulation_score") == 0 or reasoning.get("approach_score") == 0:
             tags.append("reasoning_failure")
+        elif reasoning.get("approach_score") == 1:
+            tags.append("partial_reasoning_failure")
         if reasoning.get("constraint_score") == 0:
             tags.append("constraint_handling_failure")
+        elif reasoning.get("constraint_score") == 1:
+            tags.append("partial_constraint_handling_failure")
 
     if _is_valid_judgment(final) and final.get("correct_value_in_reasoning") is True:
         final_reason = final.get("reason_not_recognized")
@@ -567,6 +884,10 @@ def _derive_error_taxonomy(judged_example):
         primary_error_type = "reasoning_failure"
     elif "constraint_handling_failure" in seen:
         primary_error_type = "constraint_handling_failure"
+    elif "partial_constraint_handling_failure" in seen:
+        primary_error_type = "partial_constraint_handling_failure"
+    elif "partial_reasoning_failure" in seen:
+        primary_error_type = "partial_reasoning_failure"
     elif _is_valid_judgment(final) and final.get("correct_value_in_reasoning") is True:
         final_reason = final.get("reason_not_recognized")
         primary_error_type = {
@@ -775,6 +1096,54 @@ def _selected_judges(judge_arg):
     return [judge_arg]
 
 
+def _retry_wait_seconds(exc, attempt):
+    msg = str(exc)
+    match = re.search(r"Please try again in ([0-9]+(?:\.[0-9]+)?)(ms|s)", msg)
+    parsed_wait = None
+    if match:
+        value = float(match.group(1))
+        unit = match.group(2)
+        if unit == "ms":
+            value /= 1000.0
+        parsed_wait = value + 1.0
+
+    if isinstance(exc, RateLimitError):
+        ramp_wait = min(120.0, 15.0 * (attempt + 1))
+        if parsed_wait is not None:
+            return max(parsed_wait, ramp_wait)
+        return ramp_wait
+
+    if isinstance(exc, (APIConnectionError, APITimeoutError)):
+        ramp_wait = min(60.0, 5.0 * (attempt + 1))
+        if parsed_wait is not None:
+            return max(parsed_wait, ramp_wait)
+        return ramp_wait
+
+    if parsed_wait is not None:
+        return max(2.0, parsed_wait)
+
+    return 0.0
+
+
+def _judge_with_retries(client, model, judge_name, example):
+    last_exc = None
+    for attempt in range(MAX_JUDGE_RETRIES):
+        try:
+            return _judge_example(client, model, judge_name, example)
+        except Exception as exc:
+            last_exc = exc
+            wait = _retry_wait_seconds(exc, attempt)
+            is_retryable = wait > 0.0
+            if not is_retryable or attempt == MAX_JUDGE_RETRIES - 1:
+                raise
+            print(
+                f"  {judge_name} judge hit {exc.__class__.__name__}, "
+                f"retrying in {wait:.1f}s... ({attempt + 1}/{MAX_JUDGE_RETRIES})"
+            )
+            time.sleep(wait)
+    raise last_exc
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_json", required=True, help="Path to input JSON file")
@@ -813,6 +1182,21 @@ def main():
     judged_examples = []
     total_examples = len(examples)
 
+    def _flush(path, examples_so_far):
+        output = {
+            "source_file": args.input_json,
+            "judge_model": args.model,
+            "judge": args.judge,
+            "include_correct": args.include_correct,
+            "max_examples": args.max_examples,
+            "summary": _summarize(examples_so_far),
+            "judged_examples": examples_so_far,
+        }
+        tmp = path + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(output, f, indent=2)
+        os.replace(tmp, path)
+
     for index, example in enumerate(examples):
         print(f"Judging example {index + 1}/{total_examples}")
         judged_example = {
@@ -820,7 +1204,6 @@ def main():
             "question": example.get("question") or "",
             "expected_answer": example.get("expected_answer"),
             "model_answer": example.get("model_answer"),
-            "raw_response": example.get("raw_response") or "",
             "correct": example.get("correct"),
             "problem_type": example.get("problem_type"),
             "level": example.get("level"),
@@ -832,25 +1215,16 @@ def main():
         for judge_name in judges:
             output_key = JUDGE_SPECS[judge_name]["output_key"]
             try:
-                judged_example[output_key] = _judge_example(client, args.model, judge_name, example)
+                judged_example[output_key] = _judge_with_retries(client, args.model, judge_name, example)
             except Exception as exc:
                 judged_example[output_key] = {"judgment_error": str(exc)}
+            time.sleep(INTER_JUDGE_DELAY_SECONDS)
 
         judged_example = _derive_error_taxonomy(judged_example)
         judged_examples.append(judged_example)
+        _flush(args.output_json, judged_examples)
 
-    output = {
-        "source_file": args.input_json,
-        "judge_model": args.model,
-        "judge": args.judge,
-        "include_correct": args.include_correct,
-        "max_examples": args.max_examples,
-        "summary": _summarize(judged_examples),
-        "judged_examples": judged_examples,
-    }
-
-    with open(args.output_json, "w") as f:
-        json.dump(output, f, indent=2)
+    print(f"Done. Results written to {args.output_json}")
 
     print(json.dumps(output["summary"], indent=2))
     _print_terminal_summary(output["summary"])
