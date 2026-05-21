@@ -52,7 +52,9 @@ ENGINES = [
     # "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
     # "deepseek-chat",
-    "deepseek-reasoner",
+    # "deepseek-reasoner",
+    "deepseek-v4-pro",
+    # "qwen-plus",
     # "gemini-2.5-pro",
     # "gemini-2.5-flash",
 ]
@@ -97,6 +99,7 @@ GEMINI_MODELS = {
 DEEPSEEK_MODELS = {
     "deepseek-chat",
     "deepseek-reasoner",
+    "deepseek-v4-pro",
 }
 
 QWEN_MODELS = {
