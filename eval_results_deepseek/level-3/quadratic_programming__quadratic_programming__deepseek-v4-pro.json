@@ -1,0 +1,263 @@
+{
+  "model": "deepseek-v4-pro",
+  "total": 25,
+  "evaluated": 25,
+  "answered": 11,
+  "correct": 11,
+  "accuracy": 1.0,
+  "avg_input_tokens": 339.52,
+  "avg_output_tokens": 13632.8,
+  "tolerance": 0.01,
+  "results": [
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 34.   2. -21.]\n [  2.  36.   8.]\n [-21.   8.  26.]] and q = [ 2.  1. -2.],\nsubject to G x <= h and A x = b, where\nG = [[ 3. -4. -3.]\n [ 0. -2. -1.]\n [-3. -3.  1.]], h = [-12.  -7. -19.],\nA = [[ 3. -1.  3.]], b = [17.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 469.28155017465974,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 341,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[29. -5. 20.]\n [-5.  6.  2.]\n [20.  2. 20.]] and q = [ 3. -3. -3.],\nsubject to G x <= h and A x = b, where\nG = [[ 3.  0.  2.]\n [ 0. -4.  1.]\n [-1.  0.  1.]], h = [12. -8.  3.],\nA = [[ 3. -2. -1.]], b = [-2.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 2.7082233983921604,
+      "model_answer": 2.708,
+      "raw_response": "{\n  \"reasoning\": \"We first eliminate x3 using the equality constraint 3x1 - 2x2 - x3 = -2, obtaining x3 = 2 + 3x1 - 2x2. Substituting into the objective and constraints gives an unconstrained quadratic in x1, x2. The unconstrained minimizer violates the second inequality 3x1 - 6x2 \u2264 -10, so we enforce it as equality: 3x1 - 6x2 = -10. Solving for x1 = 2x2 - 10/3 and substituting into the objective yields a quadratic in x2. Minimizing gives x2 = 4285/2274 \u2248 1.884, x1 = 165/379 \u2248 0.435, and x3 \u2248 -0.463. Checking other constraints shows they are satisfied. The optimal objective value is 12317/4548 \u2248 2.708, which is accurate to within 0.01.\",\n  \"answer\": 2.708\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 338,
+      "output_tokens": 10787
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[14.  2.  5.]\n [ 2. 36. 16.]\n [ 5. 16. 26.]] and q = [-4. -3.  3.],\nsubject to G x <= h and A x = b, where\nG = [[ 3.  1.  4.]\n [-1.  3. -4.]\n [-2. -1.  0.]], h = [21. -8. -3.],\nA = [[ 2. -1. -3.]], b = [-6.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 146.5129695895551,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 338,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 36.   2. -28.]\n [  2.   3.  -1.]\n [-28.  -1.  33.]] and q = [-1. -3.  4.],\nsubject to G x <= h and A x = b, where\nG = [[-1.  2. -3.]\n [ 4. -1. -3.]\n [ 0. -4.  1.]], h = [-2.  6.  1.],\nA = [[1. 2. 4.]], b = [8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 10.697089091630449,
+      "model_answer": 10.7,
+      "raw_response": "{\n  \"reasoning\": \"The problem is a convex quadratic program. We solve KKT conditions. The unconstrained minimizer violates the first inequality constraint. We enforce the equality constraint and the first inequality as active, parametrizing x in terms of x2: x1 = 14x2 - 16, x3 = 6 - 4x2. Substituting into the objective yields a quadratic in x2: f = 5393.5 x2^2 - 13071 x2 + 7930. The minimizer is x2 = 13071/10787 \u2248 1.2117, giving x1 = 10402/10787 \u2248 0.9644, x3 = 12438/10787 \u2248 1.1530. All other constraints are satisfied. KKT multipliers are \u03bc1 = 16977/10787 > 0 and \u03bb = -24586/10787, confirming optimality. The objective value is computed as 230779/21574 \u2248 10.69709.\",\n  \"answer\": 10.70\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 341,
+      "output_tokens": 10608
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 41. -13.   8.]\n [-13.  34.  -8.]\n [  8.  -8.   4.]] and q = [ 4. -1.  2.],\nsubject to G x <= h and A x = b, where\nG = [[-3.  3. -1.]\n [-4.  1.  2.]\n [ 1. -4.  2.]], h = [12.  5. -9.],\nA = [[ 2. -2.  2.]], b = [-4.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 72.1478873439763,
+      "model_answer": 72.15,
+      "raw_response": "{\n  \"reasoning\": \"Solved the QP by assuming the third inequality constraint is active. Formed KKT conditions with equality constraints Ax = b and G3 x = h3. Solved for x = (81/71, 137/71, -86/71) and multipliers. Checked inactive constraints and found them satisfied. Computed optimal value exactly as 10245/142 \u2248 72.1479.\",\n  \"answer\": 72.15\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 342,
+      "output_tokens": 11189
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 26.   0.  -8.]\n [  0.  25. -16.]\n [ -8. -16.  32.]] and q = [-2.  0.  2.],\nsubject to G x <= h and A x = b, where\nG = [[ 4.  0. -4.]\n [ 1. -3.  3.]\n [ 3. -2. -1.]], h = [1. 2. 2.],\nA = [[ 4.  1. -1.]], b = [5.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 22.295626722529054,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 342,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 18. -18. -12.]\n [-18.  24.   8.]\n [-12.   8.  12.]] and q = [ 1. -3.  0.],\nsubject to G x <= h and A x = b, where\nG = [[-3.  3. -4.]\n [-3.  4.  3.]\n [ 2. -1.  2.]], h = [-2. 15.  7.],\nA = [[ 1. -3.  0.]], b = [-7.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 20.092150203865835,
+      "model_answer": 20.09,
+      "raw_response": "{\n  \"reasoning\": \"Substituted x1 = 3x2 - 7 from equality constraint into objective and inequalities. Reduced to unconstrained quadratic in x2, x3: f = 39 x2^2 + 6 x3^2 - 28 x2 x3 - 252 x2 + 84 x3 + 434. Unconstrained minimum at (84/19, 63/19) violates 5x2 + 2x3 <= 21. Imposed equality on that constraint, solved KKT conditions, got x2 = 1071/293, x3 = 399/293, \u03bb = 294/293 > 0, all other constraints strictly satisfied. Objective value = 1,724,891/85,849 \u2248 20.092.\",\n  \"answer\": 20.09\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 339,
+      "output_tokens": 11327
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 41. -12.  14.]\n [-12.  48. -32.]\n [ 14. -32.  24.]] and q = [-3. -4.  3.],\nsubject to G x <= h and A x = b, where\nG = [[ 1. -2.  4.]\n [-3. -4. -4.]\n [-2.  1. -3.]], h = [  5. -25.  -7.],\nA = [[ 3.  4. -2.]], b = [22.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 301.9939207718449,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 340,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[11.  9.  6.]\n [ 9. 33.  8.]\n [ 6.  8.  4.]] and q = [-2.  2. -1.],\nsubject to G x <= h and A x = b, where\nG = [[ 3.  4.  0.]\n [ 1.  3.  1.]\n [-4. -4. -3.]], h = [ 18.  12. -21.],\nA = [[-1.  4. -1.]], b = [-1.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 127.14040563620361,
+      "model_answer": 127.14,
+      "raw_response": "{\n  \"reasoning\": \"We start by eliminating x3 using the equality constraint -x1 + 4x2 - x3 = -1, so x3 = -x1 + 4x2 + 1. Substituting into the objective and constraints reduces the problem to minimizing f(x1,x2) = 1.5x1^2 + 80.5x2^2 + 9x1x2 + x1 + 22x2 + 1 subject to 3x1+4x2 <= 18, x2 <= 11/7, and x1+16x2 >= 18. The unconstrained minimum of f is at x1 \u2248 0.092, x2 \u2248 -0.142, which violates x1+16x2 >= 18. Thus the optimum must lie on the boundary x1+16x2 = 18. Solving the equality-constrained problem gives x2 = 696/641, x1 = 402/641, which satisfies all other constraints. Substituting back yields the optimal objective value 81497/641 \u2248 127.1404.\",\n  \"answer\": 127.14\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 340,
+      "output_tokens": 9230
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 26.  17. -20.]\n [ 17.  14. -10.]\n [-20. -10.  19.]] and q = [-4.  3. -4.],\nsubject to G x <= h and A x = b, where\nG = [[-3. -1.  4.]\n [-2.  3.  4.]\n [-2. -4.  3.]], h = [11. 17.  0.],\nA = [[-4. -1.  2.]], b = [0.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": -0.8503144653429787,
+      "model_answer": -0.85,
+      "raw_response": "{\"reasoning\": \"Substituted equality constraint to eliminate x2, yielding a quadratic in x1, x3. Unconstrained minimum violated 14x1 - 5x3 <= 0. Minimizing along that active constraint gave x1 = 26/159, x3 = 364/795, x2 = 208/795. Objective value = -676/795 \u2248 -0.8503, feasible and KKT optimal.\", \"answer\": -0.85}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 338,
+      "output_tokens": 7572
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 6.  1.  0.]\n [ 1. 13. -8.]\n [ 0. -8. 20.]] and q = [-4.  4. -3.],\nsubject to G x <= h and A x = b, where\nG = [[ 2.  4. -3.]\n [ 0. -2. -1.]\n [-2.  0.  2.]], h = [ 5. -2.  2.],\nA = [[ 2. -3.  1.]], b = [5.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 19.275373142578204,
+      "model_answer": 19.28,
+      "raw_response": "{\n  \"reasoning\": \"The problem is a convex quadratic program with a positive definite P. The unconstrained minimizer violates the second inequality and the equality constraint, so constraints must be considered. By assuming the equality and the second inequality are active, we solved the KKT conditions and obtained a candidate point (x1 \u2248 2.5746, x2 \u2248 0.4299, x3 \u2248 1.1403) that satisfies all constraints with the inequality multiplier positive. This yields the optimal objective value as 8652715/448900 \u2248 19.27537. Since the required accuracy is 0.01, the answer 19.28 is within tolerance.\",\n  \"answer\": 19.28\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 341,
+      "output_tokens": 12031
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[19. 11. -6.]\n [11. 17. 15.]\n [-6. 15. 34.]] and q = [ 3. -2.  0.],\nsubject to G x <= h and A x = b, where\nG = [[-4.  4. -4.]\n [-1.  3.  4.]\n [-1. -4. -4.]], h = [-20.  21. -25.],\nA = [[-4.  2.  0.]], b = [-12.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 468.90679053032596,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 337,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[17.  4. 19.]\n [ 4. 20.  6.]\n [19.  6. 34.]] and q = [-2. -3.  4.],\nsubject to G x <= h and A x = b, where\nG = [[ 1. -2. -2.]\n [-1. -4. -3.]\n [-1.  2.  1.]], h = [ -3. -16.   7.],\nA = [[-3.  3. -4.]], b = [-22.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 519.7417297572247,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 338,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[34.  7. 18.]\n [ 7. 17.  2.]\n [18.  2. 29.]] and q = [ 1. -4. -2.],\nsubject to G x <= h and A x = b, where\nG = [[ 4.  4.  1.]\n [-4. -2.  3.]\n [-1.  0. -1.]], h = [ 23. -12.   0.],\nA = [[ 2.  3. -3.]], b = [9.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 42.80132290094066,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 339,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 18. -16.   0.]\n [-16.  36.  14.]\n [  0.  14.   9.]] and q = [ 2. -4.  4.],\nsubject to G x <= h and A x = b, where\nG = [[ 4. -2. -1.]\n [-4.  4. -3.]\n [-1. -4.  3.]], h = [ -3.   7. -10.],\nA = [[ 4. -3.  1.]], b = [-6.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 198.5528000834889,
+      "model_answer": 198.55,
+      "raw_response": "{\n  \"reasoning\": \"We solve the QP by checking KKT conditions. First, the unconstrained solution violates constraints 1 and 2. Trying active sets: constraints 1 and 2 together are inconsistent with the equality. With only constraint 1 active, constraints 2 and 3 are violated. With only constraint 2 active, constraint 3 is violated. With constraints 2 and 3 active and the equality, we obtain a feasible point x = (3/5, 79/25, 27/25) \u2248 (0.6, 3.16, 1.08). Solving the stationarity conditions yields dual variables \u03bc2 \u2248 96.44, \u03bc3 \u2248 38.61, both positive, so KKT holds. The objective value is computed as f(x) = 0.5 x^T P x + q^T x = 205.6728 - 7.12 = 198.5528.\",\n  \"answer\": 198.55\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 340,
+      "output_tokens": 13513
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 48. -40.  -4.]\n [-40.  34.   6.]\n [ -4.   6.  13.]] and q = [ 3. -2.  2.],\nsubject to G x <= h and A x = b, where\nG = [[-1.  3. -1.]\n [ 4. -3. -1.]\n [-1.  3. -4.]], h = [ 3.  1. -3.],\nA = [[4. 2. 2.]], b = [16.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 37.61093668677289,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 341,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 2.  6.  1.]\n [ 6. 18.  3.]\n [ 1.  3. 13.]] and q = [3. 0. 3.],\nsubject to G x <= h and A x = b, where\nG = [[ 0. -2.  3.]\n [ 3. -3. -4.]\n [-4.  2. -3.]], h = [  6.   0. -12.],\nA = [[-3.  2. -3.]], b = [-13.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 42.32795079668754,
+      "model_answer": 42.33,
+      "raw_response": "{\n  \"reasoning\": \"We need to minimize (1/2) x^T P x + q^T x subject to Gx \u2264 h and Ax = b. The data is given. First, check P is positive semidefinite (it is, with zero determinant). Use the equality A x = b to eliminate one variable. Write A = [[-3, 2, -3]], b = [-13], which gives -3x1 + 2x2 - 3x3 = -13, or 3x1 - 2x2 + 3x3 = 13. Solve for x2: x2 = (3/2)x1 + (3/2)x3 - 13/2. Substitute into objective and inequalities. Let u = x1, v = x3. Then x2 = 1.5u + 1.5v - 6.5. The objective becomes f(u,v) = (121/4)u^2 + 55uv + (125/4)v^2 - (423/2)u - 192v + 1521/4. The inequalities G x \u2264 h reduce to: (1) u \u2265 7/3, (2) 3u + 17v \u2265 39, (3) u \u2265 -1 (redundant). The problem is convex. Find unconstrained minimum: set partial derivatives to zero gives u \u2248 3.5157, v \u2248 -0.0218. But this violates 3u + 17v \u2265 39 (computed 3u+17v \u2248 10.18). Thus the second inequality must be active: 3u + 17v = 39. Solve for v = (39 - 3u)/17. Substitute back to get f as a quadratic in u: f(u) = (12437/578)u^2 - (22179/289)u + 60255/578. The unconstrained minimizer of this quadratic is u = 22179/12437 \u2248 1.783, but we also require u \u2265 7/3 \u2248 2.333. Since 1.783 < 2.333, the feasible minimum is at the boundary u = 7/3. Then v = (39 - 3*(7/3))/17 = 32/17, and x2 = 1.5*(7/3) + 1.5*(32/17) - 6.5 = -3/17. Check all constraints: active at (1) and (2), (3) strictly satisfied. Compute optimal objective value: plug x = (7/3, -3/17, 32/17) into original objective. Get f = 110095/2601 \u2248 42.328. Within 0.01, this is 42.33.\",\n  \"answer\": 42.33\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 341,
+      "output_tokens": 11267
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 18. -12.  -6.]\n [-12.  27.  24.]\n [ -6.  24.  24.]] and q = [-3.  0.  1.],\nsubject to G x <= h and A x = b, where\nG = [[ 2.  2.  3.]\n [ 1. -1. -2.]\n [ 0. -4.  3.]], h = [22. -5.  6.],\nA = [[4. 4. 4.]], b = [28.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 200.8333333549236,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 340,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[  9.   2. -17.]\n [  2.   5.  -2.]\n [-17.  -2.  34.]] and q = [-2. -2.  2.],\nsubject to G x <= h and A x = b, where\nG = [[ 1. -2.  4.]\n [-3.  0.  4.]\n [ 2.  4. -2.]], h = [11. 14. 14.],\nA = [[-1. -4. -2.]], b = [-26.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 108.61673554742998,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 341,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[34. -6. 15.]\n [-6. 20. -4.]\n [15. -4. 10.]] and q = [-1.  2.  1.],\nsubject to G x <= h and A x = b, where\nG = [[ 4.  4. -2.]\n [ 4. -2.  2.]\n [-2.  1.  2.]], h = [11. 14.  8.],\nA = [[4. 1. 1.]], b = [13.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 180.8299421509396,
+      "model_answer": null,
+      "raw_response": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 336,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[21.  8. 16.]\n [ 8.  9. -1.]\n [16. -1. 22.]] and q = [4. 1. 2.],\nsubject to G x <= h and A x = b, where\nG = [[-2. -1. -4.]\n [ 4.  0.  1.]\n [-4. -3. -3.]], h = [-16.  15. -18.],\nA = [[-1.  3. -1.]], b = [-2.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 227.28414941995788,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 338,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[  9. -15.   7.]\n [-15.  27. -12.]\n [  7. -12.   6.]] and q = [3. 3. 0.],\nsubject to G x <= h and A x = b, where\nG = [[-2. -1.  3.]\n [-4. -2. -4.]\n [ 3. -3. -4.]], h = [  0. -15. -11.],\nA = [[-4.  2.  4.]], b = [8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 32.51382488527179,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 340,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[21. -6.  8.]\n [-6.  9. -8.]\n [ 8. -8.  9.]] and q = [ 1. -3. -1.],\nsubject to G x <= h and A x = b, where\nG = [[ 0.  2.  1.]\n [-4.  1.  4.]\n [ 2. -4.  3.]], h = [10.  0.  7.],\nA = [[ 2. -3. -4.]], b = [-8.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 16.822055959533817,
+      "model_answer": 16.82,
+      "raw_response": "{\n  \"reasoning\": \"The problem is a quadratic program with equality and inequality constraints. After substituting the equality constraint to eliminate x1, the reduced problem in x2 and x3 has objective f = 19.125 x2^2 + 62.5 x3^2 + 55 x2 x3 - 103.5 x2 - 199 x3 + 164, with constraints 2x2 + x3 \u2264 10, 5x2 + 4x3 \u2265 16, -x2 + 7x3 \u2264 15. The unconstrained minimum of the reduced problem violates 5x2+4x3 \u2265 16, so this constraint is active at the optimum. Solving with 5x2+4x3=16 gives x2 = 4156/1537 \u2248 2.704, x3 = 953/1537 \u2248 0.620. Substituting back satisfies all other constraints and yields Lagrange multipliers \u03bc2 \u2248 6.806 (positive) and \u03bd \u2248 5.135 for the equality, confirming optimality. The optimal value is computed as 17 - 547/3074 \u2248 16.822.\",\n  \"answer\": 16.82\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 339,
+      "output_tokens": 12100
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[17. 10. -7.]\n [10. 41. 18.]\n [-7. 18. 21.]] and q = [-2.  4. -2.],\nsubject to G x <= h and A x = b, where\nG = [[ 3.  0. -1.]\n [ 3.  1.  0.]\n [ 3.  3.  1.]], h = [12. 16. 29.],\nA = [[-1. -1. -4.]], b = [-23.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 29.27771931502913,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 338,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Minimize the quadratic objective (1/2) x^T P x + q^T x where\nP = [[ 2.  3. -4.]\n [ 3. 14. -5.]\n [-4. -5. 17.]] and q = [ 3.  0. -4.],\nsubject to G x <= h and A x = b, where\nG = [[ 3. -3. -2.]\n [-1. -2.  4.]\n [ 2.  3.  2.]], h = [-8. 10. 16.],\nA = [[ 0.  2. -2.]], b = [-2.].\nWhat is the optimal value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 10.44019138850691,
+      "model_answer": 10.44,
+      "raw_response": "{\n  \"reasoning\": \"We minimize (1/2) x^T P x + q^T x subject to constraints. Substitute equality x2 = x3 - 1 to reduce to 2 variables. The unconstrained minimum violates the first inequality. Assuming constraint 1 is active, we solve the equality-constrained subproblem along 3x1 - 5x3 = -11, yielding x1 = -443/209, x3 = 194/209, x2 = -15/209. This point satisfies all constraints with a positive Lagrange multiplier for constraint 1, satisfying KKT, so it is optimal. The optimal objective value evaluates to 2182/209 \u2248 10.44.\",\n  \"answer\": 10.44\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 340,
+      "output_tokens": 7196
+    }
+  ]
+}
