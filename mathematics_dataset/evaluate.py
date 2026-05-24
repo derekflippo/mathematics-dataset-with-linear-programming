@@ -44,15 +44,15 @@ flags.mark_flag_as_required('output_dir')
 ENGINES = [
     # "gpt-4o-mini",
     # "gpt-4.1-mini",
-    "gpt-4.1",
+    # "gpt-4.1",
     # "gpt-5",
     # "o4-mini",
     # "o3",
-    #"gpt-5.5",
+    # "gpt-5.5",
     # "gpt-5.4",
-    #"gpt-5.4-mini",
+    # "gpt-5.4-mini",
     # "claude-opus-4-7",
-    # "claude-sonnet-4-6",
+    "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
     # "deepseek-chat",
     # "deepseek-reasoner",
@@ -296,7 +296,7 @@ def _evaluate_gemini(client, question, model):
     for attempt in range(3):
         try:
             thinking_config = (
-                google_types.ThinkingConfig(thinking_budget=GEMINI_THINKING_BUDGET, include_thoughts=True)
+                google_types.ThinkingConfig(thinking_budget=GEMINI_THINKING_BUDGET, include_thoughts=False)
                 if model in _GEMINI_THINKING_MODELS else None
             )
             config = google_types.GenerateContentConfig(
