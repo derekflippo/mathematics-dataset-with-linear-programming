@@ -1,0 +1,263 @@
+{
+  "model": "deepseek-v4-pro",
+  "total": 25,
+  "evaluated": 25,
+  "answered": 11,
+  "correct": 10,
+  "accuracy": 0.9090909090909091,
+  "avg_input_tokens": 306.24,
+  "avg_output_tokens": 12367.72,
+  "tolerance": 0.01,
+  "results": [
+    {
+      "question": "Find the minimum value of 4*x1^-1*x2^-1 + 3*x1^2*x2^-1*x3^2 subject to (4*x1*x2^2*x3 + 2*x2^2*x3^2) <= 45.43, (2*x1^2*x2^2 + 3*x2^2*x3^2) <= 37.77, 1/(x3*x2) <= 0.34, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 1.732299936871923,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 315,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 7*x1^2*x2^-1*x3 + 6*x1^-1*x2^2*x3 subject to (2*x3 + 4*x1^2) <= 17.42, (4*x1*x3^2 + 5*x1^2*x3^2) <= 52.91, 1/(x3*x1) <= 0.43, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 29.224600646821024,
+      "model_answer": 29.23,
+      "raw_response": "{\n  \"reasoning\": \"We need to minimize f = 7*x1^2*x2^-1*x3 + 6*x1^-1*x2^2*x3 subject to given constraints. Since x2 appears only in f, we can minimize over x2 for fixed x1, x3. The unconstrained minimizer is x2 = x1*(7/12)^(1/3) \u2248 0.836*x1, feasible for x1\u22650.598. For x1<0.598, x2=0.5 gives higher f. So optimal is to use x2 = c*x1 with c=(7/12)^(1/3), giving f = (7/c+6c^2)*x1*x3 = 10.5/c * x1*x3. The product p=x1*x3 must be at least 1/0.43 \u2248 2.32558 from constraint 3. Constraints 1 and 2 allow p=2.32558 with appropriate x1 (e.g., x1=1). Thus min f = 10.5*p/c = 10.5*(1/0.43)*(12/7)^(1/3) \u2248 29.226, which rounds to 29.23.\",\n  \"answer\": 29.23\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 303,
+      "output_tokens": 8818
+    },
+    {
+      "question": "Find the minimum value of 7*x1*x2^-1*x3^2 + x2^2*x3^-1 subject to (5*x1^2*x3 + 3*x1*x3^2) <= 26.64, (5*x1*x2 + 3*x1*x2^2*x3^2) <= 28.51, 1/(x2*x3) <= 0.5, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 5.291502224600881,
+      "model_answer": 5.2915,
+      "raw_response": "{\n  \"reasoning\": \"We minimize f = 7 x1 x2^{-1} x3^2 + x2^2 x3^{-1} subject to constraints. Since f increases with x1, set x1 to its lower bound 0.5. Constraint (3) gives x2 x3 >= 2. For fixed product p = x2 x3, substitute u = x3^3 to get f = 3.5 u/p + p^2/u, minimized when terms equal, giving u = sqrt(p^3/3.5) and f_min = 2 sqrt(3.5 p). This increases with p, so p=2 is optimal. Then f_min = 2 sqrt(7) \u2248 5.2915. The optimal b, c are within bounds and satisfy all constraints with slack. Thus the minimum is 5.2915.\",\n  \"answer\": 5.2915\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 305,
+      "output_tokens": 4396
+    },
+    {
+      "question": "Find the minimum value of x1^-1*x2 + x1^-1*x2^-1*x3 subject to (5*x2^2*x3^2 + x1^2*x3) <= 41.07, (2*x2^2 + x1^2*x2^2*x3) <= 16.35, 1/(x1*x2) <= 0.35, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 0.2828427121087018,
+      "model_answer": 0.28284,
+      "raw_response": "{\"reasoning\": \"We want to minimize f = x1^{-1} x2 + x1^{-1} x2^{-1} x3 subject to the given constraints. Let a = x1, b = x2, c = x3. Then f = b/a + c/(ab) = (b^2 + c)/(ab) with P = ab. Constraints: c \u2265 0.5, a,b \u2208 [0.5,5], P \u2265 1/0.35 \u2248 2.85714 from 1/(ab) \u2264 0.35. The main restrictive constraint is (2): 2b^2 + a^2 b^2 c = 2b^2 + P^2 c \u2264 16.35. To minimize f, we want P as large as possible and b, c as small as possible. Since f increases with c, set c at its lower bound 0.5. With c=0.5, (2) becomes 2b^2 + 0.5 P^2 \u2264 16.35 \u2192 P \u2264 sqrt(32.7 - 4b^2). Also a = P/b \u2264 5 \u2192 P \u2264 5b. For small b, 5b is smaller, so max P = 5b. Then f = b/(5b) * b? Actually f = (b^2+0.5)/(5b) = b/5 + 0.1/b. Minimizing this over b > 0 gives b = \u221a0.5 \u2248 0.7071. Check feasibility: at a=5, b=\u221a0.5, c=0.5, P=5\u221a0.5\u22483.5355 satisfies P\u22652.857, and constraints (1): 1.25b^2+0.5a^2\u224813.125 \u2264 41.07, (2): 2b^2+0.5P^2=7.25 \u2264 16.35. Thus optimal. f_min = \u221a0.5/5 + 0.5/(5\u221a0.5) = \u221a2/5 \u2248 0.28284.\", \"answer\": 0.28284}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 299,
+      "output_tokens": 11591
+    },
+    {
+      "question": "Find the minimum value of 4*x1^-1*x3^-1 + x2^-1 subject to (3*x1*x3^2 + 3*x2^2*x3^2) <= 47.05, (5*x1^2*x2^2*x3^2 + 4*x2^2*x3) <= 125.54, 1/(x3*x2) <= 0.27, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 3.0687089984672182,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 305,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of x2^2*x3^-1 + 5*x1*x3^-1 subject to (5*x1*x2 + 3*x3^2) <= 20.81, (x1*x2*x3 + 5*x1*x3) <= 19.21, 1/(x1*x3) <= 0.35, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 2.4987213032829176,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 292,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 6*x1^2*x2^-1*x3 + 6*x1^-1*x2^2*x3^2 subject to (3*x1^2*x3 + 5*x2^2) <= 28.04, (x1*x2*x3 + x1*x2) <= 7.14, 1/(x2*x3) <= 0.51, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 21.475104297602154,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 302,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 4*x1^-1*x2*x3^2 + 6*x1^-1*x2*x3 subject to (4*x2*x3 + 4*x1*x2^2*x3) <= 39.19, (3*x1^2*x2^2 + 4*x1*x2*x3^2) <= 40.72, 1/(x3*x1) <= 0.52, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 0.4000000187408366,
+      "model_answer": 0.4,
+      "raw_response": "{\"reasoning\": \"The objective is f = 4*x1^{-1}*x2*x3^2 + 6*x1^{-1}*x2*x3. To minimize, we want x1 as large as possible and x2, x3 as small as possible. Upper bound of x1 is 5, lower bounds of x2 and x3 are 0.5. At x1=5, x2=0.5, x3=0.5, all constraints are satisfied with slack: (1) 4*0.5*0.5+4*5*0.5^2*0.5 = 3.5 \u2264 39.19; (2) 3*25*0.25+4*5*0.5*0.25 = 21.25 \u2264 40.72; (3) 1/(5*0.5)=0.4 \u2264 0.52. The objective value is 0.4. No smaller value is possible because decreasing x1 or increasing x2/x3 would increase f.\", \"answer\": 0.4}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 309,
+      "output_tokens": 2081
+    },
+    {
+      "question": "Find the minimum value of 2*x1^-1*x2 + 5*x1^2*x2^-1*x3^2 subject to (4*x1*x3 + 3*x1^2*x2^2*x3) <= 70.81, (5*x1*x2^2*x3 + 5*x1^2*x3) <= 82.86, 1/(x3*x1) <= 0.4, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 16.72724032922442,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 309,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 7*x2^2*x3^-1 + 6*x1*x2^-1 subject to (2*x1^2*x2^2 + x2*x3) <= 20.49, (3*x1*x2*x3 + 2*x1^2*x2^2*x3^2) <= 49.3, 1/(x2*x3) <= 0.49, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 4.397691725451946,
+      "model_answer": 4.4,
+      "raw_response": "{\n  \"reasoning\": \"The objective is f = 7*x2^2/x3 + 6*x1/x2. To minimize, we want x1 as small as possible and x3 as large as possible, so set x1=0.5 and x3=5. For fixed x1, x3, f is convex in x2: f = 1.4*x2^2 + 3/x2. Derivative gives optimal x2^3 = (3*0.5*5)/7 = 15/14 \u2248 1.0714, so x2 \u2248 1.0233. This yields f \u2248 1.4*(1.0233^2) + 3/1.0233 \u2248 4.3977. All constraints are satisfied with slack, so this is the global minimum. First pass estimate gives f \u2248 4.40.\",\n  \"answer\": 4.40\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 305,
+      "output_tokens": 4871
+    },
+    {
+      "question": "Find the minimum value of 2*x1^2*x3^-1 + 3*x1*x2*x3^-1 subject to (5*x1*x3^2 + 3*x1^2*x2^2*x3) <= 37.79, (4*x1^2*x2 + 2*x1^2*x2*x3) <= 17.34, 1/(x2*x3) <= 0.48, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 0.34154199277876984,
+      "model_answer": 0.34,
+      "raw_response": "{\n  \"reasoning\": \"Set x1=0.5 (lower bound) since f increases with x1. Constraint 3 requires x2*x3 >= 1/0.48 \u2248 2.0833. To minimize f = (0.5+1.5*x2)/x3, we want x3 large and x2 small. x2 is minimized by making constraint 3 active: x2 = 2.0833/x3. Substitute into constraint 1: 2.5*x3^2 + 0.75*(2.0833/x3)^2 * x3 <= 37.79 -> 2.5*x3^2 + 3.2552/x3 <= 37.79. Multiplying by x3: 2.5*x3^3 - 37.79*x3 + 3.2552 <= 0. Solving for maximum x3 gives x3 \u2248 3.844. Then x2 = 2.0833/3.844 \u2248 0.542. Constraint 2 is easily satisfied (LHS \u2248 1.583). f = 2*0.25/3.844 + 3*0.5*0.542/3.844 \u2248 0.3415. Thus minimum value \u2248 0.34.\",\n  \"answer\": 0.34\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 309,
+      "output_tokens": 9870
+    },
+    {
+      "question": "Find the minimum value of 6*x1^2*x2^-1*x3^2 + x1^-1*x2^2*x3 subject to (5*x1^2*x2^2 + 3*x2^2*x3) <= 49.12, (x1^2 + 3*x1*x2^2*x3) <= 19.8, 1/(x1*x2) <= 0.37, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 2.8474740083778936,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 308,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 5*x2^-1*x3 + 6*x1^-1*x3 subject to (2*x3 + x1^2*x2^2*x3) <= 15.89, (5*x1*x2^2*x3^2 + 4*x1*x3) <= 63.27, 1/(x3*x1) <= 0.49, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 2.6048706981955276,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 299,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 2*x1^-1 + 3*x1*x2^-1 subject to (x1^2 + x1*x2^2*x3^2) <= 20.17, (3*x2^2*x3^2 + 2*x1^2*x2*x3^2) <= 60.22, 1/(x2*x1) <= 0.3, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 2.190889612988114,
+      "model_answer": 2.19,
+      "raw_response": "{\n  \"reasoning\": \"We set x3 = 0.5 (its lower bound) to minimize the left-hand sides of constraints 1 and 2. Then the constraints simplify to: x1^2 + 0.25 x1 x2^2 \u2264 20.17 and 0.75 x2^2 + 0.5 x1^2 x2 \u2264 60.22, with x1, x2 \u2208 [0.5, 5] and x1 x2 \u2265 10/3 \u2248 3.333. For fixed x2, the objective f = 2/x1 + 3 x1/x2 is convex in x1, with unconstrained minimum at x1* = \u221a(2x2/3). This yields f* = 2\u221a(3/(2x2)) + 3\u221a(2/(3x2)) \u2248 4.8989/\u221ax2, which decreases as x2 increases. The maximum feasible x2 is 5. With x2 = 5, x1* = \u221a(10/3) \u2248 1.8257 lies within the feasible interval (max(0.5, 3.333/5) \u2264 x1 \u2264 min(5, root1, root2) \u2248 [0.6667, 2.3464]). All constraints are satisfied (C1: 14.74 \u2264 20.17, C2: 27.08 \u2264 60.22, C3: 9.13 \u2265 3.333). The minimum objective value is f = 2/1.8257 + 3\u00d71.8257/5 = 2.1909.\",\n  \"answer\": 2.19\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 302,
+      "output_tokens": 4143
+    },
+    {
+      "question": "Find the minimum value of 3*x1^2*x2*x3^-1 + 2*x1^-1*x2^2*x3 subject to (4*x2 + 5*x1^2*x2*x3) <= 33.08, (4*x1^2*x3 + 2*x1^2*x2^2) <= 25.61, 1/(x1*x3) <= 0.38, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 1.8456403824133711,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 307,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 6*x2^-1*x3 + 3*x1^-1*x2^2 subject to (4*x1^2*x2^2*x3^2 + 3*x1^2) <= 62.34, (5*x2 + 4*x1^2*x2*x3) <= 31.38, 1/(x3*x2) <= 0.43, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 10.293305663698165,
+      "model_answer": 10.29,
+      "raw_response": "{\"reasoning\": \"We minimize f(x1,x2,x3)=6*x3/x2 + 3*x2^2/x1. Constraint 3 gives x2*x3 >= 1/0.43 \u2248 2.3256. To minimize, set x3 = 2.3256/x2, giving f = 13.9535/x2^2 + 3*x2^2/x1. Constraint 1 gives x1 \u2264 1.591. Constraint 2: 5*x2 + 9.3023*x1^2 \u2264 31.38. For fixed x1, unconstrained optimal x2 = (4.6512*x1)^{1/4} gives f_min = 12.94/\u221ax1, decreasing in x1. This is feasible until constraint 2 binds near x1=1.5777, f\u224810.301. For larger x1, constraint 2 forces x2 smaller, yielding a lower f minimum. Testing points where constraint 2 is active, f reaches about 10.292 at x1\u22481.5825, x2\u22481.6168. Further increases in x1 increase f. The global minimum is approximately 10.292, within 0.01 of 10.29.\", \"answer\": 10.29}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 303,
+      "output_tokens": 11280
+    },
+    {
+      "question": "Find the minimum value of x1^-1*x2^2*x3^-1 + 4*x1^2*x2^-1*x3^-1 subject to (3*x1^2*x2*x3^2 + 4*x2^2*x3^2) <= 121.63, (2*x3^2 + 2*x1^2*x2^2*x3) <= 55.21, 1/(x1*x3) <= 0.27, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 0.7057515185178131,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 317,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 7*x1^2*x2^2*x3^-1 + 2*x1^-1*x2^2*x3 subject to (4*x3 + x2*x3^2) <= 8.97, (x1*x2^2*x3^2 + 4*x1*x2) <= 24.04, 1/(x2*x3) <= 0.5, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 11.743888455438105,
+      "model_answer": 11.74,
+      "raw_response": "{\n  \"reasoning\": \"We minimize f(x1,x2,x3)=7*x1^2*x2^2/x3 + 2*x2^2*x3/x1 subject to constraints. For fixed x2,x3, the unconstrained minimizer in x1 is x1 = (x3^2/7)^(1/3), giving f = 3*7^(1/3)*x3^(1/3)*x2^2. Constraint 3 (1/(x2*x3) \u2264 0.5) gives x2 \u2265 2/x3. Constraint 1 (4*x3 + x2*x3^2 \u2264 8.97) with x2 \u2265 2/x3 yields x3 \u2264 8.97/6 = 1.495. To minimize f, we want x2 as small as possible (x2 = 2/x3) and x3 as large as possible (x3 = 1.495), giving x2 = 400/299 \u2248 1.3378. Then x1 = (1.495^2/7)^(1/3) \u2248 0.6835, within bounds. f evaluates to 3*7^(1/3)*1.495^(1/3)*(400/299)^2 \u2248 11.7442. This satisfies all constraints with slacks (constraint 2 is slack). No other feasible point yields a smaller value.\",\n  \"answer\": 11.74\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 304,
+      "output_tokens": 15619
+    },
+    {
+      "question": "Find the minimum value of 5*x1^-1*x2^2*x3^2 + 4*x1^2*x2^-1*x3 subject to (2*x1^2*x2^2*x3 + x2^2*x3) <= 25.08, (3*x1^2*x2*x3 + 5*x1*x2*x3^2) <= 71.61, 1/(x1*x2) <= 0.49, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 4.5175395107791685,
+      "model_answer": 4.52,
+      "raw_response": "{\n  \"reasoning\": \"Set x3 = 0.5 (lower bound) as objective increases with x3. For x3=0.5, objective becomes 1.25*x2^2/x1 + 2*x1^2/x2. Using AM-GM, lower bound is 2*sqrt(2.5)*sqrt(x1*x2) and equality when 1.25*x2^2/x1 = 2*x1^2/x2. Constraint 1/(x1*x2) <= 0.49 gives x1*x2 >= 100/49 \u2248 2.0408. Thus minimal objective is 2*sqrt(2.5)*sqrt(100/49) = 10*sqrt(10)/7 \u2248 4.5175. This point satisfies all constraints. Hence minimum is 10\u221a10/7.\",\n  \"answer\": 4.52\n}",
+      "finish_reason": "stop",
+      "correct": true,
+      "input_tokens": 315,
+      "output_tokens": 7542
+    },
+    {
+      "question": "Find the minimum value of 6*x1*x2^2*x3^-1 + 2*x2^-1*x3^2 subject to (x1*x2^2*x3 + 3*x2^2*x3) <= 13.61, (3*x1^2*x3^2 + x1^2*x2^2*x3^2) <= 25.56, 1/(x2*x1) <= 0.46, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 11.775329280475392,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 312,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 4*x2^-1 + 3*x1^2*x2^-1*x3 subject to (5*x1*x2^2*x3^2 + 2*x1^2) <= 80.26, (2*x1^2*x2*x3^2 + 5*x2*x3) <= 44.29, 1/(x3*x2) <= 0.39, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 0.876923076901222,
+      "model_answer": 0.93,
+      "raw_response": "{\n  \"reasoning\": \"The objective is decreasing in x2 and x3 and increasing in x1, so we want x1 as small as possible (0.5) and x2 as large as possible (5). Constraint (1) gives 2.5*x2^2*x3^2 + 0.5 \u2264 80.26 \u2192 x2*x3 \u2264 5.6478. With x2=5, x3 \u2264 1.12956. Setting x3=1.12956 uses the full bound and satisfies constraints (2) and (3). The objective becomes 4/5 + 3*(0.25)/(5*1.12956) \u2248 0.8 + 0.1328 = 0.9328. No other feasible point yields a lower value.\",\n  \"answer\": 0.93\n}",
+      "finish_reason": "stop",
+      "correct": false,
+      "input_tokens": 305,
+      "output_tokens": 4982
+    },
+    {
+      "question": "Find the minimum value of 3*x1^-1*x2^-1 + 5*x1^-1*x2^2*x3 subject to (x2^2 + 5*x2*x3) <= 15.8, (2*x1*x3^2 + 4*x1*x2) <= 17.88, 1/(x2*x3) <= 0.37, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 15.355713754415305,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 298,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 3*x1^2*x2^-1*x3^2 + 5*x1*x2*x3^-1 subject to (4*x1^2*x2^2*x3^2 + 5*x2*x3^2) <= 68.88, (x1*x3^2 + x2^2*x3^2) <= 9.64, 1/(x3*x1) <= 0.32, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 31.332264770458927,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 312,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 5*x1^2*x3^-1 + 4*x1^-1*x2^2*x3^-1 subject to (5*x2 + 2*x1^2*x2^2) <= 31.58, (3*x1*x2^2*x3 + 2*x1^2*x2^2*x3^2) <= 114.16, 1/(x1*x2) <= 0.39, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 7.623337317415972,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 313,
+      "output_tokens": 16000
+    },
+    {
+      "question": "Find the minimum value of 3*x1^-1*x2^2 + 6*x2^-1*x3 subject to (x1^2*x3 + 2*x1^2*x2^2) <= 22.05, (3*x1^2*x2^2*x3^2 + x1*x2*x3^2) <= 77.0, 1/(x3*x1) <= 0.3, 0.5 \u2264 x_i \u2264 5, with x_i > 0. What is the minimum value?\nYou must solve it using only mental mathematical reasoning. Do NOT write or execute any code. Do NOT use Python, MATLAB, Julia, or any programming language. Do NOT use CVXPY, scipy, numpy, or any solver library.",
+      "expected_answer": 8.797261468547369,
+      "model_answer": null,
+      "raw_response": "",
+      "finish_reason": "length",
+      "correct": null,
+      "input_tokens": 308,
+      "output_tokens": 16000
+    }
+  ]
+}

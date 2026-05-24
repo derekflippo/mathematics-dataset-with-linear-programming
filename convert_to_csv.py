@@ -15,6 +15,8 @@ import argparse
 DEFAULT_DIRS = [
     "Claude results",
     "Claude Haiku Results",
+    "eval_results_deepseek",
+    "eval_results_qwen_plus",
 ]
 
 # Strip model suffix from filename to get module name
@@ -32,6 +34,8 @@ MODEL_SUFFIXES = [
     "__gemini-2.0-flash.json",
     "__deepseek-chat.json",
     "__deepseek-reasoner.json",
+    "__deepseek-v4-pro.json",
+    "__qwen-plus.json",
 ]
 
 MODULE_LABELS = {
