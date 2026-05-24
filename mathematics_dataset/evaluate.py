@@ -44,15 +44,18 @@ flags.mark_flag_as_required('output_dir')
 ENGINES = [
     # "gpt-4o-mini",
     # "gpt-4.1-mini",
-    # "gpt-4.1",
+    "gpt-4.1",
     # "gpt-5",
     # "o4-mini",
     # "o3",
+    #"gpt-5.5",
+    # "gpt-5.4",
+    #"gpt-5.4-mini",
     # "claude-opus-4-7",
     # "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
     # "deepseek-chat",
-    "deepseek-reasoner",
+    # "deepseek-reasoner",
     # "gemini-2.5-pro",
     # "gemini-2.5-flash",
 ]
@@ -82,6 +85,9 @@ OPENAI_MODELS = {
     "gpt-4.1-mini",
     "gpt-4.1",
     "gpt-5",
+    "gpt-5.5",
+    "gpt-5.4",
+    "gpt-5.4-mini",
     "o4-mini",
     "o3",
 }
@@ -97,6 +103,8 @@ GEMINI_MODELS = {
 DEEPSEEK_MODELS = {
     "deepseek-chat",
     "deepseek-reasoner",
+    "deepseek-v4-pro",
+    "deepseek-v4-flash",
 }
 
 QWEN_MODELS = {
@@ -145,7 +153,62 @@ def _parse_levels(levels_str):
     return levels
 
 
+OPENAI_RESPONSES_MODELS = {"gpt-5.5", "gpt-5.4", "gpt-5.4-mini"}
+
+
+def _evaluate_openai_responses(client, question, model):
+    """Use the Responses API for reasoning models that support summaries."""
+    response = client.responses.create(
+        model=model,
+        input=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": question},
+        ],
+        reasoning={"effort": "high", "summary": "auto"},
+        max_output_tokens=MAX_COMPLETION_TOKENS,
+        text={
+            "format": {
+                "type": "json_schema",
+                "name": "math_answer",
+                "schema": _ANSWER_SCHEMA,
+                "strict": True,
+            }
+        },
+    )
+
+    reasoning_summary = ""
+    text_content = ""
+    for item in response.output:
+        if item.type == "reasoning":
+            for s in (item.summary or []):
+                reasoning_summary += s.text
+        elif item.type == "message":
+            for c in (item.content or []):
+                if c.type == "output_text":
+                    text_content += c.text
+
+    finish_reason = response.status
+    input_tokens = response.usage.input_tokens if response.usage else None
+    output_tokens = response.usage.output_tokens if response.usage else None
+
+    raw_response = (
+        f"[REASONING SUMMARY]\n{reasoning_summary}\n\n[RESPONSE]\n{text_content}"
+        if reasoning_summary else text_content
+    )
+
+    if not text_content:
+        logging.warning('Responses API returned no text (status=%s)', finish_reason)
+        return None, raw_response, finish_reason, input_tokens, output_tokens
+    try:
+        return json.loads(text_content)["answer"], raw_response, finish_reason, input_tokens, output_tokens
+    except (json.JSONDecodeError, KeyError):
+        logging.warning('Failed to parse Responses API output (status=%s): %s', finish_reason, text_content[:80])
+        return None, raw_response, finish_reason, input_tokens, output_tokens
+
+
 def _evaluate_openai(client, question, model):
+    if model in OPENAI_RESPONSES_MODELS:
+        return _evaluate_openai_responses(client, question, model)
     response = client.chat.completions.create(
         model=model,
         messages=[
@@ -176,29 +239,46 @@ def _evaluate_openai(client, question, model):
         return None, content, finish_reason, input_tokens, output_tokens
 
 
+ANTHROPIC_THINKING_BUDGET = 15000
+
+
 def _evaluate_anthropic(client, question, model):
     for attempt in range(3):
         try:
             response = client.messages.create(
                 model=model,
                 max_tokens=MAX_COMPLETION_TOKENS,
-                temperature=0,
                 system=SYSTEM_PROMPT,
+                thinking={"type": "enabled", "budget_tokens": ANTHROPIC_THINKING_BUDGET, "display": "summarized"},
                 messages=[{"role": "user", "content": question}],
-                output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}},
+                output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}, "effort": "high"},
             )
-            content = response.content[0].text if response.content else ''
+
+            thinking_summary = ""
+            text_content = ""
+            for block in response.content:
+                if block.type == "thinking":
+                    thinking_summary = block.thinking or ""
+                elif block.type == "text":
+                    text_content = block.text or ""
+
             stop_reason = response.stop_reason
             input_tokens = response.usage.input_tokens
             output_tokens = response.usage.output_tokens
-            if not content:
-                logging.warning('Model returned no content (stop_reason=%s)', stop_reason)
-                return None, content, stop_reason, input_tokens, output_tokens
+
+            raw_response = (
+                f"[THINKING SUMMARY]\n{thinking_summary}\n\n[RESPONSE]\n{text_content}"
+                if thinking_summary else text_content
+            )
+
+            if not text_content:
+                logging.warning('Model returned no text content (stop_reason=%s)', stop_reason)
+                return None, raw_response, stop_reason, input_tokens, output_tokens
             try:
-                return json.loads(content)["answer"], content, stop_reason, input_tokens, output_tokens
+                return json.loads(text_content)["answer"], raw_response, stop_reason, input_tokens, output_tokens
             except (json.JSONDecodeError, KeyError):
-                logging.warning('Failed to parse structured output (stop_reason=%s): %s', stop_reason, content[:80])
-                return None, content, stop_reason, input_tokens, output_tokens
+                logging.warning('Failed to parse structured output (stop_reason=%s): %s', stop_reason, text_content[:80])
+                return None, raw_response, stop_reason, input_tokens, output_tokens
         except anthropic.InternalServerError:
             if attempt < 2:
                 logging.warning('Anthropic 500 error on attempt %d, retrying in 5s...', attempt + 1)
@@ -208,33 +288,55 @@ def _evaluate_anthropic(client, question, model):
                 return None, '', 'error_500', None, None
 
 
+_GEMINI_THINKING_MODELS = {"gemini-2.5-pro", "gemini-2.5-flash"}
+GEMINI_THINKING_BUDGET = 15000
+
+
 def _evaluate_gemini(client, question, model):
     for attempt in range(3):
         try:
+            thinking_config = (
+                google_types.ThinkingConfig(thinking_budget=GEMINI_THINKING_BUDGET, include_thoughts=True)
+                if model in _GEMINI_THINKING_MODELS else None
+            )
             config = google_types.GenerateContentConfig(
                 response_mime_type='application/json',
                 response_schema=_ANSWER_SCHEMA,
                 temperature=0,
                 max_output_tokens=MAX_COMPLETION_TOKENS,
                 system_instruction=SYSTEM_PROMPT or None,
+                thinking_config=thinking_config,
             )
             response = client.models.generate_content(
                 model=model,
                 contents=question,
                 config=config,
             )
-            content = response.text or ''
+            thinking_text = ""
+            content = ""
+            if response.candidates and response.candidates[0].content.parts:
+                for part in response.candidates[0].content.parts:
+                    if getattr(part, 'thought', False):
+                        thinking_text += part.text or ""
+                    else:
+                        content += part.text or ""
+            else:
+                content = response.text or ""
             finish_reason = str(response.candidates[0].finish_reason) if response.candidates else 'unknown'
             input_tokens = response.usage_metadata.prompt_token_count if response.usage_metadata else None
             output_tokens = response.usage_metadata.candidates_token_count if response.usage_metadata else None
             if not content:
                 logging.warning('Gemini returned no content (finish_reason=%s)', finish_reason)
-                return None, '', finish_reason, input_tokens, output_tokens
+                return None, thinking_text, finish_reason, input_tokens, output_tokens
+            raw_response = (
+                f"[THINKING]\n{thinking_text}\n\n[RESPONSE]\n{content}"
+                if thinking_text else content
+            )
             try:
-                return json.loads(content)["answer"], content, finish_reason, input_tokens, output_tokens
+                return json.loads(content)["answer"], raw_response, finish_reason, input_tokens, output_tokens
             except (json.JSONDecodeError, KeyError):
                 logging.warning('Failed to parse Gemini structured output (finish_reason=%s): %s', finish_reason, content[:80])
-                return None, content, finish_reason, input_tokens, output_tokens
+                return None, raw_response, finish_reason, input_tokens, output_tokens
         except Exception as e:
             if attempt < 2:
                 logging.warning('Gemini error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
@@ -246,15 +348,19 @@ def _evaluate_gemini(client, question, model):
 
 _DEEPSEEK_SYSTEM_PROMPT = (
     SYSTEM_PROMPT +
-    "\n\nYou must respond in JSON format with exactly two keys. Example:\n"
-    '{"reasoning": "step by step work here", "answer": 3.14}'
+    "\n\nYou must respond in JSON format with exactly one key. Example:\n"
+    '{"answer": 3.14}'
 )
 
 
+_DEEPSEEK_THINKING_MODELS = {"deepseek-v4-pro", "deepseek-v4-flash", "deepseek-reasoner"}
+
+
 def _evaluate_deepseek(client, question, model):
+    use_thinking = model in _DEEPSEEK_THINKING_MODELS
     for attempt in range(3):
         try:
-            response = client.chat.completions.create(
+            kwargs = dict(
                 model=model,
                 messages=[
                     {"role": "system", "content": _DEEPSEEK_SYSTEM_PROMPT},
@@ -263,22 +369,31 @@ def _evaluate_deepseek(client, question, model):
                 max_tokens=MAX_COMPLETION_TOKENS,
                 response_format={"type": "json_object"},
             )
-            content = response.choices[0].message.content
+            if use_thinking:
+                kwargs["reasoning_effort"] = "high"
+                kwargs["extra_body"] = {"thinking": {"type": "enabled"}}
+            response = client.chat.completions.create(**kwargs)
+            msg = response.choices[0].message
+            content = msg.content or ''
+            reasoning_content = getattr(msg, 'reasoning_content', None) or ''
             finish_reason = response.choices[0].finish_reason
             input_tokens = response.usage.prompt_tokens if response.usage else None
             output_tokens = response.usage.completion_tokens if response.usage else None
             if not content:
                 logging.warning('DeepSeek returned no content (finish_reason=%s)', finish_reason)
-                return None, '', finish_reason, input_tokens, output_tokens
+                return None, reasoning_content, finish_reason, input_tokens, output_tokens
             model_answer = _extract_answer_from_text(content)
-
             if model_answer is None:
                 logging.warning(
                     'Failed to extract answer (finish_reason=%s): %s',
                     finish_reason,
                     content[:120]
                 )
-            return model_answer, content, finish_reason, input_tokens, output_tokens
+            raw_response = (
+                f"[REASONING]\n{reasoning_content}\n\n[RESPONSE]\n{content}"
+                if reasoning_content else content
+            )
+            return model_answer, raw_response, finish_reason, input_tokens, output_tokens
         except Exception as e:
             if attempt < 2:
                 logging.warning('DeepSeek error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
