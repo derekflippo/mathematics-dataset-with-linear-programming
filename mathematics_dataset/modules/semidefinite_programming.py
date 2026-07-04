@@ -20,12 +20,7 @@ import cvxpy as cp
 
 
 
-# Entropy ranges control "difficulty" and "size" selection for train/test.
-_ENTROPY_TRAIN = (0, 8)
-_ENTROPY_INTERPOLATE = (5, 6)
-_ENTROPY_EXTRAPOLATE = (7, 8)
-
-# (k_matrix_size, m_equality_constraints) per level. Level index = int(entropy).
+# (k_matrix_size, m_equality_constraints) per level.
 _LEVEL_DIMS = [
     (2,  1),  # level 1
     (2,  2),  # level 2
@@ -40,24 +35,17 @@ _LEVEL_DIMS = [
 
 
 # Module registry: used to create a callable generator
-def _make_modules(entropy):
+def _make_modules(level):
   return {
       'basic_semidefinite_programming': functools.partial(
-          basic_semidefinite_programming, *entropy
+          basic_semidefinite_programming, level
       ),
   }
 
-# Entry points used by the dataset framework to select train/test ranges, entropy_fn is provided
-def train(entropy_fn):
-  return _make_modules(entropy_fn(_ENTROPY_TRAIN))
 
-
-def test():
-  return _make_modules(_ENTROPY_INTERPOLATE)
-
-
-def test_extra():
-  return _make_modules(_ENTROPY_EXTRAPOLATE)
+# Entry point used by the dataset framework to select the difficulty level.
+def train(level):
+  return _make_modules(level)
 
 
 # Helper functions
@@ -105,12 +93,10 @@ def _safe_round(x, ndigits=3):
 #   - Construct a known PSD matrix X* = M M^T
 #   - Set b_i = <A_i, X*>
 # Then X* satisfies all constraints by construction.
-def basic_semidefinite_programming(min_entropy, max_entropy):
-  entropy = random.uniform(min_entropy, max_entropy)
+def basic_semidefinite_programming(level):
   context = composition.Context()  # provides consistent formatting
 
   # Choose matrix size and number of constraints from level.
-  level = min(int(entropy), 7)
   k, m = _LEVEL_DIMS[level]
 
   # limits coeff to be small integers to reduce numerical instability

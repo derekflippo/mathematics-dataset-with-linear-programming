@@ -1,18 +1,11 @@
-"""Write generated questions to JSON files.
+"""Write generated optimization problems to JSON files.
 
-Given an output directory, this will create the following subdirectories:
+Creates one subdirectory per difficulty level (level-1 through level-8), each
+holding one JSON file per module. Each file is a list of
+{"question": ..., "answer": ..., "level": ...} dicts.
 
-*   train-easy
-*   train-medium
-*   train-hard
-*   interpolate
-*   extrapolate
-
-and populate each with a JSON file per module, where each file contains a list
-of {"question": ..., "answer": ...} dictionaries.
-
-Passing --train_split=False will create a single output directory 'train' for
-training data.
+Use --num_problems to set how many problems are generated per module per level,
+and --levels (e.g. "1-5" or "1,3,5") to restrict which levels are generated.
 """
 
 from __future__ import absolute_import
@@ -34,8 +27,6 @@ from six.moves import range
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('output_dir', None, 'Where to write output JSON')
-flags.DEFINE_boolean('train_split', True,
-                     'Whether to split training data by difficulty')
 flags.DEFINE_string('levels', None, 'Levels to generate, e.g. "1-4" or "2,5,7"')
 flags.mark_flag_as_required('output_dir')
 
@@ -53,7 +44,7 @@ def _parse_levels(levels_str):
 
 
 def main(unused_argv):
-  generate.init_modules(FLAGS.train_split)
+  generate.init_modules()
 
   allowed_levels = _parse_levels(FLAGS.levels) if FLAGS.levels else None
 

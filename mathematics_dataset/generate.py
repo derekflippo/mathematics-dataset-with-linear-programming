@@ -34,37 +34,14 @@ from six.moves import range
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('filter', '', 'restrict to matching module names')
-flags.DEFINE_integer('per_train_module', 10, 'Num of examples per train module')
-flags.DEFINE_integer('per_test_module', 10, 'Num of examples per test module')
+flags.DEFINE_integer('num_problems', 25, 'Number of problems per module per level')
 flags.DEFINE_bool('show_dropped', False, 'Whether to print dropped questions')
-flags.DEFINE_bool('train_only', False, 'Only generate training data (skip interpolate/extrapolate)')
 
+
+NUM_LEVELS = 8
 
 filtered_modules = collections.OrderedDict([])
 counts = {}
-
-
-def _make_entropy_fn(level, num_levels):
-  """This returns a function that returns a subrange of entropy.
-
-  E.g., if level=1 (medium) and num_levels=3, then the returned function will
-  map the range [x, x + y] to [x + y/3, x + 2y/3].
-
-  Args:
-    level: Integer in range [0, num_levels - 1].
-    num_levels: Number of difficulty levels.
-
-  Returns:
-    Function to restrict entropy range.
-  """
-  lower = level / num_levels
-  upper = (level + 1) / num_levels
-  def modify_entropy(range_):
-    assert len(range_) == 2
-    length = range_[1] - range_[0]
-    return (range_[0] + lower * length, range_[0] + upper * length)
-  return modify_entropy
-
 
 
 def _filter_and_flatten(modules_):
@@ -91,31 +68,15 @@ def _filter_and_flatten(modules_):
   return flat
 
 
-def init_modules(train_split=False):
-  """Inits the dicts containing functions for generating modules."""
+def init_modules():
+  """Inits the dicts containing functions for generating modules by level."""
   if filtered_modules:
     return  # already initialized
 
-  all_modules = collections.OrderedDict([])
-  if train_split:
-    for i in range(8):
-      level_name = 'level-{}'.format(i + 1)
-      all_modules[level_name] = modules.train(_make_entropy_fn(i, 8))
-  else:
-    all_modules['train'] = modules.train(_make_entropy_fn(0, 1))
-
-  if not FLAGS.train_only:
-    all_modules['interpolate'] = modules.test()
-    all_modules['extrapolate'] = modules.test_extra()
-
-  counts['train'] = FLAGS.per_train_module
-  for i in range(8):
-    counts['level-{}'.format(i + 1)] = FLAGS.per_train_module // 8
-  counts['interpolate'] = FLAGS.per_test_module
-  counts['extrapolate'] = FLAGS.per_test_module
-
-  for regime_, modules_ in six.iteritems(all_modules):
-    filtered_modules[regime_] = _filter_and_flatten(modules_)
+  for i in range(NUM_LEVELS):
+    level_name = 'level-{}'.format(i + 1)
+    filtered_modules[level_name] = _filter_and_flatten(modules.train(i))
+    counts[level_name] = FLAGS.num_problems
 
 
 def sample_from_module(module):

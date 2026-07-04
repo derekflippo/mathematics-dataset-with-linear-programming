@@ -1,6 +1,6 @@
 # Constrained Optimization Benchmark for LLMs
 
-A benchmark for evaluating LLM performance on constrained mathematical optimization problems. Problems are procedurally generated across five problem types and five difficulty levels, with verified numerical answers.
+A benchmark for evaluating LLM performance on constrained mathematical optimization problems. Problems are procedurally generated across five problem types and eight difficulty levels, with verified numerical answers.
 
 ## Problem Types
 
@@ -14,7 +14,7 @@ A benchmark for evaluating LLM performance on constrained mathematical optimizat
 
 ## Difficulty Levels
 
-Levels 1–5, with increasing problem size, number of constraints, and complexity of the optimal solution structure.
+Levels 1–8, with increasing problem size, number of constraints, and complexity of the optimal solution structure.
 
 ## Setup
 
@@ -25,10 +25,14 @@ pip install -e .
 ## Generating Problems
 
 ```bash
-python -m mathematics_dataset.generate_to_file \
+python -m mathematics_dataset.generate_to_json \
   --output_dir=output_json \
   --num_problems=25
 ```
+
+This writes one subdirectory per difficulty level (`level-1` … `level-8`), each
+containing one JSON file per problem type. Use `--levels` (e.g. `--levels=1-4`)
+to restrict which levels are generated.
 
 ## Evaluating Models
 

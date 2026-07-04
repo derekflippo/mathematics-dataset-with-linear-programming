@@ -13,11 +13,7 @@ from mathematics_dataset import example
 from mathematics_dataset.util import composition
 
 
-_ENTROPY_TRAIN = (0, 8)
-_ENTROPY_INTERPOLATE = (5, 6)
-_ENTROPY_EXTRAPOLATE = (7, 8)
-
-# (n_variables, obj_terms, n_constraints, terms_per_constraint, exp_min, exp_max)
+# (n_variables, obj_terms, n_constraints, terms_per_constraint, exp_min, exp_max) per level
 _LEVEL_DIMS = [
     (2, 2, 1, 1, 0,  2),  # level 1
     (2, 2, 2, 1, 0,  2),  # level 2
@@ -30,24 +26,15 @@ _LEVEL_DIMS = [
 ]
 
 
-def _make_modules(entropy):
+def _make_modules(level):
   return {
       'basic_geometric_programming':
-          functools.partial(basic_geometric_programming, *entropy)
+          functools.partial(basic_geometric_programming, level)
   }
 
 
-def train(entropy_fn):
-  return _make_modules(entropy_fn(_ENTROPY_TRAIN))
-
-
-def test():
-  return _make_modules(_ENTROPY_INTERPOLATE)
-
-
-def test_extra():
-  return _make_modules(_ENTROPY_EXTRAPOLATE)
-
+def train(level):
+  return _make_modules(level)
 
 
 def _make_monomial(x, exponents, coeff):
@@ -79,11 +66,9 @@ def _monomial_str(exponents, coeff):
 
 
 
-def basic_geometric_programming(min_entropy, max_entropy):
-  entropy = random.uniform(min_entropy, max_entropy)
+def basic_geometric_programming(level):
   context = composition.Context()
 
-  level = min(int(entropy), 7)
   n, obj_terms, num_constraints, terms_per_con, exp_min, exp_max = _LEVEL_DIMS[level]
   x = cp.Variable(n, pos=True)
 
@@ -178,10 +163,10 @@ def basic_geometric_programming(min_entropy, max_entropy):
   try:
     prob.solve(gp=True, solver=cp.SCS, eps=1e-6, max_iters=10000)
   except cp.SolverError:
-    return basic_geometric_programming(min_entropy, max_entropy)
+    return basic_geometric_programming(level)
 
   if prob.status in ["infeasible", "unbounded", "infeasible_inaccurate", "unbounded_inaccurate"]:
-    return basic_geometric_programming(min_entropy, max_entropy)
+    return basic_geometric_programming(level)
 
   constraints_text = ", ".join(constraint_strings)
   bounds_text = "0.5 ≤ x_i ≤ 5"

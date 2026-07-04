@@ -18,11 +18,7 @@ from mathematics_dataset.util import composition
 import cvxpy as cp
 
 
-_ENTROPY_TRAIN = (0, 8)
-_ENTROPY_INTERPOLATE = (5, 6)
-_ENTROPY_EXTRAPOLATE = (7, 8)
-
-# (n_variables, m_quadratic_constraints) per level. Level index = int(entropy).
+# (n_variables, m_quadratic_constraints) per level.
 _LEVEL_DIMS = [
     (2,  1),  # level 1
     (2,  2),  # level 2
@@ -36,22 +32,14 @@ _LEVEL_DIMS = [
 
 
 
-def _make_modules(entropy):
+def _make_modules(level):
   return {
-      'basic_qcqp': functools.partial(basic_qcqp, *entropy),
+      'basic_qcqp': functools.partial(basic_qcqp, level),
   }
 
 
-def train(entropy_fn):
-  return _make_modules(entropy_fn(_ENTROPY_TRAIN))
-
-
-def test():
-  return _make_modules(_ENTROPY_INTERPOLATE)
-
-
-def test_extra():
-  return _make_modules(_ENTROPY_EXTRAPOLATE)
+def train(level):
+  return _make_modules(level)
 
 
 def _rand_int_matrix(n, low, high):
@@ -102,12 +90,10 @@ def _safe_round(x, ndigits=3):
 
 
 # note: qcqp sometimes not convex, we only generate convex problems
-def basic_qcqp(min_entropy, max_entropy):
-  entropy = random.uniform(min_entropy, max_entropy)
+def basic_qcqp(level):
   context = composition.Context()
 
   # 1) Choose dimension and number of constraints from level
-  level = min(int(entropy), 7)
   n, m = _LEVEL_DIMS[level]
 
   coeff_low, coeff_high = -4, 4
