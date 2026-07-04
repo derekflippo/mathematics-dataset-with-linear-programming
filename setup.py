@@ -21,46 +21,43 @@ from __future__ import print_function
 from setuptools import find_packages
 from setuptools import setup
 
-description = """A synthetic dataset of school-level mathematics questions.
+description = """A benchmark for evaluating LLMs on constrained optimization.
 
-This dataset code generates mathematical question and answer pairs, from a range
-of question types (such as in arithmetic, algebra, probability, etc), at roughly
-school-level difficulty. This is designed to test the mathematical learning and
-reasoning skills of learning models.
+This code procedurally generates constrained mathematical optimization
+problems across five problem types (geometric, linear, quadratic, quadratically
+constrained quadratic, and semidefinite programming) and five difficulty
+levels, each with a verified numerical answer. It also provides tooling to
+evaluate large language models on these problems and to judge their reasoning.
 
-Original paper: Analysing Mathematical Reasoning Abilities of Neural Models
-(Saxton, Grefenstette, Hill, Kohli) (https://openreview.net/pdf?id=H1gR5iR5FX).
+Built on the problem generation framework of "Analysing Mathematical Reasoning
+Abilities of Neural Models" (Saxton, Grefenstette, Hill, Kohli)
+(https://openreview.net/pdf?id=H1gR5iR5FX).
 """
 
 setup(
     name='mathematics_dataset',
-    version='1.0.1',
-    description='A synthetic dataset of school-level mathematics questions',
+    version='2.0.0',
+    description='A benchmark for evaluating LLMs on constrained optimization',
     long_description=description,
-    author='DeepMind',
-    author_email='saxton@google.com',
     license='Apache License, Version 2.0',
-    keywords='mathematics dataset',
-    url='https://github.com/deepmind/mathematics_dataset',
+    keywords='constrained optimization benchmark llm evaluation',
     packages=find_packages(),
     install_requires=[
         'absl-py>=0.1.0',
-        'numpy>=1.10',
-        'six',
         'sympy>=1.2',
+        'six',
+        'openai>=1.0',
+        'anthropic>=0.30',
+        'google-genai>=0.3',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
-        'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
 )

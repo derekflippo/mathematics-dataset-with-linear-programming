@@ -1,4 +1,4 @@
-"""Evaluate an LLM on generated math problems.
+"""Evaluate an LLM on generated optimization problems.
 
 Reads a generated JSON file of question/answer pairs, sends each question
 to an LLM, and compares the response to the verified answer.
@@ -10,7 +10,7 @@ Usage:
   export DEEPSEEK_API_KEY=sk-...
   export DASHSCOPE_API_KEY=sk-...
   python -m mathematics_dataset.evaluate \
-    --input_json=output_json/train-easy/quadratic_programming__quadratic_programming.json \
+    --input_json=output_json/level-1/quadratic_programming__quadratic_programming.json \
     --output_dir=eval_results
 """
 
