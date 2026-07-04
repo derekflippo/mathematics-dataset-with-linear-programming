@@ -117,10 +117,9 @@ QWEN_MODELS = {
 _ANSWER_SCHEMA = {
     "type": "object",
     "properties": {
-        "reasoning": {"type": "string"},
         "answer": {"type": "number"},
     },
-    "required": ["reasoning", "answer"],
+    "required": ["answer"],
     "additionalProperties": False,
 }
 
@@ -421,7 +420,22 @@ def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_clie
     results = []
     correct_count = 0
 
+    if os.path.exists(output_path):
+        try:
+            with open(output_path) as f:
+                existing = json.load(f)
+            results = existing.get('results', [])
+            correct_count = sum(1 for r in results if r.get('correct'))
+            logging.info('[%s] Resuming from %d/%d completed results', model, len(results), len(problems))
+        except Exception:
+            results = []
+            correct_count = 0
+
+    start_index = len(results)
+
     for i, problem in enumerate(problems):
+        if i < start_index:
+            continue
         question = problem['question']
         expected = float(problem['answer'])
 

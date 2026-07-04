@@ -7,3 +7,24 @@ __pycache__/
 dist/
 build/
 .DS_Store
+
+# Result data (kept locally, not tracked)
+eval_results*/
+Claude*/
+GPT*/
+LLM Judge Results/
+Qwen3-235b/
+output_json*/
+Linear programming 100 problems/
+Test1/
+latex/
+
+# Helper scripts
+convert_to_csv.py
+llm_judge_to_csv.py
+plot_*.py
+
+# Analysis outputs
+*.csv
+*.png
+*.json

@@ -35,7 +35,7 @@ FIELD_ALIASES = {
     "output_tokens": ["output_tokens"],
 }
 
-JUDGE_CHOICES = ("reasoning", "arithmetic", "final", "all")
+JUDGE_CHOICES = ("reasoning", "arithmetic", "final", "reasoning,final", "all")
 PRIMARY_ERROR_TYPES = (
     "reasoning_failure",
     "arithmetic_failure",
@@ -1093,6 +1093,8 @@ def _print_terminal_summary(summary):
 def _selected_judges(judge_arg):
     if judge_arg == "all":
         return ["reasoning", "arithmetic", "final"]
+    if "," in judge_arg:
+        return [j.strip() for j in judge_arg.split(",")]
     return [judge_arg]
 
 
@@ -1226,8 +1228,9 @@ def main():
 
     print(f"Done. Results written to {args.output_json}")
 
-    print(json.dumps(output["summary"], indent=2))
-    _print_terminal_summary(output["summary"])
+    summary = _summarize(judged_examples)
+    print(json.dumps(summary, indent=2))
+    _print_terminal_summary(summary)
 
 
 if __name__ == "__main__":
