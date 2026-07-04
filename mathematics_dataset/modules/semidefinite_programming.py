@@ -13,7 +13,6 @@ import random # controls problem entropy
 import numpy as np # generates matrices
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
 # CVXPY: we use this to solve the SDP to verify
 import cvxpy as cp
@@ -94,8 +93,6 @@ def _safe_round(x, ndigits=3):
 #   - Set b_i = <A_i, X*>
 # Then X* satisfies all constraints by construction.
 def basic_semidefinite_programming(level):
-  context = composition.Context()  # provides consistent formatting
-
   # Choose matrix size and number of constraints from level.
   k, m = _LEVEL_DIMS[level]
 
@@ -179,7 +176,6 @@ def basic_semidefinite_programming(level):
   ])
 
   question = example.question(
-    context,
     template,
     k=k,
     m=m,

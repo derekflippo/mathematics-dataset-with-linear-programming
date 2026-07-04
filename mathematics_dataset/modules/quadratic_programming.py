@@ -10,7 +10,6 @@ import cvxpy as cp
 import numpy as np
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
 # (n_variables, m_inequality_constraints) per level.
 _LEVEL_DIMS = [
@@ -39,8 +38,6 @@ def train(level):
 
 
 def quadratic_programming(level):
-  context = composition.Context()
-
   n, m = _LEVEL_DIMS[level]
   p = max(1, n // 2)
 
@@ -106,5 +103,5 @@ def quadratic_programming(level):
 
   return example.Problem(
       question=example.question(
-          context, template, P=P_str, q=q_str, G=G_str, h=h_str, A=A_str, b=b_str),
+          template, P=P_str, q=q_str, G=G_str, h=h_str, A=A_str, b=b_str),
       answer=answer)

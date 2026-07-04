@@ -10,7 +10,6 @@ import cvxpy as cp
 import numpy as np
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
 # (n_variables, m_constraints) per level.
 _LEVEL_DIMS = [
@@ -37,7 +36,6 @@ def train(level):
 
 
 def non_trivial_linear_programming(level):
-  context = composition.Context()
   n, m = _LEVEL_DIMS[level]
   # Use integer inputs so displayed values are exact (no precision loss)
   coeff_low, coeff_high = -4, 4
@@ -80,5 +78,5 @@ def non_trivial_linear_programming(level):
       'Do NOT use CVXPY, scipy, numpy, or any solver library.',
   ])
   return example.Problem(
-      question=example.question(context, template, c=c_str, b=b_str, A=A_str),
+      question=example.question(template, c=c_str, b=b_str, A=A_str),
       answer=answer)

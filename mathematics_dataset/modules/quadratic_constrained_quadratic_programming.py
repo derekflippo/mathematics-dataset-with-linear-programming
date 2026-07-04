@@ -13,7 +13,6 @@ import random
 import numpy as np
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
 import cvxpy as cp
 
@@ -91,8 +90,6 @@ def _safe_round(x, ndigits=3):
 
 # note: qcqp sometimes not convex, we only generate convex problems
 def basic_qcqp(level):
-  context = composition.Context()
-
   # 1) Choose dimension and number of constraints from level
   n, m = _LEVEL_DIMS[level]
 
@@ -194,7 +191,6 @@ def basic_qcqp(level):
   ])
 
   question = example.question(
-      context,
       template,
       n=n,
       m=m,

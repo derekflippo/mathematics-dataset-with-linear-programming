@@ -10,7 +10,6 @@ import numpy as np
 import cvxpy as cp
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
 
 # (n_variables, obj_terms, n_constraints, terms_per_constraint, exp_min, exp_max) per level
@@ -67,8 +66,6 @@ def _monomial_str(exponents, coeff):
 
 
 def basic_geometric_programming(level):
-  context = composition.Context()
-
   n, obj_terms, num_constraints, terms_per_con, exp_min, exp_max = _LEVEL_DIMS[level]
   x = cp.Variable(n, pos=True)
 
@@ -181,7 +178,6 @@ def basic_geometric_programming(level):
 
   return example.Problem(
       question=example.question(
-          context,
           template,
           obj=obj_str,
           constraints=constraints_text,
