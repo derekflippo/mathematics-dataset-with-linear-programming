@@ -10,13 +10,8 @@ import cvxpy as cp
 import numpy as np
 
 from mathematics_dataset import example
-from mathematics_dataset.util import composition
 
-_ENTROPY_TRAIN = (0, 8)
-_ENTROPY_INTERPOLATE = (5, 6)
-_ENTROPY_EXTRAPOLATE = (7, 8)
-
-# (n_variables, m_inequality_constraints) per level. Level index = int(entropy).
+# (n_variables, m_inequality_constraints) per level.
 _LEVEL_DIMS = [
     (2,  2),   # level 1
     (2,  3),   # level 2
@@ -30,31 +25,19 @@ _LEVEL_DIMS = [
 
 
 
-def _make_modules(entropy):
+def _make_modules(level):
   return {
       'quadratic_programming': functools.partial(
-          quadratic_programming, *entropy
+          quadratic_programming, level
       ),
   }
 
 
-def train(entropy_fn):
-  return _make_modules(entropy_fn(_ENTROPY_TRAIN))
+def train(level):
+  return _make_modules(level)
 
 
-def test():
-  return _make_modules(_ENTROPY_INTERPOLATE)
-
-
-def test_extra():
-  return _make_modules(_ENTROPY_EXTRAPOLATE)
-
-
-def quadratic_programming(min_entropy, max_entropy):
-  entropy = random.uniform(min_entropy, max_entropy)
-  context = composition.Context()
-
-  level = min(int(entropy), 7)
+def quadratic_programming(level):
   n, m = _LEVEL_DIMS[level]
   p = max(1, n // 2)
 
@@ -120,5 +103,5 @@ def quadratic_programming(min_entropy, max_entropy):
 
   return example.Problem(
       question=example.question(
-          context, template, P=P_str, q=q_str, G=G_str, h=h_str, A=A_str, b=b_str),
+          template, P=P_str, q=q_str, G=G_str, h=h_str, A=A_str, b=b_str),
       answer=answer)

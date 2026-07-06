@@ -35,20 +35,16 @@ all_ = {
 }
 
 
-def train(entropy_fn):
-  """Returns dict of training modules."""
+def train(level):
+  """Returns dict of modules generating problems at the given difficulty level.
+
+  Args:
+    level: Integer level index in [0, 7].
+
+  Returns a dict mapping each module name to its dict of generator callables.
+  """
   return {
-      name: module.train(entropy_fn) for name, module in six.iteritems(all_)
+      name: module.train(level) for name, module in six.iteritems(all_)
   }
-#returns an entire dictionary for all module, with nested functions. (module.train returns dictonary. )
-
-def test():
-  """Returns dict of testing modules."""
-  return {name: module.test() for name, module in six.iteritems(all_)}
-
-
-def test_extra():
-  """Returns dict of extrapolation testing modules."""
-  return {name: module.test_extra() for name, module in six.iteritems(all_)}
 
 
