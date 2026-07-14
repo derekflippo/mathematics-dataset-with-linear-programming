@@ -420,7 +420,7 @@ Return strict JSON only."""
 
 FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to commit to it as the final answer.
 
-Use tolerance 0.01.
+Use the benchmark tolerance: abs(value - expected_answer) <= max(0.01, 0.001 * abs(expected_answer)).
 
 Your main task is to identify the behavioral reason the model did not commit to a correct value that appeared in its reasoning.
 
@@ -435,7 +435,7 @@ finish_reason rules:
 - finish_reason is only weak evidence. The content of the reasoning is primary.
 
 Only flag correct_value_in_reasoning=true if ALL are true:
-- A numerical value within 0.01 of the expected answer appears in the reasoning.
+- A numerical value within the benchmark tolerance of the expected answer appears in the reasoning.
 - The value is clearly relevant to the final answer, not a coincidental intermediate value.
 - The model did not submit this value as its final answer.
 - The reason it did not commit is clearly one of: token_limit, continued_refinement, or dismissed.
@@ -449,7 +449,7 @@ token_limit: Use this ONLY when:
 - The model was mid-sentence, mid-output, or just about to state a final answer when the response ended.
 
 continued_refinement: Use this when:
-- A correct value within 0.01 of the expected answer appears in the reasoning.
+- A correct value within the benchmark tolerance of the expected answer appears in the reasoning.
 - The model appears to understand that this value is plausible or near-optimal ("approximately", "close to", "optimal value is about").
 - But instead of committing, the model continues: refining lambda, interpolating between values, recomputing with higher precision, checking nearby candidate points, running more iterations, or otherwise postponing the final answer.
 - The response eventually ends (including by max_tokens) while still in this refinement loop.
@@ -473,8 +473,8 @@ dismissed: Use this when:
 Additional consistency rules:
 - If correct_value_in_reasoning=true and model_recognized_it=false, reason_not_recognized must be one of token_limit, continued_refinement, or dismissed. It must never be null.
 - If you cannot confidently assign one of those three, set correct_value_in_reasoning=false.
-- If correct_value_in_reasoning=true, distance_from_expected must be <= 0.01.
-- If no value within 0.01 exists, correct_value_in_reasoning must be false, correct_value_found must be null, distance_from_expected must be null.
+- If correct_value_in_reasoning=true, distance_from_expected must be within the benchmark tolerance.
+- If no value within the benchmark tolerance exists, correct_value_in_reasoning must be false, correct_value_found must be null, distance_from_expected must be null.
 
 Prefer the behavioral root cause over the API finish reason.
 Keep your explanation under 150 words.
@@ -792,7 +792,7 @@ def _build_final_explanation(judgment):
 
     if correct_value_in_reasoning is True:
         parts = [
-            "A correct value within 0.01 appeared in the reasoning",
+            "A correct value within benchmark tolerance appeared in the reasoning",
         ]
         if correct_value_found is not None:
             parts.append(f"value={correct_value_found}")
@@ -811,7 +811,7 @@ def _build_final_explanation(judgment):
         return "; ".join(parts) + "."
 
     parts = [
-        "No correct value within 0.01 was retained as a valid final-answer-recognition case"
+        "No correct value within benchmark tolerance was retained as a valid final-answer-recognition case"
     ]
     if model_recognized_it is True:
         parts.append("model_recognized_it=true")
