@@ -420,7 +420,7 @@ Return strict JSON only."""
 
 FINAL_PROMPT = """You are an expert judge checking whether a model computed the correct final value during reasoning but failed to commit to it as the final answer.
 
-Use the benchmark tolerance: abs(value - expected_answer) <= max(0.01, 0.001 * abs(expected_answer)).
+Use the benchmark tolerance: abs(value - expected_answer) <= 0.001 * abs(expected_answer).
 
 Your main task is to identify the behavioral reason the model did not commit to a correct value that appeared in its reasoning.
 
