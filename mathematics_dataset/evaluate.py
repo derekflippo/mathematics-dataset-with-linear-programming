@@ -78,10 +78,7 @@ ANSWER_HEADROOM = 1000
 MAX_OUTPUT_TOKENS = THINKING_BUDGET + ANSWER_HEADROOM
 
 SYSTEM_PROMPT = (
-    "You are a math solver. Solve the given optimization problem step by step. "
-    "As soon as you compute any candidate objective value — even from a first pass — output it immediately as your final answer. "
-    "Do NOT iterate, refine dual variables, or run bisection beyond a single attempt. "
-    "Commit to your first reasonable estimate and stop."
+    "You are a math solver. Solve the given optimization problem."
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
