@@ -63,7 +63,10 @@ ENGINES = [
     # "qwen3-235b-a22b-thinking-2507",
 ]
 
-ABS_TOLERANCE = 0.01
+# Correctness = pure 0.1% relative optimality gap, following ConstraintBench's
+# no-tools regime (no absolute floor). Safe here because the reference answers
+# have no zero/near-zero optima (min |answer| ~= 0.069), so the relative gap is
+# well-defined for every problem.
 REL_TOLERANCE = 1e-3
 
 # ── Token envelope ────────────────────────────────────────────────────────────
@@ -78,7 +81,8 @@ ANSWER_HEADROOM = 1000
 MAX_OUTPUT_TOKENS = THINKING_BUDGET + ANSWER_HEADROOM
 
 SYSTEM_PROMPT = (
-    "You are a math solver. Solve the given optimization problem."
+    "You are a math solver. Solve the given optimization problem. "
+    "Report the final objective value to at least 4 significant figures."
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -149,7 +153,7 @@ def _is_qwen(model):
 
 
 def _allowed_objective_error(reference):
-    return max(ABS_TOLERANCE, REL_TOLERANCE * abs(reference))
+    return REL_TOLERANCE * abs(reference)
 
 
 def _score_answer(reference, candidate):
@@ -531,8 +535,7 @@ def _build_output(model, problems, results, evaluated=None):
         'avg_input_tokens': total_input / token_count if token_count > 0 else 0,
         'avg_output_tokens': total_output / token_count if token_count > 0 else 0,
         'tolerance': {
-            'type': 'max_absolute_relative',
-            'abs_tolerance': ABS_TOLERANCE,
+            'type': 'relative',
             'rel_tolerance': REL_TOLERANCE,
         },
         'results': results,
