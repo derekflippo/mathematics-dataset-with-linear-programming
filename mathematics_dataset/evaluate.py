@@ -63,10 +63,6 @@ ENGINES = [
     # "qwen3-235b-a22b-thinking-2507",
 ]
 
-# Correctness = pure 0.1% relative optimality gap, following ConstraintBench's
-# no-tools regime (no absolute floor). Safe here because the reference answers
-# have no zero/near-zero optima (min |answer| ~= 0.069), so the relative gap is
-# well-defined for every problem.
 REL_TOLERANCE = 1e-3
 
 # ── Token envelope ────────────────────────────────────────────────────────────
