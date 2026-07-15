@@ -53,7 +53,8 @@ ENGINES = [
     # "gpt-5.4",
     # "gpt-5.4-mini",
     # "claude-opus-4-7",
-    "claude-sonnet-4-6",
+    "claude-sonnet-5",
+    # "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
     # "deepseek-chat",
     # "deepseek-reasoner",
@@ -67,12 +68,12 @@ REL_TOLERANCE = 1e-3
 
 # ── Token envelope ────────────────────────────────────────────────────────────
 # Input tokens are always separate and are never counted against the caps below.
-# THINKING_BUDGET is a hard reasoning-token budget; ANSWER_HEADROOM leaves room
-# for the final answer on top of it. Providers that bill reasoning *inside* the
-# output cap (OpenAI, Anthropic, DeepSeek) treat MAX_OUTPUT_TOKENS as
-# thinking + answer; providers that bill reasoning *separately* (Gemini, Qwen)
-# treat it as a generous answer ceiling. Both readings are correct at these values.
-THINKING_BUDGET = 16000
+# THINKING_BUDGET is a hard reasoning-token cap for the models that accept one
+# (Gemini, Qwen). Claude Sonnet 5 has no thinking-budget knob — it uses adaptive
+# thinking bounded only by MAX_OUTPUT_TOKENS (thinking + answer share it) — and
+# OpenAI/DeepSeek expose only an effort level, so for those three MAX_OUTPUT_TOKENS
+# is the real limit. ANSWER_HEADROOM keeps ~1k for the answer on top of the budget.
+THINKING_BUDGET = 15000
 ANSWER_HEADROOM = 1000
 MAX_OUTPUT_TOKENS = THINKING_BUDGET + ANSWER_HEADROOM
 
@@ -88,6 +89,7 @@ SYSTEM_PROMPT = (
 ANTHROPIC_MODELS = {
     "claude-opus-4-7",
     "claude-opus-4-5",
+    "claude-sonnet-5",
     "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001",
 }
@@ -264,13 +266,22 @@ def _evaluate_openai(client, question, model):
 
 
 def _evaluate_anthropic(client, question, model):
+    """Evaluate a Claude model via the Messages API.
+
+    Targets Claude Sonnet 5, which uses adaptive thinking: manual
+    thinking={"type":"enabled","budget_tokens":N} is rejected with a 400 error, so
+    there is no fixed thinking-budget knob. Reasoning depth is governed by
+    effort="high" and bounded only by MAX_OUTPUT_TOKENS (thinking + answer share
+    it). display="summarized" is required because Sonnet 5 defaults to "omitted"
+    (empty thinking); Claude only ever returns a summary, never the raw chain.
+    """
     for attempt in range(3):
         try:
             response = client.messages.create(
                 model=model,
                 max_tokens=MAX_OUTPUT_TOKENS,
                 system=SYSTEM_PROMPT,
-                thinking={"type": "enabled", "budget_tokens": THINKING_BUDGET, "display": "summarized"},
+                thinking={"type": "adaptive", "display": "summarized"},
                 messages=[{"role": "user", "content": question}],
                 output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}, "effort": "high"},
             )
@@ -430,7 +441,7 @@ def _evaluate_qwen(client, question, model):
     Per the Alibaba Cloud Model Studio docs these always reason and ignore
     enable_thinking, and open-source Qwen3 models support streaming output only.
     We therefore stream and cap reasoning at THINKING_BUDGET (matching the
-    16k budget used for the other reasoning models) while capping the response at
+    15k budget used for the other reasoning models) while capping the response at
     MAX_OUTPUT_TOKENS. thinking_budget is separate from max_tokens on
     DashScope; if left unset the model would default to its ~82k max chain-of-
     thought length. The answer is parsed from the accumulated text (response_format
