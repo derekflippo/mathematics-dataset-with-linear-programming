@@ -19,6 +19,7 @@ from __future__ import division
 from __future__ import print_function
 
 import json
+import math
 import os
 import time
 import re
@@ -52,23 +53,32 @@ ENGINES = [
     # "gpt-5.4",
     # "gpt-5.4-mini",
     # "claude-opus-4-7",
-    "claude-sonnet-4-6",
+    "claude-sonnet-5",
+    # "claude-sonnet-4-6",
     # "claude-haiku-4-5-20251001",
     # "deepseek-chat",
     # "deepseek-reasoner",
     # "gemini-2.5-pro",
     # "gemini-2.5-flash",
+    # "qwen3-235b-a22b-thinking-2507",
 ]
 
-TOLERANCE = 0.01
-MAX_COMPLETION_TOKENS = 16000
+ABS_TOLERANCE = 0.01
+REL_TOLERANCE = 1e-3
+
+# ── Token envelope ────────────────────────────────────────────────────────────
+# Input tokens are always separate and are never counted against the caps below.
+# THINKING_BUDGET is a hard reasoning-token cap for the models that accept one
+# (Gemini, Qwen). Claude Sonnet 5 has no thinking-budget knob — it uses adaptive
+# thinking bounded only by MAX_OUTPUT_TOKENS (thinking + answer share it) — and
+# OpenAI/DeepSeek expose only an effort level, so for those three MAX_OUTPUT_TOKENS
+# is the real limit. ANSWER_HEADROOM keeps ~1k for the answer on top of the budget.
+THINKING_BUDGET = 15000
+ANSWER_HEADROOM = 1000
+MAX_OUTPUT_TOKENS = THINKING_BUDGET + ANSWER_HEADROOM
 
 SYSTEM_PROMPT = (
-    "You are a math solver. Solve the given optimization problem step by step. "
-    "Your answer only needs to be accurate to within 0.01 of the true optimal value. "
-    "As soon as you compute any candidate objective value — even from a first pass — output it immediately as your final answer. "
-    "Do NOT iterate, refine dual variables, or run bisection beyond a single attempt. "
-    "Commit to your first reasonable estimate and stop."
+    "You are a math solver. Solve the given optimization problem."
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -76,6 +86,7 @@ SYSTEM_PROMPT = (
 ANTHROPIC_MODELS = {
     "claude-opus-4-7",
     "claude-opus-4-5",
+    "claude-sonnet-5",
     "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001",
 }
@@ -108,10 +119,7 @@ DEEPSEEK_MODELS = {
 }
 
 QWEN_MODELS = {
-    "qwen-plus",
-    "qwen-max",
-    "qwen-turbo",
-    "qwen3-235b-a22b",
+    "qwen3-235b-a22b-thinking-2507",
 }
 
 _ANSWER_SCHEMA = {
@@ -140,6 +148,24 @@ def _is_qwen(model):
     return model in QWEN_MODELS or model.startswith("qwen")
 
 
+def _allowed_objective_error(reference):
+    return max(ABS_TOLERANCE, REL_TOLERANCE * abs(reference))
+
+
+def _score_answer(reference, candidate):
+    allowed_error = _allowed_objective_error(reference)
+    if candidate is None:
+        return None, None, allowed_error
+    try:
+        candidate = float(candidate)
+    except (TypeError, ValueError):
+        return False, None, allowed_error
+    if not math.isfinite(reference) or not math.isfinite(candidate):
+        return False, None, allowed_error
+    objective_error = abs(reference - candidate)
+    return objective_error <= allowed_error, objective_error, allowed_error
+
+
 def _parse_levels(levels_str):
     levels = set()
     for part in levels_str.split(','):
@@ -156,15 +182,20 @@ OPENAI_RESPONSES_MODELS = {"gpt-5.5", "gpt-5.4", "gpt-5.4-mini"}
 
 
 def _evaluate_openai_responses(client, question, model):
-    """Use the Responses API for reasoning models that support summaries."""
+    """Use the Responses API for GPT-5.x reasoning models.
+
+    Effort is left at the model default (medium for gpt-5.5). OpenAI only exposes
+    a reasoning *summary*, not the raw chain, and its summaries are too sparse to
+    be useful, so we do not request them.
+    """
     response = client.responses.create(
         model=model,
         input=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": question},
         ],
-        reasoning={"effort": "high", "summary": "auto"},
-        max_output_tokens=MAX_COMPLETION_TOKENS,
+        reasoning={"effort": "medium"},
+        max_output_tokens=MAX_OUTPUT_TOKENS,
         text={
             "format": {
                 "type": "json_schema",
@@ -175,13 +206,9 @@ def _evaluate_openai_responses(client, question, model):
         },
     )
 
-    reasoning_summary = ""
     text_content = ""
     for item in response.output:
-        if item.type == "reasoning":
-            for s in (item.summary or []):
-                reasoning_summary += s.text
-        elif item.type == "message":
+        if item.type == "message":
             for c in (item.content or []):
                 if c.type == "output_text":
                     text_content += c.text
@@ -190,10 +217,7 @@ def _evaluate_openai_responses(client, question, model):
     input_tokens = response.usage.input_tokens if response.usage else None
     output_tokens = response.usage.output_tokens if response.usage else None
 
-    raw_response = (
-        f"[REASONING SUMMARY]\n{reasoning_summary}\n\n[RESPONSE]\n{text_content}"
-        if reasoning_summary else text_content
-    )
+    raw_response = text_content
 
     if not text_content:
         logging.warning('Responses API returned no text (status=%s)', finish_reason)
@@ -214,7 +238,7 @@ def _evaluate_openai(client, question, model):
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": question},
         ],
-        max_completion_tokens=MAX_COMPLETION_TOKENS,
+        max_completion_tokens=MAX_OUTPUT_TOKENS,
         response_format={
             "type": "json_schema",
             "json_schema": {
@@ -238,17 +262,23 @@ def _evaluate_openai(client, question, model):
         return None, content, finish_reason, input_tokens, output_tokens
 
 
-ANTHROPIC_THINKING_BUDGET = 15000
-
-
 def _evaluate_anthropic(client, question, model):
+    """Evaluate a Claude model via the Messages API.
+
+    Targets Claude Sonnet 5, which uses adaptive thinking: manual
+    thinking={"type":"enabled","budget_tokens":N} is rejected with a 400 error, so
+    there is no fixed thinking-budget knob. Reasoning depth is governed by
+    effort="high" and bounded only by MAX_OUTPUT_TOKENS (thinking + answer share
+    it). display="summarized" is required because Sonnet 5 defaults to "omitted"
+    (empty thinking); Claude only ever returns a summary, never the raw chain.
+    """
     for attempt in range(3):
         try:
             response = client.messages.create(
                 model=model,
-                max_tokens=MAX_COMPLETION_TOKENS,
+                max_tokens=MAX_OUTPUT_TOKENS,
                 system=SYSTEM_PROMPT,
-                thinking={"type": "enabled", "budget_tokens": ANTHROPIC_THINKING_BUDGET, "display": "summarized"},
+                thinking={"type": "adaptive", "display": "summarized"},
                 messages=[{"role": "user", "content": question}],
                 output_config={"format": {"type": "json_schema", "schema": _ANSWER_SCHEMA}, "effort": "high"},
             )
@@ -288,21 +318,20 @@ def _evaluate_anthropic(client, question, model):
 
 
 _GEMINI_THINKING_MODELS = {"gemini-2.5-pro", "gemini-2.5-flash"}
-GEMINI_THINKING_BUDGET = 15000
 
 
 def _evaluate_gemini(client, question, model):
     for attempt in range(3):
         try:
             thinking_config = (
-                google_types.ThinkingConfig(thinking_budget=GEMINI_THINKING_BUDGET, include_thoughts=False)
+                google_types.ThinkingConfig(thinking_budget=THINKING_BUDGET, include_thoughts=False)
                 if model in _GEMINI_THINKING_MODELS else None
             )
             config = google_types.GenerateContentConfig(
                 response_mime_type='application/json',
                 response_schema=_ANSWER_SCHEMA,
                 temperature=0,
-                max_output_tokens=MAX_COMPLETION_TOKENS,
+                max_output_tokens=MAX_OUTPUT_TOKENS,
                 system_instruction=SYSTEM_PROMPT or None,
                 thinking_config=thinking_config,
             )
@@ -365,7 +394,7 @@ def _evaluate_deepseek(client, question, model):
                     {"role": "system", "content": _DEEPSEEK_SYSTEM_PROMPT},
                     {"role": "user", "content": question},
                 ],
-                max_tokens=MAX_COMPLETION_TOKENS,
+                max_tokens=MAX_OUTPUT_TOKENS,
                 response_format={"type": "json_object"},
             )
             if use_thinking:
@@ -402,6 +431,76 @@ def _evaluate_deepseek(client, question, model):
                 return None, '', 'error', None, None
 
 
+def _evaluate_qwen(client, question, model):
+    """Evaluate a Qwen model via the DashScope OpenAI-compatible endpoint.
+
+    We evaluate Qwen3 thinking-only variants (e.g. qwen3-235b-a22b-thinking-2507).
+    Per the Alibaba Cloud Model Studio docs these always reason and ignore
+    enable_thinking, and open-source Qwen3 models support streaming output only.
+    We therefore stream and cap reasoning at THINKING_BUDGET (matching the
+    15k budget used for the other reasoning models) while capping the response at
+    MAX_OUTPUT_TOKENS. thinking_budget is separate from max_tokens on
+    DashScope; if left unset the model would default to its ~82k max chain-of-
+    thought length. The answer is parsed from the accumulated text (response_format
+    json is not documented as compatible with thinking mode).
+    """
+    for attempt in range(3):
+        try:
+            stream = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": _DEEPSEEK_SYSTEM_PROMPT},
+                    {"role": "user", "content": question},
+                ],
+                max_tokens=MAX_OUTPUT_TOKENS,
+                extra_body={"thinking_budget": THINKING_BUDGET},
+                stream=True,
+                stream_options={"include_usage": True},
+            )
+            reasoning_content = ""
+            content = ""
+            finish_reason = None
+            input_tokens = None
+            output_tokens = None
+            for chunk in stream:
+                if getattr(chunk, "usage", None):
+                    input_tokens = chunk.usage.prompt_tokens
+                    output_tokens = chunk.usage.completion_tokens
+                if not chunk.choices:
+                    continue
+                choice = chunk.choices[0]
+                delta = choice.delta
+                if getattr(delta, "reasoning_content", None):
+                    reasoning_content += delta.reasoning_content
+                if getattr(delta, "content", None):
+                    content += delta.content
+                if choice.finish_reason:
+                    finish_reason = choice.finish_reason
+
+            if not content:
+                logging.warning('Qwen returned no content (finish_reason=%s)', finish_reason)
+                return None, reasoning_content, finish_reason, input_tokens, output_tokens
+            model_answer = _extract_answer_from_text(content)
+            if model_answer is None:
+                logging.warning(
+                    'Failed to extract Qwen answer (finish_reason=%s): %s',
+                    finish_reason,
+                    content[:120]
+                )
+            raw_response = (
+                f"[REASONING]\n{reasoning_content}\n\n[RESPONSE]\n{content}"
+                if reasoning_content else content
+            )
+            return model_answer, raw_response, finish_reason, input_tokens, output_tokens
+        except Exception as e:
+            if attempt < 2:
+                logging.warning('Qwen error on attempt %d (%s), retrying in 5s...', attempt + 1, e)
+                time.sleep(5)
+            else:
+                logging.warning('Qwen error after 3 attempts, skipping problem: %s', e)
+                return None, '', 'error', None, None
+
+
 def evaluate_problem(openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, question, model):
     if _is_anthropic(model):
         return _evaluate_anthropic(anthropic_client, question, model)
@@ -412,26 +511,61 @@ def evaluate_problem(openai_client, anthropic_client, gemini_client, deepseek_cl
     if _is_deepseek(model):
         return _evaluate_deepseek(deepseek_client, question, model)
     if _is_qwen(model):
-        return _evaluate_deepseek(qwen_client, question, model)
+        return _evaluate_qwen(qwen_client, question, model)
     raise ValueError(f'Unknown model: {model}')
+
+
+def _build_output(model, problems, results, evaluated=None):
+    answered = sum(1 for r in results if r.get('model_answer') is not None)
+    correct_count = sum(1 for r in results if r.get('correct'))
+    total_input = sum(r.get('input_tokens') for r in results if r.get('input_tokens') is not None)
+    total_output = sum(r.get('output_tokens') for r in results if r.get('output_tokens') is not None)
+    token_count = sum(1 for r in results if r.get('input_tokens') is not None)
+    return {
+        'model': model,
+        'total': len(problems),
+        'evaluated': len(results) if evaluated is None else evaluated,
+        'answered': answered,
+        'correct': correct_count,
+        'accuracy': correct_count / answered if answered > 0 else 0,
+        'avg_input_tokens': total_input / token_count if token_count > 0 else 0,
+        'avg_output_tokens': total_output / token_count if token_count > 0 else 0,
+        'tolerance': {
+            'type': 'max_absolute_relative',
+            'abs_tolerance': ABS_TOLERANCE,
+            'rel_tolerance': REL_TOLERANCE,
+        },
+        'results': results,
+    }
 
 
 def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, model, problems, output_path):
     results = []
-    correct_count = 0
 
     if os.path.exists(output_path):
         try:
             with open(output_path) as f:
                 existing = json.load(f)
             results = existing.get('results', [])
-            correct_count = sum(1 for r in results if r.get('correct'))
+            for result in results:
+                if 'expected_answer' not in result:
+                    continue
+                is_correct, objective_error, allowed_error = _score_answer(
+                    float(result['expected_answer']),
+                    result.get('model_answer'),
+                )
+                result['correct'] = is_correct
+                result['objective_error'] = objective_error
+                result['allowed_error'] = allowed_error
             logging.info('[%s] Resuming from %d/%d completed results', model, len(results), len(problems))
         except Exception:
             results = []
-            correct_count = 0
 
     start_index = len(results)
+    output = _build_output(model, problems, results, evaluated=start_index)
+    if start_index >= len(problems):
+        with open(output_path, 'w') as f:
+            json.dump(output, f, indent=2)
 
     for i, problem in enumerate(problems):
         if i < start_index:
@@ -444,9 +578,7 @@ def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_clie
             openai_client, anthropic_client, gemini_client, deepseek_client, qwen_client, question, model
         )
 
-        is_correct = model_answer is not None and abs(expected - model_answer) <= TOLERANCE
-        if is_correct:
-            correct_count += 1
+        is_correct, objective_error, allowed_error = _score_answer(expected, model_answer)
 
         results.append({
             'question': question,
@@ -455,32 +587,22 @@ def evaluate_model(openai_client, anthropic_client, gemini_client, deepseek_clie
             'raw_response': raw_response,
             'finish_reason': finish_reason,
             'correct': is_correct if model_answer is not None else None,
+            'objective_error': objective_error,
+            'allowed_error': allowed_error,
             'input_tokens': input_tokens,
             'output_tokens': output_tokens,
         })
 
         evaluated = i + 1
-        answered = sum(1 for r in results if r['model_answer'] is not None)
-        total_input = sum(r['input_tokens'] for r in results if r['input_tokens'] is not None)
-        total_output = sum(r['output_tokens'] for r in results if r['output_tokens'] is not None)
-        token_count = sum(1 for r in results if r['input_tokens'] is not None)
-        output = {
-            'model': model,
-            'total': len(problems),
-            'evaluated': evaluated,
-            'answered': answered,
-            'correct': correct_count,
-            'accuracy': correct_count / answered if answered > 0 else 0,
-            'avg_input_tokens': total_input / token_count if token_count > 0 else 0,
-            'avg_output_tokens': total_output / token_count if token_count > 0 else 0,
-            'tolerance': TOLERANCE,
-            'results': results,
-        }
+        output = _build_output(model, problems, results, evaluated=evaluated)
         with open(output_path, 'w') as f:
             json.dump(output, f, indent=2)
 
     logging.info('[%s] Accuracy: %d/%d answered (%.1f%%)',
-                 model, correct_count, answered, 100 * correct_count / answered if answered > 0 else 0)
+                 model,
+                 output['correct'],
+                 output['answered'],
+                 100 * output['correct'] / output['answered'] if output['answered'] > 0 else 0)
     return output
 
 def _extract_answer_from_text(content):
