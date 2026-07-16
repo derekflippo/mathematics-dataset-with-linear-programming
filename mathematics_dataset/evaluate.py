@@ -820,6 +820,11 @@ def _validated_resume_results(existing, model, problems):
                             model, index + 1)
             break
 
+        if result.get('finish_reason') == 'api_error':
+            logging.info('[%s] Re-running result %d: previous attempt ended in an API error.',
+                         model, index + 1)
+            break
+
         is_correct, objective_error, allowed_error = _score_answer(
             float(result['expected_answer']), result.get('model_answer'),
         )
