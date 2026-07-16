@@ -7,6 +7,7 @@ __pycache__/
 dist/
 build/
 .DS_Store
+.env
 
 # Result data (kept locally, not tracked)
 eval_results*/
@@ -28,3 +29,4 @@ plot_*.py
 *.csv
 *.png
 *.json
+.env
